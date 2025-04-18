@@ -165,4 +165,116 @@ SDK depends on **telescope‑generated** bindings for contract schemas.
 - Move metering on‑chain with gas or compute proofs.
 ---
 
-Deliver this MVP and you’ll have a complete, audited proof‑of‑concept of _AI agents paying per‑tool on Cosmos_. From here you can iterate into dynamic pricing, multi‑tenant registries, and cross‑chain settlement. Happy building!
+## 9. Developer Specification
+
+This section defines the full contract-level spec derived from our scoped MVP decisions during brainstorming.
+
+### 9.1 Registry Contract
+
+#### Types
+
+```rust
+pub struct ToolMeta {
+  pub provider: Addr,
+  pub price: Uint128,
+  pub is_active: bool,
+}
+```
+
+#### Messages
+
+```rust
+// InstantiateMsg
+pub struct InstantiateMsg {}
+
+// ExecuteMsg
+pub enum ExecuteMsg {
+  RegisterTool { tool_id: String, price: Uint128 },
+  UpdatePrice { tool_id: String, new_price: Uint128 },
+  PauseTool { tool_id: String },
+  ResumeTool { tool_id: String },
+}
+
+// QueryMsg
+pub enum QueryMsg {
+  GetTool { tool_id: String },
+}
+
+// SudoMsg — not implemented for Registry
+```
+
+#### Constraints
+
+- `tool_id` must be ≤ 16 characters
+- Only the provider (i.e. `info.sender`) can register or modify their own tools
+- A provider may register multiple tools
+
+---
+
+### 9.2 Escrow Contract
+
+#### Types
+
+```rust
+pub struct Escrow {
+  pub caller: Addr,
+  pub provider: Addr,
+  pub max_fee: Uint128,
+  pub auth_token: Binary,
+  pub expires: u64, // block height
+}
+
+pub struct Config {
+  pub frozen: bool,
+}
+```
+
+#### Messages
+
+```rust
+// InstantiateMsg
+pub struct InstantiateMsg {}
+
+// ExecuteMsg
+pub enum ExecuteMsg {
+  LockFunds {
+    tool_id: String,
+    max_fee: Uint128,
+    auth_token: Binary,
+    expires: u64,
+  },
+  Release {
+    escrow_id: u64,
+    usage_fee: Uint128,
+  },
+  RefundExpired {
+    escrow_id: u64,
+  },
+}
+
+// QueryMsg
+pub enum QueryMsg {
+  GetEscrow { escrow_id: u64 },
+}
+
+// SudoMsg
+pub enum SudoMsg {
+  Freeze { value: bool },
+}
+```
+
+#### Constraints
+
+- `expires` must be ≤ 50 blocks into the future
+- `usage_fee` in `Release` must be ≤ `max_fee`
+- Only the original provider may call `Release`
+- Only the original caller may call `RefundExpired`
+- `auth_token` is stored in plaintext
+- Emits events:
+  - `wasm-toolpay.locked`
+  - `wasm-toolpay.released`
+  - `wasm-toolpay.refunded`
+
+---
+
+This specification should now guide contract implementation and testing directly, with minimal guesswork or backtracking. For full integration, reference the Provider SDK and AI-wallet flows outlined in previous sections.

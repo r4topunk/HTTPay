@@ -1,0 +1,306 @@
+# ToolPay MVP Implementation Tasks
+
+This document provides a comprehensive, actionable tasklist for implementing the ToolPay MVP. Each task is broken down into specific subtasks with clear deliverables.
+
+## Chunk 1: Project Setup
+
+### 1.1 Initialize CosmWasm template
+- [ ] Install `cargo-generate` if needed: `cargo install cargo-generate`
+- [ ] Generate project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name toolpay`
+- [ ] Rename default contract to `registry`
+- [ ] Create a second contract directory for `escrow`
+
+### 1.2 Create Rust workspace
+- [ ] Set up `Cargo.toml` at root with workspace members
+- [ ] Add common dependencies to workspace:
+  - [ ] `cosmwasm-std = "1.5"`
+  - [ ] `cw-storage-plus = "1.2"`
+  - [ ] `schemars`
+  - [ ] `serde`
+  - [ ] `thiserror`
+- [ ] Configure optimization settings for Wasm compilation
+- [ ] Add `rust-toolchain.toml` with Rust 1.78 specification
+
+### 1.3 Set up TypeScript workspace
+- [ ] Initialize npm workspace: `npm init -y`
+- [ ] Install TypeScript: `npm install -D typescript`
+- [ ] Add `tsconfig.json` with appropriate settings
+- [ ] Install CosmJS dependencies:
+  - [ ] `@cosmjs/stargate`
+  - [ ] `@cosmjs/cosmwasm-stargate`
+  - [ ] `@cosmjs/proto-signing`
+- [ ] Install Telescope: `npm install -D @cosmology/telescope`
+- [ ] Install testing framework: `npm install -D jest @types/jest ts-jest`
+
+### 1.4 Validate initial setup
+- [ ] Ensure `cargo build` succeeds
+- [ ] Create initial git repository: `git init`
+- [ ] Add `.gitignore` for Rust and Node artifacts
+- [ ] Make first commit with scaffold
+
+## Chunk 2: Registry Contract Implementation
+
+### 2.1 Define Registry messages and types
+- [ ] Create `msg.rs` with:
+  - [ ] `InstantiateMsg` struct (empty for MVP)
+  - [ ] `ExecuteMsg` enum with variants: `RegisterTool`, `UpdatePrice`, `PauseTool`, `ResumeTool`
+  - [ ] `QueryMsg` enum with variant: `GetTool`
+  - [ ] `ToolResponse` struct for query returns
+- [ ] Create `state.rs` with:
+  - [ ] `ToolMeta` struct with fields: `provider: Addr`, `price: Uint128`, `is_active: bool`
+  - [ ] `TOOLS: Map<String, ToolMeta>` storage definition
+
+### 2.2 Implement Registry contract logic
+- [ ] Implement `instantiate` function with minimal setup
+- [ ] Implement `execute` function with pattern matching for all message variants
+- [ ] Implement `RegisterTool` handler:
+  - [ ] Validate `tool_id` length ≤ 16 characters
+  - [ ] Store provider address from `info.sender`
+  - [ ] Store tool metadata in `TOOLS` map
+  - [ ] Return success response with tool_id
+- [ ] Implement `UpdatePrice` handler:
+  - [ ] Load existing tool
+  - [ ] Verify sender is the provider
+  - [ ] Update price and save
+- [ ] Implement `PauseTool` handler:
+  - [ ] Load existing tool
+  - [ ] Verify sender is the provider
+  - [ ] Set `is_active` to false
+- [ ] Implement `ResumeTool` handler:
+  - [ ] Load existing tool
+  - [ ] Verify sender is the provider
+  - [ ] Set `is_active` to true
+- [ ] Implement `query` function for `GetTool`
+
+### 2.3 Add Registry contract tests
+- [ ] Set up test helpers and mocks
+- [ ] Test successful tool registration
+- [ ] Test tool registration with invalid tool_id (too long)
+- [ ] Test unauthorized price update
+- [ ] Test successful price update
+- [ ] Test pause and resume functionality
+- [ ] Test query functionality
+
+## Chunk 3: Escrow Contract Implementation
+
+### 3.1 Define Escrow messages and types
+- [ ] Create `msg.rs` with:
+  - [ ] `InstantiateMsg` struct (empty for MVP)
+  - [ ] `ExecuteMsg` enum with variants: `LockFunds`, `Release`, `RefundExpired`
+  - [ ] `QueryMsg` enum with variant: `GetEscrow`
+  - [ ] `SudoMsg` enum with variant: `Freeze`
+  - [ ] `EscrowResponse` struct for query returns
+- [ ] Create `state.rs` with:
+  - [ ] `Escrow` struct with fields: `caller`, `provider`, `max_fee`, `auth_token`, `expires`
+  - [ ] `Config` struct with field: `frozen: bool`
+  - [ ] `ESCROWS: Map<u64, Escrow>` storage
+  - [ ] `NEXT_ID: Item<u64>` counter
+  - [ ] `CONFIG: Item<Config>` storage
+
+### 3.2 Implement `LockFunds` functionality
+- [ ] Add import for `Registry` contract interfaces for querying tools
+- [ ] Implement `instantiate` function with `CONFIG` and `NEXT_ID` initialization
+- [ ] Implement `LockFunds` handler:
+  - [ ] Query Registry contract for tool details
+  - [ ] Verify tool exists and is active
+  - [ ] Validate `max_fee` against attached funds
+  - [ ] Validate `expires` is within limits (≤ 50 blocks)
+  - [ ] Create and store `Escrow` object
+  - [ ] Increment `NEXT_ID`
+  - [ ] Emit `wasm-toolpay.locked` event
+  - [ ] Return escrow_id
+
+### 3.3 Implement `Release` functionality
+- [ ] Implement `Release` handler:
+  - [ ] Load escrow by id
+  - [ ] Verify caller is the original provider
+  - [ ] Verify escrow hasn't expired
+  - [ ] Verify `usage_fee` ≤ `max_fee`
+  - [ ] Transfer `usage_fee` to provider
+  - [ ] Transfer remaining funds (if any) to original caller
+  - [ ] Remove escrow from storage
+  - [ ] Emit `wasm-toolpay.released` event
+
+### 3.4 Implement `RefundExpired` functionality
+- [ ] Implement `RefundExpired` handler:
+  - [ ] Load escrow by id
+  - [ ] Verify caller is the original caller
+  - [ ] Verify escrow has expired (current block > expires)
+  - [ ] Return all funds to original caller
+  - [ ] Remove escrow from storage
+  - [ ] Emit `wasm-toolpay.refunded` event
+
+### 3.5 Implement query and sudo functionality
+- [ ] Implement `query` function for `GetEscrow`
+- [ ] Implement `sudo` function for `Freeze` that sets the contract's frozen state
+
+## Chunk 4: Contract Unit Tests
+
+### 4.1 Set up testing environment
+- [ ] Configure `cw-multi-test` in each contract's tests
+- [ ] Create mock accounts for providers and users
+- [ ] Create helper functions for contract instantiation
+- [ ] Set up integration between Registry and Escrow contracts in tests
+
+### 4.2 Write happy path tests
+- [ ] Test complete flow: register tool → lock funds → release → verify balances
+- [ ] Test complete flow with partial fee usage (refund remainder)
+- [ ] Test query endpoints returning correct data
+- [ ] Test Registry contract's basic functionality
+
+### 4.3 Write edge case tests
+- [ ] Test attempting to exceed max TTL (50 blocks)
+- [ ] Test attempting to charge > max_fee
+- [ ] Test unauthorized release attempt
+- [ ] Test expired escrow refund
+- [ ] Test attempt to refund non-expired escrow
+- [ ] Test interactions when contract is frozen
+
+### 4.4 Run comprehensive test suite
+- [ ] Configure Cargo to run wasm tests: `cargo wasm-test`
+- [ ] Verify all tests pass without warnings
+- [ ] Check code coverage (if available)
+
+## Chunk 5: CI & Localnet Configuration
+
+### 5.1 Set up GitHub Actions workflow
+- [ ] Create `.github/workflows/ci.yml`
+- [ ] Configure Rust build and test steps
+- [ ] Add cargo wasm optimizer step
+- [ ] Set up caching for faster CI builds
+
+### 5.2 Configure Neutron localnet
+- [ ] Create `docker-compose.yml` for Neutron localnet
+- [ ] Configure volumes and networks
+- [ ] Add deployment scripts for contracts
+- [ ] Create convenience scripts for running localnet
+
+### 5.3 Set up TypeScript test environment
+- [ ] Configure Jest for TypeScript testing
+- [ ] Set up environment variables for test configuration
+- [ ] Integrate TypeScript tests with GitHub Actions
+- [ ] Create integration test scripts that deploy and test contracts
+
+## Chunk 6: Provider SDK (TypeScript)
+
+### 6.1 Initialize provider SDK package
+- [ ] Create directory `packages/provider-sdk`
+- [ ] Initialize package with `npm init -y`
+- [ ] Create TypeScript configuration
+- [ ] Set up build and test scripts
+- [ ] Configure package exports and types
+
+### 6.2 Generate TypeScript bindings
+- [ ] Extract contract schemas: `cargo schema`
+- [ ] Configure Telescope settings
+- [ ] Generate TypeScript types from schemas
+- [ ] Create wrapper classes for contract interaction
+
+### 6.3 Implement escrow verification
+- [ ] Create `EscrowVerifier` class
+- [ ] Implement `verifyEscrow` method:
+  - [ ] Query escrow by ID
+  - [ ] Validate auth token
+  - [ ] Check expiration
+  - [ ] Verify provider address
+  - [ ] Return boolean result and escrow details
+
+### 6.4 Implement usage posting
+- [ ] Create `UsageReporter` class
+- [ ] Implement `postUsage` method:
+  - [ ] Create `Release` message
+  - [ ] Sign and broadcast transaction
+  - [ ] Handle error states
+  - [ ] Return transaction hash and status
+
+### 6.5 Prepare package for publishing
+- [ ] Add documentation comments
+- [ ] Create README with examples
+- [ ] Add tests for SDK functions
+- [ ] Create packaged version for local registry
+
+## Chunk 7: CLI Tool for Provider
+
+### 7.1 Set up CLI framework
+- [ ] Create directory `packages/provider-cli`
+- [ ] Install CLI framework: `npm install commander` (or oclif)
+- [ ] Create main entry point
+- [ ] Set up command structure
+- [ ] Configure binary creation
+
+### 7.2 Implement CLI commands
+- [ ] Implement `register-tool` command:
+  - [ ] Parse arguments: tool_id, price
+  - [ ] Load wallet from key
+  - [ ] Call registry contract
+- [ ] Implement `update-price` command:
+  - [ ] Parse arguments: tool_id, new_price
+  - [ ] Call registry contract
+- [ ] Implement `pause-tool` and `resume-tool` commands
+- [ ] Implement `release-escrow` command:
+  - [ ] Parse arguments: escrow_id, usage_fee
+  - [ ] Call escrow contract
+
+### 7.3 Add configuration handling
+- [ ] Create config file structure
+- [ ] Add options for RPC endpoint, chain ID
+- [ ] Add wallet key management
+- [ ] Implement configuration validation
+
+### 7.4 Add CLI tests
+- [ ] Set up test fixtures
+- [ ] Mock contract interactions
+- [ ] Test command parsing
+- [ ] Test configuration loading
+
+## Chunk 8: AI-Wallet Client Demo & E2E
+
+### 8.1 Create demo script
+- [ ] Initialize demo directory
+- [ ] Create wallet generation utilities
+- [ ] Implement tool discovery flow
+- [ ] Implement fund locking and API call flow
+- [ ] Create simple HTTP server for demo provider
+
+### 8.2 Implement E2E test script
+- [ ] Set up test environment with contracts deployed
+- [ ] Create test wallets with funds
+- [ ] Register test tool
+- [ ] Lock funds and verify escrow
+- [ ] Mock API call with auth token
+- [ ] Release funds and verify balances
+- [ ] Test refund flow with timeout
+
+### 8.3 Integrate with CI
+- [ ] Add E2E tests to CI workflow
+- [ ] Configure localnet startup in CI
+- [ ] Ensure tests are isolated and reproducible
+
+## Chunk 9: Documentation & Hardening
+
+### 9.1 Create comprehensive README
+- [ ] Add project description and architecture diagram
+- [ ] Document installation instructions
+- [ ] Provide quickstart guide
+- [ ] Add examples for each component
+- [ ] Include troubleshooting section
+
+### 9.2 Finalize specification
+- [ ] Review and update `project.md` with final implementation details
+- [ ] Add links to code repositories
+- [ ] Document any deviations from original spec
+- [ ] Add suggestions for future improvements
+
+### 9.3 Harden implementation
+- [ ] Add gas limits to all transactions
+- [ ] Add input validation throughout
+- [ ] Review for security issues (reentrancy, overflow)
+- [ ] Add more edge-case tests
+- [ ] Optimize contract storage patterns
+
+### 9.4 Prepare for release
+- [ ] Tag release in git
+- [ ] Prepare crates for publication
+- [ ] Prepare npm packages for publication
+- [ ] Create release notes
+- [ ] Generate documentation website (if applicable)

@@ -1,4 +1,4 @@
-ToolPay MVP — Minimal Viable Specification
+# ToolPay MVP — Minimal Viable Specification
 
 _(Target stack: CosmWasm 1.5 on Neutron + TypeScript SDK/CLI)_
 

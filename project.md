@@ -47,9 +47,11 @@ _(Target stack: CosmWasm 1.5 on Neutron + TypeScript SDK/CLI)_
 
 | **Function** | **Msg**      | **Params**                                                | **Response**        |
 | ------------ | ------------ | --------------------------------------------------------- | ------------------- |
-| Register     | RegisterTool | tool_id: String, provider_addr, price: Uint128 (per call) | tool_id             |
+| Register     | RegisterTool | tool_id: String (max 16 characters), provider_addr, price: Uint128 (per call) | tool_id             |
 | Update price | UpdatePrice  | tool_id, new_price                                        | ()                  |
-| Query meta   | GetTool      | tool_id                                                   | { provider, price } |
+| Pause Tool   | PauseTool    | tool_id                                                   | ()                  |
+| Resume Tool  | ResumeTool   | tool_id                                                   | ()                  |
+| Query meta   | GetTool      | tool_id                                                   | { provider, price, is_active } |
 
 _Storage:_ TOOLS: Map<String, ToolMeta>
 
@@ -70,14 +72,14 @@ pub struct Escrow {
   caller: Addr,
   provider: Addr,
   max_fee: Uint128,
-  auth_token: Binary,
-  expires: u64  // block height
+  auth_token: Binary, // stored as plaintext
+  expires: u64,       // block height (user-defined TTL, max 50 blocks)
 }
 ESCROWS: Map<u64, Escrow>;
 NEXT_ID: Item<u64>;
 ```
 
-_Safety toggles:_ hard‑coded TTL = 10 blocks; contract owner can sudo { freeze: true }.
+_Safety toggles:_ hard‑coded TTL = user-defined (max 50 blocks); contract owner can sudo { freeze: true | false }.
 
 ---
 

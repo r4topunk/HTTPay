@@ -138,6 +138,10 @@ We will implement ToolPay in 3 distinct phases:
 - [ ] Implement `query` function for `GetEscrow`
 - [ ] Implement `sudo` function for `Freeze` that sets the contract's frozen state
 
+### 3.6 Fix warnings in helpers.rs
+- [x] Addressed unreachable expression and unused variable warnings in `call` method of `CwTemplateContract`.
+- [x] Updated the method to return an error since `ExecuteMsg` is uninhabited.
+
 ## Chunk 4: Contract Unit Tests
 
 ### 4.1 Set up testing environment

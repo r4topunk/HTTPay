@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use cosmwasm_std::{to_json_binary, Addr, CosmosMsg, StdResult, WasmMsg};
+use cosmwasm_std::{Addr, CosmosMsg, StdResult};
 
 use crate::msg::ExecuteMsg;
 
@@ -15,13 +15,9 @@ impl CwTemplateContract {
         self.0.clone()
     }
 
-    pub fn call<T: Into<ExecuteMsg>>(&self, msg: T) -> StdResult<CosmosMsg> {
-        let msg = to_json_binary(&msg.into())?;
-        Ok(WasmMsg::Execute {
-            contract_addr: self.addr().into(),
-            msg,
-            funds: vec![],
-        }
-        .into())
+    pub fn call<T: Into<ExecuteMsg>>(&self, _msg: T) -> StdResult<CosmosMsg> {
+        // Since ExecuteMsg is uninhabited, this function cannot be meaningfully implemented.
+        // Returning an error to indicate this.
+        Err(cosmwasm_std::StdError::generic_err("ExecuteMsg is uninhabited and cannot be used."))
     }
 }

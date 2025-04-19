@@ -157,7 +157,7 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
 }
 
 // GetTool query implementation
-fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
+pub fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
     let tool = TOOLS.may_load(deps.storage, &tool_id)?;
     
     match tool {
@@ -173,6 +173,3 @@ fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
         None => to_json_binary(&Option::<ToolResponse>::None),
     }
 }
-
-#[cfg(test)]
-mod tests {}

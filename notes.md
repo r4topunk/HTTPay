@@ -40,10 +40,10 @@ The initial project setup has been completed successfully, establishing the foun
 **Next Steps**:
 The project is now ready for Chunk 2, which will focus on implementing the Registry contract according to the specifications in project.md.
 
-### Chunk 2: Registry Contract Implementation (IN PROGRESS)
+### Chunk 2: Registry Contract Implementation (COMPLETED)
 
 **Overview**:
-Work on the Registry contract implementation has made significant progress. The core contract logic (Chunk 2.2) has been completed successfully, implementing all required functionality.
+The Registry contract has been fully implemented and tested. All required functionality for registering, updating, pausing, and querying tools has been successfully implemented and verified with a comprehensive test suite.
 
 **Key Accomplishments**:
 
@@ -61,8 +61,17 @@ Work on the Registry contract implementation has made significant progress. The 
    - Implemented validation checks for unauthorized access
    - Added error handling for non-existent tools
 
+3. **Comprehensive Test Suite**:
+   - Created test helpers and mocks to simplify test cases
+   - Implemented tests for successful tool registration and validation
+   - Added tests for validating tool ID length restrictions
+   - Created tests for authorized and unauthorized price updates
+   - Added tests for tool pausing and resuming functionality
+   - Implemented tests for query functionality with both existing and non-existing tools
+   - Refactored tests into a separate module for better organization and maintainability
+
 **Next Steps**:
-Next tasks include implementing unit tests for the Registry contract (Chunk 2.3) to ensure all functionality works as expected.
+The Registry contract implementation is now complete. The next phase will focus on implementing the Escrow contract (Chunk 3), beginning with defining its messages and types.
 
 ### Chunk 3: Escrow Contract Implementation (PENDING)
 

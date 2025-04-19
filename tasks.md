@@ -77,13 +77,13 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Implement `query` function for `GetTool`
 
 ### 2.3 Add Registry contract tests
-- [ ] Set up test helpers and mocks
-- [ ] Test successful tool registration
-- [ ] Test tool registration with invalid tool_id (too long)
-- [ ] Test unauthorized price update
-- [ ] Test successful price update
-- [ ] Test pause and resume functionality
-- [ ] Test query functionality
+- [x] Set up test helpers and mocks
+- [x] Test successful tool registration
+- [x] Test tool registration with invalid tool_id (too long)
+- [x] Test unauthorized price update
+- [x] Test successful price update
+- [x] Test pause and resume functionality
+- [x] Test query functionality
 
 ## Chunk 3: Escrow Contract Implementation
 

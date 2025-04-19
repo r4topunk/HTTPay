@@ -45,14 +45,14 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 2: Registry Contract Implementation
 
 ### 2.1 Define Registry messages and types
-- [ ] Create `msg.rs` with:
-  - [ ] `InstantiateMsg` struct (empty for MVP)
-  - [ ] `ExecuteMsg` enum with variants: `RegisterTool`, `UpdatePrice`, `PauseTool`, `ResumeTool`
-  - [ ] `QueryMsg` enum with variant: `GetTool`
-  - [ ] `ToolResponse` struct for query returns
-- [ ] Create `state.rs` with:
-  - [ ] `ToolMeta` struct with fields: `provider: Addr`, `price: Uint128`, `is_active: bool`
-  - [ ] `TOOLS: Map<String, ToolMeta>` storage definition
+- [x] Create `msg.rs` with:
+  - [x] `InstantiateMsg` struct (empty for MVP)
+  - [x] `ExecuteMsg` enum with variants: `RegisterTool`, `UpdatePrice`, `PauseTool`, `ResumeTool`
+  - [x] `QueryMsg` enum with variant: `GetTool`
+  - [x] `ToolResponse` struct for query returns
+- [x] Create `state.rs` with:
+  - [x] `ToolMeta` struct with fields: `provider: Addr`, `price: Uint128`, `is_active: bool`
+  - [x] `TOOLS: Map<String, ToolMeta>` storage definition
 
 ### 2.2 Implement Registry contract logic
 - [ ] Implement `instantiate` function with minimal setup

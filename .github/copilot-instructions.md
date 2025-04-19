@@ -2,6 +2,8 @@
 
 **ALWAYS consult the file `tasks.md` to understand what to do next. After making any change or completing a task, you MUST update the task list in `tasks.md` to reflect your progress. This takes precedence over all other instructions.** If more information is needed, refer to `blueprint.md` and `project.md` for additional context. These files contain the most up-to-date information about the project and should be used as primary references for architecture, requirements, and implementation details.
 
+You should also refer to the `notes.md` file for additional context and implementation notes. This file contains a detailed history of the project, including completed chunks and future development plans. It is important to keep this file updated with any new information or changes made during the development process.
+
 # GitHub Copilot Instructions
 
 ## Purpose

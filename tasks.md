@@ -126,13 +126,13 @@ We will implement ToolPay in 3 distinct phases:
   - [x] Emit `wasm-toolpay.released` event
 
 ### 3.4 Implement `RefundExpired` functionality
-- [ ] Implement `RefundExpired` handler:
-  - [ ] Load escrow by id
-  - [ ] Verify caller is the original caller
-  - [ ] Verify escrow has expired (current block > expires)
-  - [ ] Return all funds to original caller
-  - [ ] Remove escrow from storage
-  - [ ] Emit `wasm-toolpay.refunded` event
+- [x] Implement `RefundExpired` handler:
+  - [x] Load escrow by id
+  - [x] Verify caller is the original caller
+  - [x] Verify escrow has expired (current block > expires)
+  - [x] Return all funds to original caller
+  - [x] Remove escrow from storage
+  - [x] Emit `wasm-toolpay.refunded` event
 
 ### 3.5 Implement query and sudo functionality
 - [ ] Implement `query` function for `GetEscrow`

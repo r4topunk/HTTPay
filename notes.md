@@ -137,6 +137,16 @@ Work has begun on implementing the Escrow contract. We've completed defining the
        - escrow_id, provider, caller, usage_fee, refund_amount
    - Fixed warnings and optimized imports in contract.rs
 
+6. **RefundExpired Implementation** (Task 3.4):
+   - Implemented `refund_expired` handler function:
+     - Loads and validates escrow existence by ID
+     - Verifies that only the original caller (not provider) can request refunds
+     - Validates that the escrow has actually expired (current block > expires)
+     - Creates a bank message to return all locked funds to the original caller
+     - Performs cleanup by removing the escrow from storage
+     - Emits `wasm-toolpay.refunded` event with relevant attributes:
+       - escrow_id, caller, refund_amount
+
 **Key Design Decisions**:
 1. **Registry Contract Integration**: The Escrow contract now requires a Registry contract address during instantiation, establishing a clear dependency between the contracts
 2. **Frozen State Check**: All execute operations first check if the contract is frozen, providing a global way to halt operations if needed
@@ -145,9 +155,10 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 5. **Event Emissions**: Standard events are emitted for blockchain explorers and indexers
 6. **Fund Transfer Logic**: Implemented conditional fund transfers that only execute when amounts are non-zero
 7. **Partial Release Support**: Added support for providers to claim only part of the maximum fee, automatically refunding the remainder
+8. **Security Controls**: Strict verification of caller identity in all operations, ensuring only authorized parties can perform actions
 
 **Next Steps**:
-Continue with Task 3.4 to implement the `RefundExpired` functionality, which will allow users to reclaim funds from expired escrows.
+Continue with Task 3.5 to implement the query and sudo functionality, including the `GetEscrow` query and `Freeze` sudo command.
 
 ### Chunk 4: Contract Unit Tests (PENDING)
 

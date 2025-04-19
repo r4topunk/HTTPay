@@ -69,7 +69,7 @@ pub fn execute(
             escrow_id,
             usage_fee,
         } => release(deps, env, info, escrow_id, usage_fee),
-        ExecuteMsg::RefundExpired { escrow_id } => unimplemented!(),
+        ExecuteMsg::RefundExpired { escrow_id } => refund_expired(deps, env, info, escrow_id),
     }
 }
 
@@ -233,6 +233,53 @@ pub fn release(
         .add_messages(messages)
         .add_event(event)
         .add_attribute("action", "release")
+        .add_attribute("escrow_id", escrow_id.to_string()))
+}
+
+// Implementation of RefundExpired functionality
+pub fn refund_expired(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    escrow_id: u64,
+) -> Result<Response, ContractError> {
+    // Load escrow by id
+    let escrow = ESCROWS.may_load(deps.storage, escrow_id)?
+        .ok_or(ContractError::EscrowNotFound {})?;
+    
+    // Verify caller is the original caller
+    if info.sender != escrow.caller {
+        return Err(ContractError::Unauthorized {});
+    }
+    
+    // Verify escrow has expired (current block > expires)
+    if env.block.height <= escrow.expires {
+        return Err(ContractError::EscrowNotExpired {});
+    }
+    
+    // Prepare message to return all funds to original caller
+    let refund_msg = CosmosMsg::Bank(BankMsg::Send {
+        to_address: escrow.caller.to_string(),
+        amount: vec![Coin {
+            denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+            amount: escrow.max_fee,
+        }],
+    });
+    
+    // Remove escrow from storage
+    ESCROWS.remove(deps.storage, escrow_id);
+    
+    // Create wasm-toolpay.refunded event
+    let event = Event::new("wasm-toolpay.refunded")
+        .add_attribute("escrow_id", escrow_id.to_string())
+        .add_attribute("caller", escrow.caller.to_string())
+        .add_attribute("refund_amount", escrow.max_fee.to_string());
+    
+    // Return success response
+    Ok(Response::new()
+        .add_message(refund_msg)
+        .add_event(event)
+        .add_attribute("action", "refund_expired")
         .add_attribute("escrow_id", escrow_id.to_string()))
 }
 

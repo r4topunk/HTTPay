@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "contracts/registry",
+    "contracts/escrow",
+]
+
+[workspace.dependencies]
+cosmwasm-std = "1.5"
+cw-storage-plus = "1.2"
+schemars = "0.8.12"
+serde = { version = "1.0.188", default-features = false, features = ["derive"] }
+thiserror = "1.0.49"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true

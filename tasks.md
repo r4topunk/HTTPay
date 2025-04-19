@@ -28,15 +28,15 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Generate escrow project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --name escrow`
 
 ### 1.3 Create Rust workspace
-- [ ] Set up `Cargo.toml` at root with workspace members, including `contracts/registry` and `contracts/escrow`
-- [ ] Add common dependencies to workspace:
-  - [ ] `cosmwasm-std = "1.5"`
-  - [ ] `cw-storage-plus = "1.2"`
-  - [ ] `schemars`
-  - [ ] `serde`
-  - [ ] `thiserror`
-- [ ] Configure optimization settings for Wasm compilation
-- [ ] Add `rust-toolchain.toml` with Rust 1.78 specification
+- [x] Set up `Cargo.toml` at root with workspace members, including `contracts/registry` and `contracts/escrow`
+- [x] Add common dependencies to workspace:
+  - [x] `cosmwasm-std = "1.5"`
+  - [x] `cw-storage-plus = "1.2"`
+  - [x] `schemars`
+  - [x] `serde`
+  - [x] `thiserror`
+- [x] Configure optimization settings for Wasm compilation
+- [x] Add `rust-toolchain.toml` with Rust 1.78 specification
 
 ### 1.4 Validate initial setup
 - [ ] Ensure `cargo build` succeeds

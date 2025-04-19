@@ -158,12 +158,12 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Test Registry contract's basic functionality
 
 ### 4.3 Write edge case tests
-- [ ] Test attempting to exceed max TTL (50 blocks)
-- [ ] Test attempting to charge > max_fee
-- [ ] Test unauthorized release attempt
-- [ ] Test expired escrow refund
-- [ ] Test attempt to refund non-expired escrow
-- [ ] Test interactions when contract is frozen
+- [x] Test attempting to exceed max TTL (50 blocks)
+- [x] Test attempting to charge > max_fee
+- [x] Test unauthorized release attempt
+- [x] Test expired escrow refund
+- [x] Test attempt to refund non-expired escrow
+- [x] Test interactions when contract is frozen
 
 ### 4.4 Run comprehensive test suite
 - [ ] Configure Cargo to run wasm tests: `cargo wasm-test`

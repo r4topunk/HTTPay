@@ -229,6 +229,29 @@ Work has begun on implementing comprehensive unit tests for both the Registry an
        - Confirms price updates work correctly
        - Ensures proper authorization checks for all operations
 
+3. **Edge Case Tests Implementation** (Task 4.3):
+   - Implemented comprehensive error and edge case testing:
+     - Created `exceed_max_ttl_test.rs` to validate TTL constraints:
+       - Verifies contract rejects escrows with expiration > 50 blocks
+       - Tests exact error messages and parameters for TTL violations
+     - Added `excessive_fee_test.rs` to test fee limits:
+       - Ensures providers cannot charge more than the maximum fee
+       - Verifies proper error handling with detailed fee information
+     - Implemented `unauthorized_release_test.rs` for authorization checks:
+       - Tests that only the original provider can release funds
+       - Confirms unauthorized users and even the escrow creator cannot release
+     - Created `expired_escrow_refund_test.rs` for timeout handling:
+       - Tests complete refund flow for expired escrows
+       - Verifies funds are fully returned to the original caller
+       - Confirms escrow state is properly cleaned up after refund
+     - Added `non_expired_refund_test.rs` for premature refund attempts:
+       - Ensures escrows cannot be refunded before expiration
+       - Verifies proper error responses for premature refund attempts
+     - Implemented `frozen_contract_test.rs` for administrative controls:
+       - Tests contract behavior when frozen by admin via sudo
+       - Verifies all operations (lock, release, refund) are rejected when frozen
+       - Confirms proper error messages for frozen contract interactions
+
 **Key Design Decisions**:
 1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
 2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking

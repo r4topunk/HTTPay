@@ -10,7 +10,10 @@ mod complete_flow_test;
 mod partial_fee_test;
 mod query_test;
 mod registry_basic_test;
+mod exceed_max_ttl_test;
+mod excessive_fee_test;
+mod unauthorized_release_test;
+mod expired_escrow_refund_test;
+mod non_expired_refund_test;
+mod frozen_contract_test;
 // Import individual test modules below as they're implemented
-// mod release_tests;
-// mod refund_expired_tests;
-// mod sudo_tests;

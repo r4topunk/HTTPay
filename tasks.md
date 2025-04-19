@@ -55,26 +55,26 @@ We will implement ToolPay in 3 distinct phases:
   - [x] `TOOLS: Map<String, ToolMeta>` storage definition
 
 ### 2.2 Implement Registry contract logic
-- [ ] Implement `instantiate` function with minimal setup
-- [ ] Implement `execute` function with pattern matching for all message variants
-- [ ] Implement `RegisterTool` handler:
-  - [ ] Validate `tool_id` length ≤ 16 characters
-  - [ ] Store provider address from `info.sender`
-  - [ ] Store tool metadata in `TOOLS` map
-  - [ ] Return success response with tool_id
-- [ ] Implement `UpdatePrice` handler:
-  - [ ] Load existing tool
-  - [ ] Verify sender is the provider
-  - [ ] Update price and save
-- [ ] Implement `PauseTool` handler:
-  - [ ] Load existing tool
-  - [ ] Verify sender is the provider
-  - [ ] Set `is_active` to false
-- [ ] Implement `ResumeTool` handler:
-  - [ ] Load existing tool
-  - [ ] Verify sender is the provider
-  - [ ] Set `is_active` to true
-- [ ] Implement `query` function for `GetTool`
+- [x] Implement `instantiate` function with minimal setup
+- [x] Implement `execute` function with pattern matching for all message variants
+- [x] Implement `RegisterTool` handler:
+  - [x] Validate `tool_id` length ≤ 16 characters
+  - [x] Store provider address from `info.sender`
+  - [x] Store tool metadata in `TOOLS` map
+  - [x] Return success response with tool_id
+- [x] Implement `UpdatePrice` handler:
+  - [x] Load existing tool
+  - [x] Verify sender is the provider
+  - [x] Update price and save
+- [x] Implement `PauseTool` handler:
+  - [x] Load existing tool
+  - [x] Verify sender is the provider
+  - [x] Set `is_active` to false
+- [x] Implement `ResumeTool` handler:
+  - [x] Load existing tool
+  - [x] Verify sender is the provider
+  - [x] Set `is_active` to true
+- [x] Implement `query` function for `GetTool`
 
 ### 2.3 Add Registry contract tests
 - [ ] Set up test helpers and mocks

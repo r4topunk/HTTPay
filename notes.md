@@ -42,7 +42,27 @@ The project is now ready for Chunk 2, which will focus on implementing the Regis
 
 ### Chunk 2: Registry Contract Implementation (IN PROGRESS)
 
-*Implementation notes will be added here once work begins on this chunk.*
+**Overview**:
+Work on the Registry contract implementation has made significant progress. The core contract logic (Chunk 2.2) has been completed successfully, implementing all required functionality.
+
+**Key Accomplishments**:
+
+1. **Contract Logic Implementation**:
+   - Implemented `instantiate` function with minimal setup
+   - Implemented `execute` function with pattern matching for all message variants
+   - Created handlers for all required operations:
+     - `RegisterTool`: Validates tool_id length (≤ 16 characters), stores provider address, and saves tool metadata
+     - `UpdatePrice`: Verifies sender authorization and updates price
+     - `PauseTool`/`ResumeTool`: Manages tool activation state with provider authorization
+   - Implemented `query` function for retrieving tool information
+
+2. **Error Handling**:
+   - Added proper error types for contract operations
+   - Implemented validation checks for unauthorized access
+   - Added error handling for non-existent tools
+
+**Next Steps**:
+Next tasks include implementing unit tests for the Registry contract (Chunk 2.3) to ensure all functionality works as expected.
 
 ### Chunk 3: Escrow Contract Implementation (PENDING)
 

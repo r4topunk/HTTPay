@@ -102,7 +102,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
    - Implemented `query_tool` function to retrieve tool information
    - Added `ToolResponse` structure matching the Registry contract's response format
 
-4. **Contract Implementation** (Task 3.2):
+4. **LockFunds Implementation** (Task 3.2):
    - Expanded `error.rs` with specific error types for escrow operations:
      - `Frozen` for when the contract is frozen
      - `ToolNotActive` for when tools don't exist or are inactive
@@ -123,15 +123,31 @@ Work has begun on implementing the Escrow contract. We've completed defining the
      - Emits `wasm-toolpay.locked` event with relevant attributes
      - Returns escrow ID to caller
 
+5. **Release Implementation** (Task 3.3):
+   - Implemented `release` handler function:
+     - Loads and validates escrow existence by ID
+     - Verifies that only the original provider can release funds
+     - Ensures the escrow hasn't expired before attempting release
+     - Validates that the usage fee doesn't exceed the maximum fee
+     - Implements fund transfers for both provider payment and refunds:
+       - Sends the usage fee to the provider
+       - Returns any remaining funds to the original caller
+     - Performs cleanup by removing the escrow from storage
+     - Emits `wasm-toolpay.released` event with detailed attributes:
+       - escrow_id, provider, caller, usage_fee, refund_amount
+   - Fixed warnings and optimized imports in contract.rs
+
 **Key Design Decisions**:
 1. **Registry Contract Integration**: The Escrow contract now requires a Registry contract address during instantiation, establishing a clear dependency between the contracts
 2. **Frozen State Check**: All execute operations first check if the contract is frozen, providing a global way to halt operations if needed
 3. **Error Handling**: Comprehensive error types were added for detailed failure reporting
 4. **Expiration Limits**: Set a maximum of 50 blocks for escrow expiration to prevent funds being locked for too long
 5. **Event Emissions**: Standard events are emitted for blockchain explorers and indexers
+6. **Fund Transfer Logic**: Implemented conditional fund transfers that only execute when amounts are non-zero
+7. **Partial Release Support**: Added support for providers to claim only part of the maximum fee, automatically refunding the remainder
 
 **Next Steps**:
-Continue with Task 3.3 to implement the `Release` functionality, which will allow providers to claim their fees after tool usage.
+Continue with Task 3.4 to implement the `RefundExpired` functionality, which will allow users to reclaim funds from expired escrows.
 
 ### Chunk 4: Contract Unit Tests (PENDING)
 

@@ -1,7 +1,7 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
-    to_binary, Addr, BankMsg, Binary, Coin, CosmosMsg, Deps, DepsMut, Env, Event, MessageInfo, 
+    BankMsg, Binary, Coin, CosmosMsg, Deps, DepsMut, Env, Event, MessageInfo, 
     Response, StdResult, Uint128,
 };
 use cw2::set_contract_version;
@@ -68,7 +68,7 @@ pub fn execute(
         ExecuteMsg::Release {
             escrow_id,
             usage_fee,
-        } => unimplemented!(),
+        } => release(deps, env, info, escrow_id, usage_fee),
         ExecuteMsg::RefundExpired { escrow_id } => unimplemented!(),
     }
 }
@@ -156,6 +156,84 @@ pub fn lock_funds(
         .add_event(event)
         .add_attribute("action", "lock_funds")
         .add_attribute("escrow_id", id.to_string()))
+}
+
+// Implementation of Release functionality
+pub fn release(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    escrow_id: u64,
+    usage_fee: Uint128,
+) -> Result<Response, ContractError> {
+    // Load escrow by id
+    let escrow = ESCROWS.may_load(deps.storage, escrow_id)?
+        .ok_or(ContractError::EscrowNotFound {})?;
+    
+    // Verify caller is the original provider
+    if info.sender != escrow.provider {
+        return Err(ContractError::Unauthorized {});
+    }
+    
+    // Verify escrow hasn't expired
+    if env.block.height > escrow.expires {
+        return Err(ContractError::EscrowExpired {});
+    }
+    
+    // Verify usage_fee ≤ max_fee
+    if usage_fee > escrow.max_fee {
+        return Err(ContractError::FeeTooHigh {
+            max_fee: escrow.max_fee.to_string(),
+            requested_fee: usage_fee.to_string(),
+        });
+    }
+    
+    // Calculate refund amount (if any)
+    let refund_amount = escrow.max_fee.checked_sub(usage_fee)
+        .expect("Usage fee is already verified to be <= max_fee");
+    
+    // Create messages for transferring funds
+    let mut messages: Vec<CosmosMsg> = vec![];
+    
+    // Transfer usage_fee to provider
+    if !usage_fee.is_zero() {
+        messages.push(CosmosMsg::Bank(BankMsg::Send {
+            to_address: escrow.provider.to_string(),
+            amount: vec![Coin {
+                denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+                amount: usage_fee,
+            }],
+        }));
+    }
+    
+    // Transfer remaining funds (if any) to original caller
+    if !refund_amount.is_zero() {
+        messages.push(CosmosMsg::Bank(BankMsg::Send {
+            to_address: escrow.caller.to_string(),
+            amount: vec![Coin {
+                denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+                amount: refund_amount,
+            }],
+        }));
+    }
+    
+    // Remove escrow from storage
+    ESCROWS.remove(deps.storage, escrow_id);
+    
+    // Create wasm-toolpay.released event
+    let event = Event::new("wasm-toolpay.released")
+        .add_attribute("escrow_id", escrow_id.to_string())
+        .add_attribute("provider", escrow.provider.to_string())
+        .add_attribute("caller", escrow.caller.to_string())
+        .add_attribute("usage_fee", usage_fee.to_string())
+        .add_attribute("refund_amount", refund_amount.to_string());
+    
+    // Return success response
+    Ok(Response::new()
+        .add_messages(messages)
+        .add_event(event)
+        .add_attribute("action", "release")
+        .add_attribute("escrow_id", escrow_id.to_string()))
 }
 
 #[cfg(test)]

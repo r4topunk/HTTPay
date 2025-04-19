@@ -115,15 +115,15 @@ We will implement ToolPay in 3 distinct phases:
   - [x] Return escrow_id
 
 ### 3.3 Implement `Release` functionality
-- [ ] Implement `Release` handler:
-  - [ ] Load escrow by id
-  - [ ] Verify caller is the original provider
-  - [ ] Verify escrow hasn't expired
-  - [ ] Verify `usage_fee` ≤ `max_fee`
-  - [ ] Transfer `usage_fee` to provider
-  - [ ] Transfer remaining funds (if any) to original caller
-  - [ ] Remove escrow from storage
-  - [ ] Emit `wasm-toolpay.released` event
+- [x] Implement `Release` handler:
+  - [x] Load escrow by id
+  - [x] Verify caller is the original provider
+  - [x] Verify escrow hasn't expired
+  - [x] Verify `usage_fee` ≤ `max_fee`
+  - [x] Transfer `usage_fee` to provider
+  - [x] Transfer remaining funds (if any) to original caller
+  - [x] Remove escrow from storage
+  - [x] Emit `wasm-toolpay.released` event
 
 ### 3.4 Implement `RefundExpired` functionality
 - [ ] Implement `RefundExpired` handler:

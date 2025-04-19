@@ -172,9 +172,51 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 **Next Steps**:
 With the core contract functionality now fully implemented (Tasks 3.1-3.5), the next phase will focus on implementing comprehensive unit tests for the contracts (Chunk 4).
 
-### Chunk 4: Contract Unit Tests (PENDING)
+### Chunk 4: Contract Unit Tests (IN PROGRESS)
 
-*Implementation notes will be added here once work begins on this chunk.*
+**Overview**:
+Work has begun on implementing comprehensive unit tests for both the Registry and Escrow contracts. The initial focus is on setting up a robust testing environment with cw-multi-test that allows for proper integration testing between contracts.
+
+**Current Progress**:
+
+1. **Testing Environment Setup** (Task 4.1):
+   - Created a well-organized test directory structure for the Escrow contract:
+     - Added `tests/mod.rs` as the main entry point for all test modules
+     - Set up importing structure for different test categories (lock_funds, release, refund, etc.)
+   - Configured `cw-multi-test` framework for integration testing:
+     - Implemented `mock_app()` function that creates a test blockchain with initial balances
+     - Set up contract code storage and instantiation helpers
+     - Added support for bank operations to test fund transfers
+   - Created mock accounts for different roles in the system:
+     - `OWNER`: Contract deployer and admin
+     - `PROVIDER`: Tool provider account
+     - `USER`: Regular user that locks funds for tool usage
+     - `UNAUTHORIZED`: Account without proper permissions for testing edge cases
+   - Implemented helper functions for common contract operations:
+     - `setup_contracts()`: Instantiates both Registry and Escrow contracts
+     - `register_tool()`: Registers a tool in the Registry contract
+     - `lock_funds()`: Locks funds in the Escrow contract
+     - `release_funds()`: Releases funds to the provider
+     - `refund_expired()`: Refunds an expired escrow
+     - `query_escrow()`: Gets escrow details by ID
+   - Set up integration between Registry and Escrow contracts:
+     - Configured Registry contract address to be passed to Escrow contract
+     - Enabled cross-contract querying for tool validation
+     - Created `TestContracts` struct to manage both contracts in tests
+   - Created initial test for locking funds:
+     - Implemented `test_lock_funds_success` to validate basic escrow creation
+     - Verified proper fund transfers between accounts
+     - Validated escrow data is stored correctly
+
+**Key Design Decisions**:
+1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
+2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking
+3. **Helper Functions**: Created comprehensive helpers to reduce code duplication in tests
+4. **Predefined Constants**: Using test constants for common values to ensure consistency across tests
+5. **Full End-to-End Testing**: Setting up infrastructure to test complete flows rather than isolated functions
+
+**Next Steps**:
+With the testing environment now configured, the next task is to implement comprehensive happy path tests (Task 4.2) that verify the core functionality flows correctly from start to finish.
 
 ### Chunk 5: CI & Localnet Configuration (PENDING)
 

@@ -1,0 +1,253 @@
+//! # Test Setup Module for Escrow Contract
+//! 
+//! This module provides the common test infrastructure for the Escrow contract.
+//! It contains helper functions to instantiate the contract for testing purposes,
+//! ensuring consistent test environment across all test cases.
+//! 
+//! The module leverages cw-multi-test for contract integration testing.
+
+use cosmwasm_std::{Addr, Coin, Empty, Uint128};
+use cw_multi_test::{App, Contract, ContractWrapper, Executor};
+
+use crate::contract::{execute, instantiate, query, sudo};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg};
+use registry::msg::{ExecuteMsg as RegistryExecuteMsg, InstantiateMsg as RegistryInstantiateMsg, QueryMsg as RegistryQueryMsg};
+
+// Define constants for testing
+pub const ATOM: &str = "uatom";
+pub const DEFAULT_MAX_FEE: u128 = 100;
+pub const DEFAULT_USAGE_FEE: u128 = 50;
+pub const DEFAULT_TOOL_ID: &str = "testtool";
+pub const DEFAULT_TTL: u64 = 10; // in blocks
+
+// Mock account addresses
+pub const OWNER: &str = "owner";
+pub const PROVIDER: &str = "provider";
+pub const USER: &str = "user";
+pub const UNAUTHORIZED: &str = "unauthorized";
+
+/// Sets up the Escrow contract for cw-multi-test
+fn escrow_contract() -> Box<dyn Contract<Empty>> {
+    let contract = ContractWrapper::new(execute, instantiate, query)
+        .with_sudo(sudo);
+    Box::new(contract)
+}
+
+/// Sets up the Registry contract for cw-multi-test
+fn registry_contract() -> Box<dyn Contract<Empty>> {
+    let contract = ContractWrapper::new(
+        registry::contract::execute,
+        registry::contract::instantiate,
+        registry::contract::query,
+    );
+    Box::new(contract)
+}
+
+/// Initializes test application with funds for accounts
+pub fn mock_app() -> App {
+    let mut app = App::default();
+    
+    // Set up initial balances
+    app.init_modules(|router, api, storage| {
+        router.bank.init_balance(
+            storage,
+            &Addr::unchecked(OWNER),
+            vec![Coin {
+                denom: ATOM.to_string(),
+                amount: Uint128::new(10000),
+            }],
+        ).unwrap();
+        
+        router.bank.init_balance(
+            storage,
+            &Addr::unchecked(PROVIDER),
+            vec![Coin {
+                denom: ATOM.to_string(),
+                amount: Uint128::new(1000),
+            }],
+        ).unwrap();
+        
+        router.bank.init_balance(
+            storage,
+            &Addr::unchecked(USER),
+            vec![Coin {
+                denom: ATOM.to_string(),
+                amount: Uint128::new(5000),
+            }],
+        ).unwrap();
+        
+        router.bank.init_balance(
+            storage,
+            &Addr::unchecked(UNAUTHORIZED),
+            vec![Coin {
+                denom: ATOM.to_string(),
+                amount: Uint128::new(1000),
+            }],
+        ).unwrap();
+    });
+    
+    app
+}
+
+/// Helper struct to manage test contracts
+pub struct TestContracts {
+    pub app: App,
+    pub registry_addr: String,
+    pub escrow_addr: String,
+}
+
+/// Instantiates both Registry and Escrow contracts for testing
+pub fn setup_contracts() -> TestContracts {
+    let mut app = mock_app();
+    
+    // Store contract codes
+    let registry_code_id = app.store_code(registry_contract());
+    let escrow_code_id = app.store_code(escrow_contract());
+    
+    // Instantiate registry contract
+    let registry_addr = app
+        .instantiate_contract(
+            registry_code_id,
+            Addr::unchecked(OWNER),
+            &RegistryInstantiateMsg {},
+            &[],
+            "registry",
+            None,
+        )
+        .unwrap();
+    
+    // Instantiate escrow contract
+    let escrow_addr = app
+        .instantiate_contract(
+            escrow_code_id,
+            Addr::unchecked(OWNER),
+            &InstantiateMsg {
+                registry_addr: registry_addr.to_string(),
+            },
+            &[],
+            "escrow",
+            None,
+        )
+        .unwrap();
+    
+    TestContracts {
+        app,
+        registry_addr: registry_addr.to_string(),
+        escrow_addr: escrow_addr.to_string(),
+    }
+}
+
+/// Helper function to register a tool in the Registry contract
+pub fn register_tool(
+    contracts: &mut TestContracts, 
+    tool_id: &str, 
+    price: u128,
+    sender: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    contracts.app.execute_contract(
+        Addr::unchecked(sender),
+        Addr::unchecked(&contracts.registry_addr),
+        &RegistryExecuteMsg::RegisterTool {
+            tool_id: tool_id.to_string(),
+            price: Uint128::new(price),
+        },
+        &[],
+    )?;
+    
+    Ok(())
+}
+
+/// Helper function to lock funds in the Escrow contract
+pub fn lock_funds(
+    contracts: &mut TestContracts,
+    tool_id: &str,
+    max_fee: u128,
+    expires_in_blocks: u64,
+    auth_token: Vec<u8>,
+    sender: &str,
+    funds: &[Coin],
+) -> Result<u64, Box<dyn std::error::Error>> {
+    let current_height = contracts.app.block_info().height;
+    
+    let res = contracts.app.execute_contract(
+        Addr::unchecked(sender),
+        Addr::unchecked(&contracts.escrow_addr),
+        &ExecuteMsg::LockFunds {
+            tool_id: tool_id.to_string(),
+            max_fee: Uint128::new(max_fee),
+            expires: current_height + expires_in_blocks,
+            auth_token: auth_token.into(),
+        },
+        funds,
+    )?;
+    
+    // Extract escrow_id from the response
+    // The attribute is expected to be in the format "escrow_id=X"
+    let escrow_id = res
+        .events
+        .iter()
+        .find_map(|e| {
+            if e.ty == "wasm" {
+                e.attributes
+                    .iter()
+                    .find(|attr| attr.key == "escrow_id")
+                    .map(|attr| attr.value.parse::<u64>().unwrap_or(0))
+            } else {
+                None
+            }
+        })
+        .unwrap_or(0);
+    
+    Ok(escrow_id)
+}
+
+/// Helper function to release funds from the Escrow contract
+pub fn release_funds(
+    contracts: &mut TestContracts,
+    escrow_id: u64,
+    usage_fee: u128,
+    sender: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    contracts.app.execute_contract(
+        Addr::unchecked(sender),
+        Addr::unchecked(&contracts.escrow_addr),
+        &ExecuteMsg::Release {
+            escrow_id,
+            usage_fee: Uint128::new(usage_fee),
+        },
+        &[],
+    )?;
+    
+    Ok(())
+}
+
+/// Helper function to refund expired escrow
+pub fn refund_expired(
+    contracts: &mut TestContracts,
+    escrow_id: u64,
+    sender: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    contracts.app.execute_contract(
+        Addr::unchecked(sender),
+        Addr::unchecked(&contracts.escrow_addr),
+        &ExecuteMsg::RefundExpired {
+            escrow_id,
+        },
+        &[],
+    )?;
+    
+    Ok(())
+}
+
+/// Helper function to get escrow details by ID
+pub fn query_escrow(
+    contracts: &TestContracts, 
+    escrow_id: u64,
+) -> Result<crate::msg::EscrowResponse, Box<dyn std::error::Error>> {
+    let res: crate::msg::EscrowResponse = contracts.app.wrap().query_wasm_smart(
+        &contracts.escrow_addr,
+        &QueryMsg::GetEscrow { id: escrow_id },
+    )?;
+    
+    Ok(res)
+}

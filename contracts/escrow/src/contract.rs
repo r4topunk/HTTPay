@@ -323,4 +323,7 @@ pub fn sudo(deps: DepsMut, _env: Env, msg: SudoMsg) -> Result<Response, Contract
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    // Main tests are in the tests/ directory
+    // This module is kept for backward compatibility
+}

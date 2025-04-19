@@ -15,11 +15,11 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 1: Project Setup
 
 ### 1.1 Create directory structure
-- [ ] Create a `contracts` directory for CosmWasm contracts
-- [ ] Create a `packages` directory for TypeScript packages
-- [ ] Create a `frontend` directory as a placeholder for future development
-- [ ] Create a `scripts` directory for helper scripts
-- [ ] Create a README.md in the frontend directory explaining it will be developed later
+- [x] Create a `contracts` directory for CosmWasm contracts
+- [x] Create a `packages` directory for TypeScript packages
+- [x] Create a `frontend` directory as a placeholder for future development
+- [x] Create a `scripts` directory for helper scripts
+- [x] Create a README.md in the frontend directory explaining it will be developed later
 
 ### 1.2 Initialize CosmWasm template
 - [ ] Change the directory to get into the `contracts` directory

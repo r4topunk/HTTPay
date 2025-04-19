@@ -108,6 +108,22 @@ This document serves as a guide for GitHub Copilot to understand our development
 - Use feature flags for significant changes to enable gradual rollouts.
 - Document breaking changes and migration paths clearly.
 
+# Reference Files Usage
+
+Always consult the following files as primary references for architecture, requirements, and implementation details:
+
+- **blueprint.md**: Provides a step-by-step plan and high-level deliverables for the ToolPay MVP, including iterative chunks and detailed actionable subtasks for each phase of the project.
+- **project.md**: Contains the minimal viable specification, including architecture diagrams, contract-level specs, message formats, storage layouts, developer constraints, and acceptance criteria. This is the authoritative source for how the system should behave and be structured.
+- **tasks.md**: Lists a comprehensive, actionable task list for implementing the ToolPay MVP, broken down into specific subtasks with clear deliverables. Use this as a checklist to track progress and ensure all requirements are met.
+
+## How to Use These Files
+
+- Before generating or modifying code, review these files to understand the current requirements, architecture, and implementation plan.
+- Use blueprint.md to guide the overall development sequence and to break down work into logical steps.
+- Use project.md to ensure all code, messages, and storage structures strictly follow the defined specifications and constraints.
+- Use tasks.md to verify that all implementation steps are completed and to avoid missing any deliverables.
+- When in doubt about requirements or design, defer to the content of these files.
+
 ## Instructions for Copilot
 
 When generating code:

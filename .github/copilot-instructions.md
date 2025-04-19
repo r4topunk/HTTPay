@@ -1,3 +1,7 @@
+# 🚨 Most Important Instruction for Copilot 🚨
+
+**ALWAYS consult the file `tasks.md` to understand what to do next. After making any change or completing a task, you MUST update the task list in `tasks.md` to reflect your progress. This takes precedence over all other instructions.**
+
 # GitHub Copilot Instructions
 
 ## Purpose

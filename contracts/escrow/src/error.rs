@@ -8,6 +8,28 @@ pub enum ContractError {
 
     #[error("Unauthorized")]
     Unauthorized {},
-    // Add any other custom errors you like here.
-    // Look at https://docs.rs/thiserror/1.0.21/thiserror/ for details.
+
+    #[error("Contract is frozen")]
+    Frozen {},
+    
+    #[error("Tool not found or inactive")]
+    ToolNotActive {},
+    
+    #[error("Insufficient funds: required {required}, but only {available} was sent")]
+    InsufficientFunds { required: String, available: String },
+    
+    #[error("Escrow expiration too far in future: max {max_blocks} blocks, got {got_blocks} blocks")]
+    ExpirationTooLong { max_blocks: u64, got_blocks: u64 },
+    
+    #[error("Escrow not found")]
+    EscrowNotFound {},
+    
+    #[error("Escrow already expired")]
+    EscrowExpired {},
+    
+    #[error("Escrow not yet expired")]
+    EscrowNotExpired {},
+    
+    #[error("Usage fee exceeds max fee: max {max_fee}, requested {requested_fee}")]
+    FeeTooHigh { max_fee: String, requested_fee: String },
 }

@@ -102,17 +102,17 @@ We will implement ToolPay in 3 distinct phases:
   - [x] `CONFIG: Item<Config>` storage
 
 ### 3.2 Implement `LockFunds` functionality
-- [ ] Add import for `Registry` contract interfaces for querying tools
-- [ ] Implement `instantiate` function with `CONFIG` and `NEXT_ID` initialization
-- [ ] Implement `LockFunds` handler:
-  - [ ] Query Registry contract for tool details
-  - [ ] Verify tool exists and is active
-  - [ ] Validate `max_fee` against attached funds
-  - [ ] Validate `expires` is within limits (≤ 50 blocks)
-  - [ ] Create and store `Escrow` object
-  - [ ] Increment `NEXT_ID`
-  - [ ] Emit `wasm-toolpay.locked` event
-  - [ ] Return escrow_id
+- [x] Add import for `Registry` contract interfaces for querying tools
+- [x] Implement `instantiate` function with `CONFIG` and `NEXT_ID` initialization
+- [x] Implement `LockFunds` handler:
+  - [x] Query Registry contract for tool details
+  - [x] Verify tool exists and is active
+  - [x] Validate `max_fee` against attached funds
+  - [x] Validate `expires` is within limits (≤ 50 blocks)
+  - [x] Create and store `Escrow` object
+  - [x] Increment `NEXT_ID`
+  - [x] Emit `wasm-toolpay.locked` event
+  - [x] Return escrow_id
 
 ### 3.3 Implement `Release` functionality
 - [ ] Implement `Release` handler:

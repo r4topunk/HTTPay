@@ -1,8 +1,12 @@
 use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::{Addr, Uint128};
 
+/// Message to instantiate the contract
 #[cw_serde]
-pub struct InstantiateMsg {}
+pub struct InstantiateMsg {
+    /// Address of the Registry contract
+    pub registry_addr: String,
+}
 
 #[cw_serde]
 pub enum ExecuteMsg {

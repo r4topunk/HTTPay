@@ -22,6 +22,8 @@ pub struct Escrow {
 pub struct Config {
     /// If true, contract operations are frozen
     pub frozen: bool,
+    /// Address of the registry contract
+    pub registry_addr: Addr,
 }
 
 /// Map of escrow ID to escrow data

@@ -76,29 +76,62 @@ The Registry contract implementation is now complete. The next phase will focus 
 ### Chunk 3: Escrow Contract Implementation (IN PROGRESS)
 
 **Overview**:
-Work has begun on implementing the Escrow contract, starting with defining the core message and state types required for the contract's functionality.
+Work has begun on implementing the Escrow contract. We've completed defining the core message and state types (Task 3.1) and have implemented the `LockFunds` functionality (Task 3.2), which allows users to lock funds for tool usage.
 
 **Current Progress**:
 
-1. **Message Types Implementation**:
+1. **Message Types Implementation** (Task 3.1):
    - Created `msg.rs` with all required message structures:
-     - `InstantiateMsg`: Empty struct for MVP as specified
+     - `InstantiateMsg`: Now includes `registry_addr` parameter to connect with the Registry contract
      - `ExecuteMsg`: Implemented with variants for `LockFunds`, `Release`, and `RefundExpired` operations
      - `QueryMsg`: Added with the `GetEscrow` variant for querying escrow details
      - `SudoMsg`: Created with the `Freeze` variant for contract-level admin control
      - `EscrowResponse`: Added response struct for query returns
 
-2. **State Types Implementation**:
+2. **State Types Implementation** (Task 3.1):
    - Created `state.rs` with core data structures:
      - `Escrow`: Struct with fields for `caller`, `provider`, `max_fee`, `auth_token`, and `expires`
-     - `Config`: Struct with `frozen` boolean field for contract-level control
+     - `Config`: Struct with `frozen` boolean field and `registry_addr` for Registry contract integration
      - Storage definitions:
        - `ESCROWS`: Map to store escrow data indexed by ID
        - `NEXT_ID`: Item to maintain sequential escrow IDs
        - `CONFIG`: Item to store contract configuration
 
+3. **Registry Interface Implementation** (Task 3.2):
+   - Created `registry_interface.rs` for interacting with the Registry contract
+   - Implemented `query_tool` function to retrieve tool information
+   - Added `ToolResponse` structure matching the Registry contract's response format
+
+4. **Contract Implementation** (Task 3.2):
+   - Expanded `error.rs` with specific error types for escrow operations:
+     - `Frozen` for when the contract is frozen
+     - `ToolNotActive` for when tools don't exist or are inactive
+     - `InsufficientFunds` for when funds are inadequate
+     - `ExpirationTooLong` for when escrow duration exceeds limits
+     - Other error types for future functionality
+   - Implemented `instantiate` function:
+     - Sets contract version for future migrations
+     - Validates and stores registry contract address
+     - Initializes configuration with `frozen: false` 
+     - Sets up escrow ID counter starting at 1
+   - Added `execute` function with pattern matching for message types
+   - Implemented `lock_funds` handler with all required validations:
+     - Queries Registry for tool existence and active status
+     - Validates provided funds against maximum fee
+     - Ensures expiration is within the 50-block limit (via `MAX_ESCROW_BLOCKS` constant)
+     - Creates/stores the escrow and increments the ID counter
+     - Emits `wasm-toolpay.locked` event with relevant attributes
+     - Returns escrow ID to caller
+
+**Key Design Decisions**:
+1. **Registry Contract Integration**: The Escrow contract now requires a Registry contract address during instantiation, establishing a clear dependency between the contracts
+2. **Frozen State Check**: All execute operations first check if the contract is frozen, providing a global way to halt operations if needed
+3. **Error Handling**: Comprehensive error types were added for detailed failure reporting
+4. **Expiration Limits**: Set a maximum of 50 blocks for escrow expiration to prevent funds being locked for too long
+5. **Event Emissions**: Standard events are emitted for blockchain explorers and indexers
+
 **Next Steps**:
-Continue with Task 3.2 to implement the `LockFunds` functionality, which will require integration with the Registry contract.
+Continue with Task 3.3 to implement the `Release` functionality, which will allow providers to claim their fees after tool usage.
 
 ### Chunk 4: Contract Unit Tests (PENDING)
 

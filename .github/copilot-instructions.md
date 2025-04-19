@@ -155,3 +155,7 @@ When generating code:
 10. **Future-Proofing**: Generate code that will be maintainable and adaptable to future requirements.
 
 Remember that the ultimate goal is to produce code that is not just functional, but sustainable, readable, and aligned with our team's values and practices.
+
+## Most important
+
+After making any change or completing a task, you MUST update the task list in `tasks.md` and the notes in `notes.md` to reflect your progress.

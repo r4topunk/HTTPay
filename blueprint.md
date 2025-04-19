@@ -1,89 +1,158 @@
 # Blueprint for ToolPay MVP
 
-This document defines a step-by-step plan to build the ToolPay MVP. It is organized into two rounds:
+This document defines a step-by-step plan to build the ToolPay MVP. It is organized into three distinct implementation phases with clear deliverables for each phase.
 
-1. **Iterative Chunks**: High-level deliverables in logical order.
-2. **Detailed Steps**: Each chunk broken down into actionable subtasks.
+## Implementation Phases
+
+### Phase 1: Smart Contracts & Testing
+Focus on implementing and thoroughly testing the core CosmWasm contracts that power the ToolPay system.
+
+### Phase 2: Provider SDK & Tools
+Develop the TypeScript SDK and CLI tools for providers once the contracts are stable and tested.
+
+### Phase 3: Frontend Development
+Build the user-facing application only after the contract and SDK foundation is solid.
+
+## Project Directory Structure
+
+```
+toolpay/
+├── contracts/               # CosmWasm contracts (Phase 1)
+│   ├── registry/           # Registry contract
+│   └── escrow/             # Escrow contract
+├── packages/                # TypeScript packages (Phase 2)
+│   ├── provider-sdk/       # SDK for tool providers
+│   └── provider-cli/       # CLI tool for providers
+├── frontend/               # User interface (Phase 3)
+│   └── README.md           # Information about future frontend development
+├── scripts/                # Helper scripts for development/deployment
+├── Cargo.toml              # Rust workspace configuration
+├── package.json            # TypeScript workspace configuration
+└── other config files...   # .gitignore, rust-toolchain.toml, etc.
+```
 
 ---
 
-## 1. Iterative Chunks
+## Phase 1: Smart Contracts & Testing
 
+### Phase 1 Deliverables
 1. **Project Setup**
 2. **Registry Contract Implementation**
 3. **Escrow Contract Implementation**
 4. **Contract Unit Tests**
-5. **CI & Localnet Configuration**
-6. **Provider SDK (TypeScript)**
-7. **CLI Tool for Provider**
-8. **AI‑Wallet Client Demo & E2E**
-9. **Documentation & Hardening**
+5. **Contract Integration Tests**
+6. **CI & Localnet Configuration**
+
+## Phase 2: Provider SDK & Tools
+
+### Phase 2 Deliverables
+1. **Provider SDK (TypeScript)**
+2. **CLI Tool for Provider**
+3. **SDK Documentation & Examples**
+4. **AI‑Wallet Client Demo**
+5. **E2E Testing with SDK**
+
+## Phase 3: Frontend Development
+
+### Phase 3 Deliverables
+1. **Frontend UI/UX Design**
+2. **User Wallet Integration**
+3. **Provider Dashboard**
+4. **Analytics & Monitoring**
+5. **Documentation & User Guides**
 
 ---
 
-## 2. Detailed Steps
+## Detailed Implementation Steps
 
-### Chunk 1: Project Setup
-- 1.1 Initialize CosmWasm template with `cargo generate`.
-- 1.2 Create Rust workspace and set up `cw-storage-plus` dependency.
-- 1.3 Add TypeScript workspace, install `telescope`, `cosmjs`, and testing frameworks.
-- 1.4 Commit initial scaffolding and verify `cargo build`.
+### Phase 1: Smart Contracts & Testing
 
-### Chunk 2: Registry Contract Implementation
-- 2.1 Define `InstantiateMsg`, `ExecuteMsg`, `QueryMsg` enums in Rust.
-- 2.2 Implement `ToolMeta` struct and `TOOLS` map storage.
-- 2.3 Enforce `tool_id` ≤ 16 characters and provider authorization.
-- 2.4 Implement `RegisterTool`, `UpdatePrice`, `PauseTool`, `ResumeTool`.
-- 2.5 Write basic Rust unit tests for each ExecuteMsg.
+#### 1.1 Project Setup
+- Create basic directory structure (contracts, packages, frontend, scripts)
+- Initialize CosmWasm template with `cargo generate`
+- Create Rust workspace and set up `cw-storage-plus` dependency
+- Add `rust-toolchain.toml` with Rust 1.78 specification
+- Set up `.gitignore` for Rust and Node artifacts
+- Make first commit with scaffold
 
-### Chunk 3: Escrow Contract Implementation
-- 3.1 Define `Escrow` and `Config` structs and storage items.
-- 3.2 Implement `LockFunds` handler:
-  - Validate TTL ≤ 50 blocks.
-  - Store `Escrow` entry and emit `wasm-toolpay.locked` event.
-- 3.3 Implement `Release` handler:
-  - Verify caller is original provider.
-  - Enforce `usage_fee` ≤ `max_fee`.
-  - Transfer funds and emit `wasm-toolpay.released`.
-- 3.4 Implement `RefundExpired` handler:
-  - Verify caller is original caller and TTL expired.
-  - Refund full amount and emit `wasm-toolpay.refunded`.
+#### 1.2 Registry Contract Implementation
+- Define `InstantiateMsg`, `ExecuteMsg`, `QueryMsg` enums in Rust
+- Implement `ToolMeta` struct and `TOOLS` map storage
+- Enforce `tool_id` ≤ 16 characters and provider authorization
+- Implement `RegisterTool`, `UpdatePrice`, `PauseTool`, `ResumeTool`
+- Write basic Rust unit tests for each ExecuteMsg
 
-### Chunk 4: Contract Unit Tests
-- 4.1 Configure `cw-multi-test` environment.
-- 4.2 Write tests for happy paths in both contracts.
-- 4.3 Write edge-case tests: TTL violation, over-limit fee, unauthorized callers.
-- 4.4 Confirm all tests pass under `cargo wasm-test`.
+#### 1.3 Escrow Contract Implementation
+- Define `Escrow` and `Config` structs and storage items
+- Implement `LockFunds` handler with TTL ≤ 50 blocks validation
+- Store `Escrow` entry and emit `wasm-toolpay.locked` event
+- Implement `Release` handler with proper verification
+- Implement `RefundExpired` handler for timeout scenarios
+- Implement query and sudo functionality
 
-### Chunk 5: CI & Localnet Configuration
-- 5.1 Create GitHub Actions workflow for Rust tests and Wasmd localnet.
-- 5.2 Define Docker Compose files for Neutron localnet.
-- 5.3 Add TypeScript test runner (Jest/Mocha) and CI integration.
+#### 1.4 Contract Testing
+- Configure `cw-multi-test` environment
+- Write unit tests for both registry and escrow contracts
+- Write integration tests for contract interactions
+- Write edge-case tests: TTL violation, over-limit fee, unauthorized callers
+- Ensure all tests pass under `cargo wasm-test`
 
-### Chunk 6: Provider SDK (TypeScript)
-- 6.1 Scaffold an NPM package `@toolpay/provider-sdk`.
-- 6.2 Generate TypeScript bindings via `telescope`.
-- 6.3 Implement `verifyEscrow(escrowId, authToken)` gRPC call logic.
-- 6.4 Implement `postUsage(escrowId, fee)` method using `cosmjs`.
-- 6.5 Publish initial version to local registry.
+#### 1.5 CI & Localnet Configuration
+- Create GitHub Actions workflow for Rust tests
+- Add cargo wasm optimizer step
+- Define Docker Compose files for Neutron localnet
+- Create convenience scripts for running localnet
+- Verify contracts can be deployed and function correctly on localnet
 
-### Chunk 7: CLI Tool for Provider
-- 7.1 Scaffold CLI with `oclif` or `commander`.
-- 7.2 Add commands: `register-tool`, `update-price`, `release-escrow`.
-- 7.3 Integrate SDK methods and parse args.
-- 7.4 Add unit tests for CLI flows.
+### Phase 2: Provider SDK & Tools
 
-### Chunk 8: AI‑Wallet Client Demo & E2E
-- 8.1 Build simple demo script using `fetch` and SDK.
-- 8.2 Write E2E test: lock → verify (mock provider) → release → refund.
-- 8.3 Run tests against localnet in CI.
+#### 2.1 TypeScript Setup
+- Initialize npm workspace
+- Install TypeScript and testing frameworks
+- Add `tsconfig.json` with appropriate settings
+- Install CosmJS dependencies and Telescope
 
-### Chunk 9: Documentation & Hardening
-- 9.1 Write README with architecture diagram and usage examples.
-- 9.2 Finalize `project.md` spec and add links.
-- 9.3 Add gas limits, edge-case tests, and secure defaults.
-- 9.4 Tag release and publish crates/NPM packages.
+#### 2.2 Provider SDK (TypeScript)
+- Extract contract schemas using `cargo schema`
+- Generate TypeScript bindings via `telescope`
+- Create `packages/provider-sdk` directory structure
+- Implement `EscrowVerifier` class with verification logic
+- Implement `UsageReporter` class for reporting usage
+- Write SDK unit tests
+
+#### 2.3 CLI Tool for Provider
+- Create `packages/provider-cli` directory
+- Scaffold CLI with `oclif` or `commander`
+- Add commands: `register-tool`, `update-price`, `release-escrow`
+- Implement configuration handling for RPC, chain ID, wallet management
+- Write CLI tests and documentation
+
+#### 2.4 SDK Integration Testing
+- Build AI-Wallet client demo script
+- Implement E2E test scenarios
+- Test complete flows on localnet
+- Document SDK usage examples and best practices
+
+### Phase 3: Frontend Development
+
+#### 3.1 Frontend Setup
+- Set up React/Next.js project in the frontend directory
+- Configure build system and development environment
+- Implement wallet connection capabilities
+- Create component library and design system
+
+#### 3.2 User Interface
+- Implement user dashboard for viewing tool usage
+- Create tool registration and management interface for providers
+- Implement escrow creation flow for users
+- Create monitoring dashboards for providers
+
+#### 3.3 Documentation & Finalization
+- Write comprehensive README with architecture diagram
+- Create user guides for different personas
+- Finalize all documentation
+- Tag release and prepare for production deployment
 
 ---
 
-> **Next**: Execute each chunk in order, commit on success, and iterate towards MVP delivery.
+> **Development Approach**: Complete each phase sequentially before moving to the next. At the end of each phase, perform a thorough review to ensure all deliverables meet quality standards before progressing.

@@ -2,16 +2,33 @@
 
 This document provides a comprehensive, actionable tasklist for implementing the ToolPay MVP. Each task is broken down into specific subtasks with clear deliverables.
 
+## Implementation Phases
+
+We will implement ToolPay in 3 distinct phases:
+
+1. **Phase 1: Smart Contracts & Testing** - Focus on implementing and thoroughly testing the core CosmWasm contracts
+2. **Phase 2: Provider SDK & Tools** - Develop the TypeScript SDK and CLI tools for providers
+3. **Phase 3: Frontend Development** - Build the user-facing application
+
+> **Current Phase**: We are currently in **Phase 1**, focusing exclusively on contract development and testing. Phases 2 and 3 will begin only after Phase 1 is fully completed and tested.
+
 ## Chunk 1: Project Setup
 
-### 1.1 Initialize CosmWasm template
-- [ ] Install `cargo-generate` if needed: `cargo install cargo-generate`
-- [ ] Generate project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name toolpay`
-- [ ] Rename default contract to `registry`
-- [ ] Create a second contract directory for `escrow`
+### 1.1 Create directory structure
+- [ ] Create a `contracts` directory for CosmWasm contracts
+- [ ] Create a `packages` directory for TypeScript packages
+- [ ] Create a `frontend` directory as a placeholder for future development
+- [ ] Create a `scripts` directory for helper scripts
+- [ ] Create a README.md in the frontend directory explaining it will be developed later
 
-### 1.2 Create Rust workspace
-- [ ] Set up `Cargo.toml` at root with workspace members
+### 1.2 Initialize CosmWasm template
+- [ ] Change the directory to get into the `contracts` directory
+- [ ] Install `cargo-generate` if needed: `cargo install cargo-generate`
+- [ ] Generate registry project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name registry`
+- [ ] Generate escrow project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name escrow`
+
+### 1.3 Create Rust workspace
+- [ ] Set up `Cargo.toml` at root with workspace members, including `contracts/registry` and `contracts/escrow`
 - [ ] Add common dependencies to workspace:
   - [ ] `cosmwasm-std = "1.5"`
   - [ ] `cw-storage-plus = "1.2"`
@@ -21,7 +38,7 @@ This document provides a comprehensive, actionable tasklist for implementing the
 - [ ] Configure optimization settings for Wasm compilation
 - [ ] Add `rust-toolchain.toml` with Rust 1.78 specification
 
-### 1.3 Set up TypeScript workspace
+### 1.4 Set up TypeScript workspace
 - [ ] Initialize npm workspace: `npm init -y`
 - [ ] Install TypeScript: `npm install -D typescript`
 - [ ] Add `tsconfig.json` with appropriate settings
@@ -32,7 +49,7 @@ This document provides a comprehensive, actionable tasklist for implementing the
 - [ ] Install Telescope: `npm install -D @cosmology/telescope`
 - [ ] Install testing framework: `npm install -D jest @types/jest ts-jest`
 
-### 1.4 Validate initial setup
+### 1.5 Validate initial setup
 - [ ] Ensure `cargo build` succeeds
 - [ ] Create initial git repository: `git init`
 - [ ] Add `.gitignore` for Rust and Node artifacts

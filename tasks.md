@@ -22,10 +22,10 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Create a README.md in the frontend directory explaining it will be developed later
 
 ### 1.2 Initialize CosmWasm template
-- [ ] Change the directory to get into the `contracts` directory
-- [ ] Install `cargo-generate` if needed: `cargo install cargo-generate`
-- [ ] Generate registry project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name registry`
-- [ ] Generate escrow project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --branch 1.0 --name escrow`
+- [x] Change the directory to get into the `contracts` directory
+- [x] Install `cargo-generate` if needed: `cargo install cargo-generate`
+- [x] Generate registry project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --name registry`
+- [x] Generate escrow project using CosmWasm template: `cargo generate --git https://github.com/CosmWasm/cw-template.git --name escrow`
 
 ### 1.3 Create Rust workspace
 - [ ] Set up `Cargo.toml` at root with workspace members, including `contracts/registry` and `contracts/escrow`

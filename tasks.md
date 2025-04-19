@@ -155,7 +155,7 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Test complete flow: register tool → lock funds → release → verify balances
 - [x] Test complete flow with partial fee usage (refund remainder)
 - [x] Test query endpoints returning correct data
-- [ ] Test Registry contract's basic functionality
+- [x] Test Registry contract's basic functionality
 
 ### 4.3 Write edge case tests
 - [ ] Test attempting to exceed max TTL (50 blocks)

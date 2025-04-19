@@ -9,8 +9,8 @@ mod lock_funds_tests;
 mod complete_flow_test;
 mod partial_fee_test;
 mod query_test;
+mod registry_basic_test;
 // Import individual test modules below as they're implemented
 // mod release_tests;
 // mod refund_expired_tests;
-// mod query_tests;
 // mod sudo_tests;

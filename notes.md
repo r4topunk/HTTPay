@@ -223,6 +223,11 @@ Work has begun on implementing comprehensive unit tests for both the Registry an
        - Verifies escrow data can be properly retrieved
        - Validates all escrow fields match expected values
        - Tests proper response formatting
+     - Implemented `registry_basic_test.rs` to verify Registry contract functionality:
+       - Tests basic tool registration, querying, and management
+       - Verifies tool activation/deactivation (pause/resume)
+       - Confirms price updates work correctly
+       - Ensures proper authorization checks for all operations
 
 **Key Design Decisions**:
 1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization

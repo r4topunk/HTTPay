@@ -21,15 +21,15 @@ toolpay/
 │   ├── registry/           # Registry contract
 │   └── escrow/             # Escrow contract
 ├── packages/                # TypeScript packages (Phase 2)
-│   ├── provider-sdk/       # SDK for tool providers
-│   └── provider-cli/       # CLI tool for providers
+│   └── provider-sdk/       # SDK for tool providers
 ├── frontend/               # User interface (Phase 3)
 │   └── README.md           # Information about future frontend development
 ├── scripts/                # Helper scripts for development/deployment
-├── Cargo.toml              # Rust workspace configuration
-├── package.json            # TypeScript workspace configuration
+├── Cargo.toml              # Rust workspace configuration for Phase 1
 └── other config files...   # .gitignore, rust-toolchain.toml, etc.
 ```
+
+Note: package.json will be created in Phase 2 when TypeScript is first needed.
 
 ---
 
@@ -43,11 +43,11 @@ toolpay/
 5. **Contract Integration Tests**
 6. **CI & Localnet Configuration**
 
-## Phase 2: Provider SDK & Tools
+## Phase 2: Provider SDK
 
 ### Phase 2 Deliverables
-1. **Provider SDK (TypeScript)**
-2. **CLI Tool for Provider**
+1. **TypeScript Workspace Setup**
+2. **Provider SDK (TypeScript)**
 3. **SDK Documentation & Examples**
 4. **AI‑Wallet Client Demo**
 5. **E2E Testing with SDK**
@@ -55,9 +55,9 @@ toolpay/
 ## Phase 3: Frontend Development
 
 ### Phase 3 Deliverables
-1. **Frontend UI/UX Design**
+1. **Frontend Setup with shadcn**
 2. **User Wallet Integration**
-3. **Provider Dashboard**
+3. **Provider Dashboard & Tool Management UI**
 4. **Analytics & Monitoring**
 5. **Documentation & User Guides**
 
@@ -104,13 +104,14 @@ toolpay/
 - Create convenience scripts for running localnet
 - Verify contracts can be deployed and function correctly on localnet
 
-### Phase 2: Provider SDK & Tools
+### Phase 2: Provider SDK
 
 #### 2.1 TypeScript Setup
-- Initialize npm workspace
+- Initialize npm workspace in the project root
 - Install TypeScript and testing frameworks
 - Add `tsconfig.json` with appropriate settings
 - Install CosmJS dependencies and Telescope
+- Create package.json for the project
 
 #### 2.2 Provider SDK (TypeScript)
 - Extract contract schemas using `cargo schema`
@@ -120,14 +121,7 @@ toolpay/
 - Implement `UsageReporter` class for reporting usage
 - Write SDK unit tests
 
-#### 2.3 CLI Tool for Provider
-- Create `packages/provider-cli` directory
-- Scaffold CLI with `oclif` or `commander`
-- Add commands: `register-tool`, `update-price`, `release-escrow`
-- Implement configuration handling for RPC, chain ID, wallet management
-- Write CLI tests and documentation
-
-#### 2.4 SDK Integration Testing
+#### 2.3 SDK Integration Testing
 - Build AI-Wallet client demo script
 - Implement E2E test scenarios
 - Test complete flows on localnet
@@ -135,11 +129,12 @@ toolpay/
 
 ### Phase 3: Frontend Development
 
-#### 3.1 Frontend Setup
-- Set up React/Next.js project in the frontend directory
+#### 3.1 Frontend Setup with shadcn
+- Set up Next.js project in the frontend directory using shadcn init command
 - Configure build system and development environment
+- Set up shadcn UI component system
 - Implement wallet connection capabilities
-- Create component library and design system
+- Integrate with Provider SDK
 
 #### 3.2 User Interface
 - Implement user dashboard for viewing tool usage

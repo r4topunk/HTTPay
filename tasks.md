@@ -7,8 +7,8 @@ This document provides a comprehensive, actionable tasklist for implementing the
 We will implement ToolPay in 3 distinct phases:
 
 1. **Phase 1: Smart Contracts & Testing** - Focus on implementing and thoroughly testing the core CosmWasm contracts
-2. **Phase 2: Provider SDK & Tools** - Develop the TypeScript SDK and CLI tools for providers
-3. **Phase 3: Frontend Development** - Build the user-facing application
+2. **Phase 2: Provider SDK** - Develop the TypeScript SDK for providers (no CLI)
+3. **Phase 3: Frontend Development** - Build the user-facing application with shadcn UI
 
 > **Current Phase**: We are currently in **Phase 1**, focusing exclusively on contract development and testing. Phases 2 and 3 will begin only after Phase 1 is fully completed and tested.
 
@@ -38,18 +38,7 @@ We will implement ToolPay in 3 distinct phases:
 - [ ] Configure optimization settings for Wasm compilation
 - [ ] Add `rust-toolchain.toml` with Rust 1.78 specification
 
-### 1.4 Set up TypeScript workspace
-- [ ] Initialize npm workspace: `npm init -y`
-- [ ] Install TypeScript: `npm install -D typescript`
-- [ ] Add `tsconfig.json` with appropriate settings
-- [ ] Install CosmJS dependencies:
-  - [ ] `@cosmjs/stargate`
-  - [ ] `@cosmjs/cosmwasm-stargate`
-  - [ ] `@cosmjs/proto-signing`
-- [ ] Install Telescope: `npm install -D @cosmology/telescope`
-- [ ] Install testing framework: `npm install -D jest @types/jest ts-jest`
-
-### 1.5 Validate initial setup
+### 1.4 Validate initial setup
 - [ ] Ensure `cargo build` succeeds
 - [ ] Create initial git repository: `git init`
 - [ ] Add `.gitignore` for Rust and Node artifacts

@@ -151,9 +151,10 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Set up integration between Registry and Escrow contracts in tests
 
 ### 4.2 Write happy path tests
-- [ ] Test complete flow: register tool → lock funds → release → verify balances
-- [ ] Test complete flow with partial fee usage (refund remainder)
-- [ ] Test query endpoints returning correct data
+- [x] Test basic lock funds functionality
+- [x] Test complete flow: register tool → lock funds → release → verify balances
+- [x] Test complete flow with partial fee usage (refund remainder)
+- [x] Test query endpoints returning correct data
 - [ ] Test Registry contract's basic functionality
 
 ### 4.3 Write edge case tests

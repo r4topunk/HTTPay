@@ -145,10 +145,10 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 4: Contract Unit Tests
 
 ### 4.1 Set up testing environment
-- [ ] Configure `cw-multi-test` in each contract's tests
-- [ ] Create mock accounts for providers and users
-- [ ] Create helper functions for contract instantiation
-- [ ] Set up integration between Registry and Escrow contracts in tests
+- [x] Configure `cw-multi-test` in each contract's tests
+- [x] Create mock accounts for providers and users
+- [x] Create helper functions for contract instantiation
+- [x] Set up integration between Registry and Escrow contracts in tests
 
 ### 4.2 Write happy path tests
 - [ ] Test complete flow: register tool → lock funds → release → verify balances

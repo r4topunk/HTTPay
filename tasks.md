@@ -88,18 +88,18 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 3: Escrow Contract Implementation
 
 ### 3.1 Define Escrow messages and types
-- [ ] Create `msg.rs` with:
-  - [ ] `InstantiateMsg` struct (empty for MVP)
-  - [ ] `ExecuteMsg` enum with variants: `LockFunds`, `Release`, `RefundExpired`
-  - [ ] `QueryMsg` enum with variant: `GetEscrow`
-  - [ ] `SudoMsg` enum with variant: `Freeze`
-  - [ ] `EscrowResponse` struct for query returns
-- [ ] Create `state.rs` with:
-  - [ ] `Escrow` struct with fields: `caller`, `provider`, `max_fee`, `auth_token`, `expires`
-  - [ ] `Config` struct with field: `frozen: bool`
-  - [ ] `ESCROWS: Map<u64, Escrow>` storage
-  - [ ] `NEXT_ID: Item<u64>` counter
-  - [ ] `CONFIG: Item<Config>` storage
+- [x] Create `msg.rs` with:
+  - [x] `InstantiateMsg` struct (empty for MVP)
+  - [x] `ExecuteMsg` enum with variants: `LockFunds`, `Release`, `RefundExpired`
+  - [x] `QueryMsg` enum with variant: `GetEscrow`
+  - [x] `SudoMsg` enum with variant: `Freeze`
+  - [x] `EscrowResponse` struct for query returns
+- [x] Create `state.rs` with:
+  - [x] `Escrow` struct with fields: `caller`, `provider`, `max_fee`, `auth_token`, `expires`
+  - [x] `Config` struct with field: `frozen: bool`
+  - [x] `ESCROWS: Map<u64, Escrow>` storage
+  - [x] `NEXT_ID: Item<u64>` counter
+  - [x] `CONFIG: Item<Config>` storage
 
 ### 3.2 Implement `LockFunds` functionality
 - [ ] Add import for `Registry` contract interfaces for querying tools

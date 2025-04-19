@@ -73,9 +73,32 @@ The Registry contract has been fully implemented and tested. All required functi
 **Next Steps**:
 The Registry contract implementation is now complete. The next phase will focus on implementing the Escrow contract (Chunk 3), beginning with defining its messages and types.
 
-### Chunk 3: Escrow Contract Implementation (PENDING)
+### Chunk 3: Escrow Contract Implementation (IN PROGRESS)
 
-*Implementation notes will be added here once work begins on this chunk.*
+**Overview**:
+Work has begun on implementing the Escrow contract, starting with defining the core message and state types required for the contract's functionality.
+
+**Current Progress**:
+
+1. **Message Types Implementation**:
+   - Created `msg.rs` with all required message structures:
+     - `InstantiateMsg`: Empty struct for MVP as specified
+     - `ExecuteMsg`: Implemented with variants for `LockFunds`, `Release`, and `RefundExpired` operations
+     - `QueryMsg`: Added with the `GetEscrow` variant for querying escrow details
+     - `SudoMsg`: Created with the `Freeze` variant for contract-level admin control
+     - `EscrowResponse`: Added response struct for query returns
+
+2. **State Types Implementation**:
+   - Created `state.rs` with core data structures:
+     - `Escrow`: Struct with fields for `caller`, `provider`, `max_fee`, `auth_token`, and `expires`
+     - `Config`: Struct with `frozen` boolean field for contract-level control
+     - Storage definitions:
+       - `ESCROWS`: Map to store escrow data indexed by ID
+       - `NEXT_ID`: Item to maintain sequential escrow IDs
+       - `CONFIG`: Item to store contract configuration
+
+**Next Steps**:
+Continue with Task 3.2 to implement the `LockFunds` functionality, which will require integration with the Registry contract.
 
 ### Chunk 4: Contract Unit Tests (PENDING)
 

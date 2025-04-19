@@ -39,10 +39,8 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Add `rust-toolchain.toml` with Rust 1.78 specification
 
 ### 1.4 Validate initial setup
-- [ ] Ensure `cargo build` succeeds
-- [ ] Create initial git repository: `git init`
-- [ ] Add `.gitignore` for Rust and Node artifacts
-- [ ] Make first commit with scaffold
+- [x] Ensure `cargo build` succeeds
+- [x] Add `.gitignore` for Rust and Node artifacts
 
 ## Chunk 2: Registry Contract Implementation
 

@@ -1,5 +1,5 @@
-use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-use cosmwasm_std::{Addr, coins, from_json, Uint128};
+use cosmwasm_std::testing::{mock_dependencies, mock_env, message_info};
+use cosmwasm_std::{Addr, from_json, Uint128};
 
 use crate::contract::{execute_pause_tool, execute_register_tool, execute_resume_tool, execute_update_price, instantiate, query_tool};
 use crate::error::ContractError;
@@ -7,7 +7,7 @@ use crate::msg::{InstantiateMsg, ToolResponse};
 
 // Helper function to instantiate the contract
 fn setup_contract(deps: cosmwasm_std::DepsMut) -> Result<cosmwasm_std::Response, ContractError> {
-    let info = mock_info("creator", &[]);
+    let info = message_info(&Addr::unchecked("creator"), &[]);
     instantiate(deps, mock_env(), info, InstantiateMsg {})
 }
 
@@ -18,7 +18,7 @@ fn register_tool_success() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a new tool
-    let info = mock_info("provider1", &[]);
+    let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     
@@ -49,7 +49,7 @@ fn register_tool_invalid_id() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Try to register a tool with ID that is too long (>16 chars)
-    let info = mock_info("provider1", &[]);
+    let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "this_tool_id_is_way_too_long".to_string();
     let price = Uint128::new(100);
     
@@ -69,13 +69,13 @@ fn update_price_unauthorized() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a tool as provider1
-    let info = mock_info("provider1", &[]);
+    let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
     
     // Try to update price as a different user (provider2)
-    let info = mock_info("provider2", &[]);
+    let info = message_info(&Addr::unchecked("provider2"), &[]);
     let new_price = Uint128::new(200);
     let err = execute_update_price(deps.as_mut(), info, tool_id, new_price).unwrap_err();
     
@@ -93,8 +93,8 @@ fn update_price_success() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a tool as provider1
-    let provider = "provider1";
-    let info = mock_info(provider, &[]);
+    let provider = Addr::unchecked("provider1");
+    let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price).unwrap();
@@ -123,8 +123,8 @@ fn pause_resume_tool() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a tool as provider1
-    let provider = "provider1";
-    let info = mock_info(provider, &[]);
+    let provider = Addr::unchecked("provider1");
+    let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price).unwrap();
@@ -159,7 +159,7 @@ fn query_tool_functionality() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a tool
-    let info = mock_info("provider1", &[]);
+    let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
@@ -186,14 +186,14 @@ fn unauthorized_pause_resume() {
     setup_contract(deps.as_mut()).unwrap();
 
     // Register a tool as provider1
-    let provider = "provider1";
-    let info = mock_info(provider, &[]);
+    let provider = Addr::unchecked("provider1");
+    let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
     
     // Try to pause the tool as a different user (provider2)
-    let unauthorized_info = mock_info("provider2", &[]);
+    let unauthorized_info = message_info(&Addr::unchecked("provider2"), &[]);
     let err = execute_pause_tool(deps.as_mut(), unauthorized_info.clone(), tool_id.clone()).unwrap_err();
     
     // Verify the error is correct

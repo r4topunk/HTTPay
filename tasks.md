@@ -135,8 +135,8 @@ We will implement ToolPay in 3 distinct phases:
   - [x] Emit `wasm-toolpay.refunded` event
 
 ### 3.5 Implement query and sudo functionality
-- [ ] Implement `query` function for `GetEscrow`
-- [ ] Implement `sudo` function for `Freeze` that sets the contract's frozen state
+- [x] Implement `query` function for `GetEscrow`
+- [x] Implement `sudo` function for `Freeze` that sets the contract's frozen state
 
 ### 3.6 Fix warnings in helpers.rs
 - [x] Addressed unreachable expression and unused variable warnings in `call` method of `CwTemplateContract`.

@@ -7,7 +7,8 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse};
+use cosmwasm_std::{to_json_binary, StdError};
 use crate::registry_interface::query_tool;
 use crate::state::{Config, Escrow, CONFIG, ESCROWS, NEXT_ID};
 
@@ -74,8 +75,25 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
-    unimplemented!()
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::GetEscrow { escrow_id } => to_json_binary(&query_escrow(deps, escrow_id)?),
+    }
+}
+
+fn query_escrow(deps: Deps, escrow_id: u64) -> StdResult<EscrowResponse> {
+    let escrow = ESCROWS.may_load(deps.storage, escrow_id)?
+        .ok_or_else(|| StdError::not_found(format!("Escrow {} not found", escrow_id)))?;
+    
+    // Convert to response format
+    Ok(EscrowResponse {
+        escrow_id,
+        caller: escrow.caller,
+        provider: escrow.provider,
+        max_fee: escrow.max_fee,
+        expires: escrow.expires,
+        auth_token: escrow.auth_token,
+    })
 }
 
 // Implementation of LockFunds functionality
@@ -281,6 +299,27 @@ pub fn refund_expired(
         .add_event(event)
         .add_attribute("action", "refund_expired")
         .add_attribute("escrow_id", escrow_id.to_string()))
+}
+
+#[cfg_attr(not(feature = "library"), entry_point)]
+pub fn sudo(deps: DepsMut, _env: Env, msg: SudoMsg) -> Result<Response, ContractError> {
+    match msg {
+        SudoMsg::Freeze {} => {
+            // Load current config
+            let mut config = CONFIG.load(deps.storage)?;
+            
+            // Set frozen state to true
+            config.frozen = true;
+            
+            // Save updated config
+            CONFIG.save(deps.storage, &config)?;
+            
+            // Return success response
+            Ok(Response::new()
+                .add_attribute("action", "freeze")
+                .add_attribute("frozen", "true"))
+        }
+    }
 }
 
 #[cfg(test)]

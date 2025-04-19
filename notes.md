@@ -157,8 +157,20 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 7. **Partial Release Support**: Added support for providers to claim only part of the maximum fee, automatically refunding the remainder
 8. **Security Controls**: Strict verification of caller identity in all operations, ensuring only authorized parties can perform actions
 
+7. **Query and Sudo Implementation** (Task 3.5):
+   - Implemented `query` function for handling `GetEscrow` requests:
+     - Added a helper function `query_escrow` that retrieves escrow details by ID
+     - Returns properly formatted `EscrowResponse` with all escrow details
+     - Handles error cases when escrows don't exist
+     - Uses modern `to_json_binary` function instead of deprecated alternatives
+   - Implemented `sudo` function for handling admin commands:
+     - Added support for the `Freeze` command that can freeze the contract
+     - Loads current configuration, sets frozen state, and saves it back
+     - Prevents any further execute operations when frozen
+     - Returns appropriate response with action attributes
+
 **Next Steps**:
-Continue with Task 3.5 to implement the query and sudo functionality, including the `GetEscrow` query and `Freeze` sudo command.
+With the core contract functionality now fully implemented (Tasks 3.1-3.5), the next phase will focus on implementing comprehensive unit tests for the contracts (Chunk 4).
 
 ### Chunk 4: Contract Unit Tests (PENDING)
 

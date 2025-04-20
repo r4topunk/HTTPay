@@ -223,8 +223,11 @@ pub fn release_funds(
     usage_fee: u128,
     sender: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // Create proper bech32 address for sender
+    let sender_addr = contracts.app.api().addr_make(sender);
+
     contracts.app.execute_contract(
-        Addr::unchecked(sender),
+        sender_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::Release {
             escrow_id,
@@ -232,7 +235,7 @@ pub fn release_funds(
         },
         &[],
     )?;
-    
+
     Ok(())
 }
 
@@ -242,15 +245,18 @@ pub fn refund_expired(
     escrow_id: u64,
     sender: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // Create proper bech32 address for sender
+    let sender_addr = contracts.app.api().addr_make(sender);
+
     contracts.app.execute_contract(
-        Addr::unchecked(sender),
+        sender_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::RefundExpired {
             escrow_id,
         },
         &[],
     )?;
-    
+
     Ok(())
 }
 

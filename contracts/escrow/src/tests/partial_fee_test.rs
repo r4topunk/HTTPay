@@ -13,7 +13,7 @@
 //! 2. The remaining funds are correctly refunded to the user
 //! 3. Final balances accurately reflect the partial fee usage
 
-use cosmwasm_std::{Addr, Coin, Uint128};
+use cosmwasm_std::{Coin, Uint128};
 use cw_multi_test::Executor;
 
 use crate::msg::ExecuteMsg;
@@ -83,8 +83,8 @@ fn test_partial_fee_usage() {
     // Step 3: Release funds with partial usage fee as the provider
     contracts.app
         .execute_contract(
-            Addr::unchecked(PROVIDER),
-            Addr::unchecked(&contracts.escrow_addr),
+            contracts.app.api().addr_make(PROVIDER),
+            contracts.app.api().addr_make(&contracts.escrow_addr),
             &ExecuteMsg::Release {
                 escrow_id,
                 usage_fee: Uint128::new(actual_usage_fee),

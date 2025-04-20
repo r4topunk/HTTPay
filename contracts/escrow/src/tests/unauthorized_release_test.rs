@@ -64,8 +64,8 @@ fn test_unauthorized_release() {
     
     // Execute the release operation with unauthorized user
     let result = contracts.app.execute_contract(
-        Addr::unchecked(UNAUTHORIZED), // Not the provider
-        Addr::unchecked(&contracts.escrow_addr),
+        contracts.app.api().addr_make(UNAUTHORIZED), // Not the provider
+        contracts.app.api().addr_make(&contracts.escrow_addr),
         &ExecuteMsg::Release {
             escrow_id,
             usage_fee: Uint128::new(usage_fee),

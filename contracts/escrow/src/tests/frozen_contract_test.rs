@@ -62,7 +62,7 @@ fn test_frozen_contract() {
     // Freeze the contract using sudo (as contract owner/admin)
     contracts.app.sudo(
         CwSudoMsg::Wasm(cw_multi_test::WasmSudo {
-            contract_addr: Addr::unchecked(contracts.escrow_addr.clone()),
+            contract_addr: contracts.app.api().addr_make(&contracts.escrow_addr),
             message: to_json_binary(&SudoMsg::Freeze {}).unwrap(),
         }),
     ).unwrap();

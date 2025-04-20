@@ -45,10 +45,13 @@ fn test_expired_escrow_refund() {
         PROVIDER,
     ).unwrap();
     
+    // Ensure USER and PROVIDER addresses are properly formatted as Bech32
+    let user_addr = contracts.app.api().addr_make(USER);
+
     // Get initial user balance
     let initial_user_balance = contracts.app
         .wrap()
-        .query_balance(USER.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), ATOM)
         .unwrap()
         .amount;
     
@@ -61,7 +64,7 @@ fn test_expired_escrow_refund() {
         DEFAULT_MAX_FEE,
         short_ttl,
         auth_token,
-        USER,
+        &user_addr.to_string(),
         &[Coin {
             denom: ATOM.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
@@ -71,7 +74,7 @@ fn test_expired_escrow_refund() {
     // Verify funds were locked (deducted from user balance)
     let post_lock_user_balance = contracts.app
         .wrap()
-        .query_balance(USER.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), ATOM)
         .unwrap()
         .amount;
     
@@ -87,7 +90,7 @@ fn test_expired_escrow_refund() {
     
     // Refund the expired escrow
     contracts.app.execute_contract(
-        Addr::unchecked(USER),
+        user_addr.clone(),
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::RefundExpired {
             escrow_id,
@@ -98,7 +101,7 @@ fn test_expired_escrow_refund() {
     // Verify funds were returned to the user
     let final_user_balance = contracts.app
         .wrap()
-        .query_balance(USER.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), ATOM)
         .unwrap()
         .amount;
     

@@ -11,6 +11,7 @@
 //! 3. The correct error is returned for operations on a frozen contract
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, SudoMsg};
 use crate::tests::setup_contract::{

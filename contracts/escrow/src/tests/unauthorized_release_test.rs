@@ -11,6 +11,7 @@
 //! 3. The correct error is returned on unauthorized release attempts
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{

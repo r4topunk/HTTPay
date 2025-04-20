@@ -14,6 +14,7 @@
 //! 3. All contract state changes are correctly applied throughout the workflow
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{

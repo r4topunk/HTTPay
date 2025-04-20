@@ -16,6 +16,7 @@
 //! 5. Authorization checks are properly enforced for all operations
 
 use cosmwasm_std::{Addr, Uint128};
+use cw_multi_test::Executor;
 use registry::msg::{ExecuteMsg as RegistryExecuteMsg, QueryMsg as RegistryQueryMsg, ToolResponse};
 use crate::tests::setup_contract::{setup_contracts, PROVIDER, UNAUTHORIZED};
 

@@ -14,6 +14,7 @@
 //! 3. Final balances accurately reflect the partial fee usage
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{

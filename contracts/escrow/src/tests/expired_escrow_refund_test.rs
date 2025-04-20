@@ -12,6 +12,7 @@
 //! 4. Escrow data is removed after refund
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID, 

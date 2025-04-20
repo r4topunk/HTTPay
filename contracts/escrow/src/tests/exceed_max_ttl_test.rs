@@ -11,6 +11,8 @@
 //! 3. The correct error is returned when the TTL limit is exceeded
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
+
 use crate::error::ContractError;
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, ATOM, DEFAULT_TOOL_ID, DEFAULT_MAX_FEE, USER, PROVIDER,

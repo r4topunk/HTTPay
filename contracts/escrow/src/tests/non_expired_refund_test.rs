@@ -10,6 +10,7 @@
 //! 2. The contract returns the correct error when attempting to refund non-expired escrows
 
 use cosmwasm_std::{Addr, Coin, Uint128};
+use cw_multi_test::Executor;
 use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{

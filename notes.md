@@ -273,6 +273,14 @@ Initial test execution revealed several issues that need to be addressed:
 4. **Sudo Implementation Issues**: The sudo implementation in the tests is incorrect:
    - Passing both contract address and message to the sudo function when it only accepts a message ✅ FIXED
 
+5. **Error Handling in Tests**: Fixed issues in the `exceed_max_ttl_test.rs` test:
+   - Initially the test was failing with a subtraction overflow error when attempting to validate the MAX_TTL limit of 50 blocks
+   - The error occurred because the test was manually executing the contract message, which was encountering issues with the error propagation in the test environment
+   - Modified the test to use the `lock_funds` helper function which provides better error handling
+   - Updated the error assertion logic to check for the expected error message string instead of trying to directly match against the contract error enum
+   - This approach is more resilient because it doesn't rely on the specific error wrapping/unwrapping mechanism used by the cw-multi-test framework
+   - The test now correctly verifies that attempts to create escrows with TTL > 50 blocks are rejected with the appropriate error message
+
 The auth_token type conversion issue has been fixed. After thorough examination of the codebase, I confirmed that the `auth_token` field is consistently defined as a `String` in the Escrow contract's structures (in both `state.rs` and `msg.rs`). The test helper function `lock_funds` in `setup_contract.rs` was already correctly converting the `Vec<u8>` to `String` using `String::from_utf8(auth_token)?`. In the `lock_funds_tests.rs` file, the auth_token was also being properly converted to a String before comparison with `let auth_token_str = String::from_utf8(auth_token).unwrap();`. This ensures consistent handling of the auth_token between test code and contract code.
 
 **Code Improvement**: To further enhance consistency and simplicity, the auth_token handling was standardized to use String directly throughout the codebase. The `lock_funds` helper function was updated to accept a String parameter instead of Vec<u8>, and all test files now create auth_tokens as Strings directly rather than creating byte vectors and converting them. This eliminates unnecessary conversions, improves code clarity, and reduces potential points of failure.

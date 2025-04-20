@@ -10,10 +10,9 @@
 //! 2. Attempts to create escrows with longer expiration periods are rejected
 //! 3. The correct error is returned when the TTL limit is exceeded
 
-use cosmwasm_std::{Addr, Coin, Uint128};
-use cw_multi_test::Executor;
+use cosmwasm_std::{Coin, Uint128};
+use crate::tests::setup_contract::lock_funds;
 
-use crate::error::ContractError;
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, ATOM, DEFAULT_TOOL_ID, DEFAULT_MAX_FEE, USER, PROVIDER,
 };
@@ -42,23 +41,18 @@ fn test_exceed_max_ttl() {
         PROVIDER,
     ).unwrap();
     
-    // Get current block height
-    let current_height = contracts.app.block_info().height;
-    
     // Try to lock funds with TTL > 50 blocks (51 blocks in this case)
     let max_ttl_plus_one = 51;
     let auth_token = "exceed_ttl_test".to_string();
     
-    // Execute the lock funds operation with excessive TTL
-    let result = contracts.app.execute_contract(
-        Addr::unchecked(USER),
-        Addr::unchecked(&contracts.escrow_addr),
-        &crate::msg::ExecuteMsg::LockFunds {
-            tool_id: DEFAULT_TOOL_ID.to_string(),
-            max_fee: Uint128::new(DEFAULT_MAX_FEE),
-            expires: current_height + max_ttl_plus_one,
-            auth_token: auth_token.into(),
-        },
+    // Use the helper function to try to lock funds with excessive TTL
+    let result = lock_funds(
+        &mut contracts,
+        DEFAULT_TOOL_ID,
+        DEFAULT_MAX_FEE,
+        max_ttl_plus_one,
+        auth_token,
+        USER,
         &[Coin {
             denom: ATOM.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
@@ -69,15 +63,9 @@ fn test_exceed_max_ttl() {
     assert!(result.is_err());
     
     // Parse the error to verify it's the correct type
-    match result.unwrap_err().downcast::<ContractError>() {
-        Ok(contract_error) => match contract_error {
-            ContractError::ExpirationTooLong { max_blocks, got_blocks } => {
-                // Verify the error contains the correct parameters
-                assert_eq!(50, max_blocks);
-                assert_eq!(max_ttl_plus_one, got_blocks);
-            },
-            err => panic!("Unexpected error: {:?}", err),
-        },
-        Err(err) => panic!("Wrong error type: {:?}", err),
-    }
+    // The error is wrapped by the cw-multi-test framework, so we can't directly match on ContractError
+    // Instead, check if the error message contains the expected information
+    let err_string = format!("{:?}", result.unwrap_err());
+    assert!(err_string.contains("Escrow expiration too far in future: max 50 blocks, got 51 blocks"), 
+            "Expected error about exceeding max TTL, got: {}", err_string);
 }

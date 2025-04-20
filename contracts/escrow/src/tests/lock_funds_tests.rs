@@ -41,13 +41,16 @@ fn test_lock_funds_success() {
         &crate::msg::QueryMsg::GetEscrow { escrow_id },
     ).unwrap();
     
+    let provider_addr = contracts.app.api().addr_make(PROVIDER);
+    let user_addr = contracts.app.api().addr_make(USER);
+    
     // Verify escrow details
-    assert_eq!(escrow.caller, Addr::unchecked(USER));
-    assert_eq!(escrow.provider, Addr::unchecked(PROVIDER));
+    assert_eq!(escrow.caller, user_addr);
+    assert_eq!(escrow.provider, provider_addr);
     assert_eq!(escrow.max_fee.u128(), DEFAULT_MAX_FEE);
     assert_eq!(escrow.auth_token, auth_token);
     
     // Verify that funds were transferred from the user to the escrow contract
-    let user_balance = contracts.app.wrap().query_balance(USER.to_string(), ATOM).unwrap();
+    let user_balance = contracts.app.wrap().query_balance(user_addr, ATOM).unwrap();
     assert_eq!(user_balance.amount.u128(), 5000 - DEFAULT_MAX_FEE);
 }

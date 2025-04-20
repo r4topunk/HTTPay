@@ -167,7 +167,7 @@ We will implement ToolPay in 3 distinct phases:
 
 ### 4.4 Fix test implementation issues
 - [x] Fix registry crate import in test files (add registry as a dependency in escrow's Cargo.toml)
-- [ ] Fix type conversion for auth_token (Vec<u8> to String)
+- [x] Fix type conversion for auth_token (Vec<u8> to String)
 - [ ] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
 - [ ] Fix type comparison issues (Addr vs &str)
 - [ ] Correct sudo implementation in frozen_contract_test.rs

@@ -169,6 +169,9 @@ pub fn lock_funds(
 ) -> Result<u64, Box<dyn std::error::Error>> {
     let current_height = contracts.app.block_info().height;
     
+    // Convert auth_token Vec<u8> to String
+    let auth_token_str = String::from_utf8(auth_token)?;
+    
     let res = contracts.app.execute_contract(
         Addr::unchecked(sender),
         Addr::unchecked(&contracts.escrow_addr),
@@ -176,7 +179,7 @@ pub fn lock_funds(
             tool_id: tool_id.to_string(),
             max_fee: Uint128::new(max_fee),
             expires: current_height + expires_in_blocks,
-            auth_token: auth_token.into(),
+            auth_token: auth_token_str,
         },
         funds,
     )?;
@@ -246,7 +249,7 @@ pub fn query_escrow(
 ) -> Result<crate::msg::EscrowResponse, Box<dyn std::error::Error>> {
     let res: crate::msg::EscrowResponse = contracts.app.wrap().query_wasm_smart(
         &contracts.escrow_addr,
-        &QueryMsg::GetEscrow { id: escrow_id },
+        &QueryMsg::GetEscrow { escrow_id },
     )?;
     
     Ok(res)

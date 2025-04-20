@@ -19,7 +19,7 @@ fn test_lock_funds_success() {
     register_tool(&mut contracts, DEFAULT_TOOL_ID, 50, PROVIDER).unwrap();
     
     // Prepare auth token
-    let auth_token = b"test_auth_token".to_vec();
+    let auth_token = "test_auth_token".to_string();
     
     // Lock funds as the user
     let escrow_id = lock_funds(
@@ -41,14 +41,11 @@ fn test_lock_funds_success() {
         &crate::msg::QueryMsg::GetEscrow { escrow_id },
     ).unwrap();
     
-    // Convert auth token to string for comparison
-    let auth_token_str = String::from_utf8(auth_token).unwrap();
-    
     // Verify escrow details
     assert_eq!(escrow.caller, USER);
     assert_eq!(escrow.provider, PROVIDER);
     assert_eq!(escrow.max_fee.u128(), DEFAULT_MAX_FEE);
-    assert_eq!(escrow.auth_token, auth_token_str);
+    assert_eq!(escrow.auth_token, auth_token);
     
     // Verify that funds were transferred from the user to the escrow contract
     let user_balance = contracts.app.wrap().query_balance(USER.to_string(), ATOM).unwrap();

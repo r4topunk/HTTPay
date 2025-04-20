@@ -45,7 +45,7 @@ fn test_frozen_contract() {
     ).unwrap();
     
     // Lock funds for a test escrow (before freezing)
-    let auth_token = "frozen_contract_test".as_bytes().to_vec();
+    let auth_token = "frozen_contract_test".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,

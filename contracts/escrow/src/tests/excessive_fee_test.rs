@@ -45,7 +45,7 @@ fn test_excessive_fee() {
     ).unwrap();
     
     // Lock funds for the tool
-    let auth_token = "excessive_fee_test".as_bytes().to_vec();
+    let auth_token = "excessive_fee_test".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,

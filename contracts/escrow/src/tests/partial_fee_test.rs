@@ -66,7 +66,7 @@ fn test_partial_fee_usage() {
     ).unwrap();
     
     // Step 2: Lock funds as the user
-    let auth_token = "partial_fee_auth".as_bytes().to_vec();
+    let auth_token = "partial_fee_auth".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         tool_id,

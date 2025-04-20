@@ -45,7 +45,7 @@ fn test_unauthorized_release() {
     ).unwrap();
     
     // Lock funds for the tool
-    let auth_token = "unauthorized_release_test".as_bytes().to_vec();
+    let auth_token = "unauthorized_release_test".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,

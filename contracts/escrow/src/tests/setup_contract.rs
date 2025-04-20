@@ -163,14 +163,11 @@ pub fn lock_funds(
     tool_id: &str,
     max_fee: u128,
     expires_in_blocks: u64,
-    auth_token: Vec<u8>,
+    auth_token: String,
     sender: &str,
     funds: &[Coin],
 ) -> Result<u64, Box<dyn std::error::Error>> {
     let current_height = contracts.app.block_info().height;
-    
-    // Convert auth_token Vec<u8> to String
-    let auth_token_str = String::from_utf8(auth_token)?;
     
     let res = contracts.app.execute_contract(
         Addr::unchecked(sender),
@@ -179,7 +176,7 @@ pub fn lock_funds(
             tool_id: tool_id.to_string(),
             max_fee: Uint128::new(max_fee),
             expires: current_height + expires_in_blocks,
-            auth_token: auth_token_str,
+            auth_token: auth_token,
         },
         funds,
     )?;

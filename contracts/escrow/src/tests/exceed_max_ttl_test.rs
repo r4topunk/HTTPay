@@ -47,7 +47,7 @@ fn test_exceed_max_ttl() {
     
     // Try to lock funds with TTL > 50 blocks (51 blocks in this case)
     let max_ttl_plus_one = 51;
-    let auth_token = "exceed_ttl_test".as_bytes().to_vec();
+    let auth_token = "exceed_ttl_test".to_string();
     
     // Execute the lock funds operation with excessive TTL
     let result = contracts.app.execute_contract(

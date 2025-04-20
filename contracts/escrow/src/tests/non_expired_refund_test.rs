@@ -44,7 +44,7 @@ fn test_refund_non_expired_escrow() {
     ).unwrap();
     
     // Lock funds with the default TTL
-    let auth_token = "non_expired_refund_test".as_bytes().to_vec();
+    let auth_token = "non_expired_refund_test".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,

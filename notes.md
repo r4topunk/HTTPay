@@ -269,6 +269,10 @@ Initial test execution revealed several issues that need to be addressed:
 
 The auth_token type conversion issue has been fixed. After thorough examination of the codebase, I confirmed that the `auth_token` field is consistently defined as a `String` in the Escrow contract's structures (in both `state.rs` and `msg.rs`). The test helper function `lock_funds` in `setup_contract.rs` was already correctly converting the `Vec<u8>` to `String` using `String::from_utf8(auth_token)?`. In the `lock_funds_tests.rs` file, the auth_token was also being properly converted to a String before comparison with `let auth_token_str = String::from_utf8(auth_token).unwrap();`. This ensures consistent handling of the auth_token between test code and contract code.
 
+**Code Improvement**: To further enhance consistency and simplicity, the auth_token handling was standardized to use String directly throughout the codebase. The `lock_funds` helper function was updated to accept a String parameter instead of Vec<u8>, and all test files now create auth_tokens as Strings directly rather than creating byte vectors and converting them. This eliminates unnecessary conversions, improves code clarity, and reduces potential points of failure.
+
+To complete this standardization, a manual search and replace was performed on all test files to replace instances of `".as_bytes().to_vec()"` with `".to_string()"`. This ensures that auth_token is created as String directly in all test files, maintaining type consistency throughout the codebase and eliminating the need for any Vec<u8> to String conversions.
+
 **Key Design Decisions**:
 1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
 2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking

@@ -54,7 +54,7 @@ fn test_expired_escrow_refund() {
     
     // Lock funds with a very short TTL (1 block)
     let short_ttl = 1;
-    let auth_token = "expired_escrow_test".as_bytes().to_vec();
+    let auth_token = "expired_escrow_test".to_string();
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,

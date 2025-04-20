@@ -12,8 +12,8 @@
 //! 2. All escrow fields are properly included in the response
 //! 3. The query correctly handles escrow IDs, provider addresses, and amounts
 
-use cosmwasm_std::{Addr, Coin, Uint128};
-use crate::msg::{ExecuteMsg, EscrowResponse, QueryMsg};
+use cosmwasm_std::{Coin, Uint128};
+use crate::msg::{EscrowResponse, QueryMsg};
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID,
     PROVIDER, USER, DEFAULT_MAX_FEE, DEFAULT_TTL,

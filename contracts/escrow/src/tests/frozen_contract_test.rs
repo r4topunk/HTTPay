@@ -16,7 +16,7 @@ use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, SudoMsg};
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID, 
-    DEFAULT_MAX_FEE, USER, PROVIDER, OWNER, DEFAULT_TTL,
+    DEFAULT_MAX_FEE, USER, PROVIDER, DEFAULT_TTL,
 };
 
 /// # Test: Contract Operations When Frozen

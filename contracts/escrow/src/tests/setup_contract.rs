@@ -10,8 +10,8 @@ use cosmwasm_std::{Addr, Coin, Empty, Uint128};
 use cw_multi_test::{App, Contract, ContractWrapper, Executor};
 
 use crate::contract::{execute, instantiate, query, sudo};
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg};
-use registry::msg::{ExecuteMsg as RegistryExecuteMsg, InstantiateMsg as RegistryInstantiateMsg, QueryMsg as RegistryQueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use registry::msg::{ExecuteMsg as RegistryExecuteMsg, InstantiateMsg as RegistryInstantiateMsg};
 
 // Define constants for testing
 pub const ATOM: &str = "uatom";
@@ -48,7 +48,7 @@ pub fn mock_app() -> App {
     let mut app = App::default();
     
     // Set up initial balances
-    app.init_modules(|router, api, storage| {
+    app.init_modules(|router, _api, storage| {
         router.bank.init_balance(
             storage,
             &Addr::unchecked(OWNER),

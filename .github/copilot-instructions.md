@@ -160,3 +160,4 @@ Remember that the ultimate goal is to produce code that is not just functional, 
 
 - ALWAYS consult the files `tasks.md`, `blueprint.md`, `project.md` and `notes.md` to understand the context and what to do next. These files contain the most up-to-date information about the project and should be used as primary references for architecture, requirements, and implementation details.
 - ALWAYS update the task list in `tasks.md` and the notes in `notes.md` to reflect your progress after making any change or completing a task.
+- **ALWAYS look inside the `cosmwasm-docs` folder to get context about CosmWasm development.**

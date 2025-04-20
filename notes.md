@@ -252,6 +252,23 @@ Work has begun on implementing comprehensive unit tests for both the Registry an
        - Verifies all operations (lock, release, refund) are rejected when frozen
        - Confirms proper error messages for frozen contract interactions
 
+**Test Execution Issues** (Task 4.4):
+Initial test execution revealed several issues that need to be addressed:
+
+1. **Registry Import Issues**: The escrow tests are not correctly importing the registry crate. This is causing compilation errors as the tests are trying to use registry modules without proper imports.
+
+2. **Type Conversion Problems**: There are issues with converting between data types, specifically:
+   - Converting `Vec<u8>` to `String` for auth_token
+   - Comparing `Addr` objects with `&str` values in assertions
+
+3. **Field Name Mismatches**: The tests are using incorrect field names in some message variants:
+   - Using `id` instead of `escrow_id` in `QueryMsg::GetEscrow`
+
+4. **Sudo Implementation Issues**: The sudo implementation in the tests is incorrect:
+   - Passing both contract address and message to the sudo function when it only accepts a message
+
+These issues need to be fixed before the test suite can be executed successfully. The fixes will involve updating imports, adjusting type conversions, correcting field names, and fixing the sudo implementation.
+
 **Key Design Decisions**:
 1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
 2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking

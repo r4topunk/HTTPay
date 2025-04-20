@@ -165,7 +165,14 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Test attempt to refund non-expired escrow
 - [x] Test interactions when contract is frozen
 
-### 4.4 Run comprehensive test suite
+### 4.4 Fix test implementation issues
+- [ ] Fix registry crate import in test files (add registry as a dependency in escrow's Cargo.toml)
+- [ ] Fix type conversion for auth_token (Vec<u8> to String)
+- [ ] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
+- [ ] Fix type comparison issues (Addr vs &str)
+- [ ] Correct sudo implementation in frozen_contract_test.rs
+
+### 4.5 Run comprehensive test suite
 - [ ] Configure Cargo to run wasm tests: `cargo wasm-test`
 - [ ] Verify all tests pass without warnings
 - [ ] Check code coverage (if available)

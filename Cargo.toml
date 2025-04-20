@@ -4,6 +4,8 @@ members = [
     "contracts/escrow",
 ]
 
+resolver = "2"
+
 [workspace.dependencies]
 cosmwasm-std = "1.5"
 cw-storage-plus = "1.2"

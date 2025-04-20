@@ -62,9 +62,12 @@ fn test_excessive_fee() {
     // Try to release the escrow with usage_fee > max_fee
     let excessive_fee = DEFAULT_MAX_FEE + 1; // One unit more than max
     
+    // Ensure PROVIDER is converted to a proper Bech32 address during the release operation
+    let provider_addr = contracts.app.api().addr_make(PROVIDER);
+
     // Execute the release operation with excessive fee
     let result = contracts.app.execute_contract(
-        Addr::unchecked(PROVIDER),
+        provider_addr, // Use the properly formatted Bech32 address
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::Release {
             escrow_id,

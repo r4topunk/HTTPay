@@ -174,10 +174,11 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
 - [x] Fix type comparison issues (Addr vs &str)
 - [x] Correct sudo implementation in frozen_contract_test.rs
+- [x] Fix `test_excessive_fee` to ensure proper Bech32 address formatting for PROVIDER.
 
 ### 4.5 Run comprehensive test suite
-- [ ] Configure Cargo to run wasm tests: `cargo wasm-test`
-- [ ] Verify all tests pass without warnings
+- [x] Configure Cargo to run wasm tests: `cargo wasm-test`
+- [x] Verify all tests pass without warnings
 - [ ] Check code coverage (if available)
 
 ## Chunk 5: CI & Localnet Configuration

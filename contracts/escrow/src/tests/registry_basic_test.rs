@@ -40,7 +40,7 @@ fn test_registry_basic_functionality() {
     let mut contracts = setup_contracts();
     
     // Constants for this test
-    let tool_id = "registry_test_tool";
+    let tool_id = "reg_test_tool"; // Changed to <=16 chars
     let initial_price = 100_u128;
     let updated_price = 150_u128;
     

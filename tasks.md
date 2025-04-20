@@ -181,6 +181,10 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Verify all tests pass without warnings
 - [ ] Check code coverage (if available)
 
+### 4.6 Update tests for Bech32 compliance
+- [x] Reviewed and updated all escrow contract tests to replace `Addr::unchecked` with Bech32-compliant addresses using `addr_make`.
+- [x] Verified and resolved warnings in test files, including unused imports.
+
 ## Chunk 5: CI & Localnet Configuration
 
 ### 5.1 Set up GitHub Actions workflow

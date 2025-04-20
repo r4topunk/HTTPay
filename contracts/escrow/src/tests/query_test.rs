@@ -46,7 +46,7 @@ fn test_query_endpoints() {
     
     // Step 2: Lock funds as the user
     let auth_token = "query_test_auth".to_string();
-    let auth_token_str = String::from_utf8(auth_token.clone()).unwrap();
+    let auth_token_str = auth_token.clone(); // No conversion needed, already a String
     let current_height = contracts.app.block_info().height;
     let expires = current_height + DEFAULT_TTL;
     

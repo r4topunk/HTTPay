@@ -10,8 +10,8 @@
 //! 2. LockFunds, Release, and RefundExpired cannot be executed when frozen
 //! 3. The correct error is returned for operations on a frozen contract
 
-use cosmwasm_std::{Addr, Coin, Uint128};
-use cw_multi_test::Executor;
+use cosmwasm_std::{Addr, Coin, Uint128, to_json_binary};
+use cw_multi_test::{Executor, SudoMsg as CwSudoMsg};
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, SudoMsg};
 use crate::tests::setup_contract::{
@@ -61,8 +61,10 @@ fn test_frozen_contract() {
     
     // Freeze the contract using sudo (as contract owner/admin)
     contracts.app.sudo(
-        Addr::unchecked(&contracts.escrow_addr),
-        &SudoMsg::Freeze {},
+        CwSudoMsg::Wasm(cw_multi_test::WasmSudo {
+            contract_addr: Addr::unchecked(contracts.escrow_addr.clone()),
+            message: to_json_binary(&SudoMsg::Freeze {}).unwrap(),
+        }),
     ).unwrap();
     
     // SECTION 1: Test locking funds on frozen contract

@@ -42,8 +42,8 @@ fn test_lock_funds_success() {
     ).unwrap();
     
     // Verify escrow details
-    assert_eq!(escrow.caller, USER);
-    assert_eq!(escrow.provider, PROVIDER);
+    assert_eq!(escrow.caller, Addr::unchecked(USER));
+    assert_eq!(escrow.provider, Addr::unchecked(PROVIDER));
     assert_eq!(escrow.max_fee.u128(), DEFAULT_MAX_FEE);
     assert_eq!(escrow.auth_token, auth_token);
     

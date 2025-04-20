@@ -305,16 +305,10 @@ pub fn refund_expired(
 pub fn sudo(deps: DepsMut, _env: Env, msg: SudoMsg) -> Result<Response, ContractError> {
     match msg {
         SudoMsg::Freeze {} => {
-            // Load current config
             let mut config = CONFIG.load(deps.storage)?;
-            
-            // Set frozen state to true
             config.frozen = true;
-            
-            // Save updated config
             CONFIG.save(deps.storage, &config)?;
             
-            // Return success response
             Ok(Response::new()
                 .add_attribute("action", "freeze")
                 .add_attribute("frozen", "true"))

@@ -172,8 +172,8 @@ We will implement ToolPay in 3 distinct phases:
   - [x] Replace `"...".as_bytes().to_vec()` with `"...".to_string()` in all test files
   - [x] Remove unnecessary String::from_utf8 conversions
 - [x] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
-- [ ] Fix type comparison issues (Addr vs &str)
-- [ ] Correct sudo implementation in frozen_contract_test.rs
+- [x] Fix type comparison issues (Addr vs &str)
+- [x] Correct sudo implementation in frozen_contract_test.rs
 
 ### 4.5 Run comprehensive test suite
 - [ ] Configure Cargo to run wasm tests: `cargo wasm-test`

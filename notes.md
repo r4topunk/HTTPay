@@ -76,7 +76,7 @@ The Registry contract implementation is now complete. The next phase will focus 
 ### Chunk 3: Escrow Contract Implementation (IN PROGRESS)
 
 **Overview**:
-Work has begun on implementing the Escrow contract. We've completed defining the core message and state types (Task 3.1) and have implemented the `LockFunds` functionality (Task 3.2), which allows users to lock funds for tool usage.
+Work has begun on implementing the Escrow contract. We've completed defining the core message and state types (Task 3.1) and have implemented the `LockFunds` functionality (Task 3.2), which allows users to lock funds for tool usage. Testing infrastructure has been set up and the first integration test for the complete flow is now working correctly.
 
 **Current Progress**:
 
@@ -99,6 +99,12 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 
 3. **Registry Interface Implementation** (Task 3.2):
    - Created `registry_interface.rs` for interacting with the Registry contract
+
+4. **Integration Testing Setup**:
+   - Fixed bech32 address encoding issue in `cw-multi-test` environment
+   - Updated the test helpers in `setup_contract.rs` to use proper address formatting with `app.api().addr_make()` instead of raw string addresses
+   - Implemented `complete_flow_test.rs` that tests the entire workflow from tool registration to fund release
+   - Ensured consistent address handling by using properly formatted bech32 addresses for balance queries and contract execution
    - Implemented `query_tool` function to retrieve tool information
    - Added `ToolResponse` structure matching the Registry contract's response format
 

@@ -39,16 +39,19 @@ fn test_complete_flow() {
     // Set up the contracts
     let mut contracts = setup_contracts();
     
-    // Get initial balances
+    // Get initial balances using properly formatted bech32 addresses
+    let provider_addr = contracts.app.api().addr_make(PROVIDER).to_string();
+    let user_addr = contracts.app.api().addr_make(USER).to_string();
+    
     let initial_provider_balance = contracts.app
         .wrap()
-        .query_balance(PROVIDER.to_string(), ATOM)
+        .query_balance(provider_addr.clone(), ATOM)
         .unwrap()
         .amount;
     
     let initial_user_balance = contracts.app
         .wrap()
-        .query_balance(USER.to_string(), ATOM)
+        .query_balance(user_addr.clone(), ATOM)
         .unwrap()
         .amount;
     
@@ -76,9 +79,11 @@ fn test_complete_flow() {
     ).unwrap();
     
     // Step 3: Release funds as the provider
+    // Use the Addr type for contract execution
+    let provider_addr_obj = contracts.app.api().addr_make(PROVIDER);
     contracts.app
         .execute_contract(
-            Addr::unchecked(PROVIDER),
+            provider_addr_obj,
             Addr::unchecked(&contracts.escrow_addr),
             &ExecuteMsg::Release {
                 escrow_id,
@@ -88,16 +93,16 @@ fn test_complete_flow() {
         )
         .unwrap();
     
-    // Step 4: Verify final balances
+    // Step 4: Verify final balances (using the same properly formatted addresses)
     let final_provider_balance = contracts.app
         .wrap()
-        .query_balance(PROVIDER.to_string(), ATOM)
+        .query_balance(provider_addr.clone(), ATOM)
         .unwrap()
         .amount;
     
     let final_user_balance = contracts.app
         .wrap()
-        .query_balance(USER.to_string(), ATOM)
+        .query_balance(user_addr.clone(), ATOM)
         .unwrap()
         .amount;
     

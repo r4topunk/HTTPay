@@ -20,7 +20,7 @@ pub const DEFAULT_USAGE_FEE: u128 = 50;
 pub const DEFAULT_TOOL_ID: &str = "testtool";
 pub const DEFAULT_TTL: u64 = 10; // in blocks
 
-// Mock account addresses
+// Mock account address names - these will be converted to properly formatted addresses
 pub const OWNER: &str = "owner";
 pub const PROVIDER: &str = "provider";
 pub const USER: &str = "user";
@@ -47,11 +47,17 @@ fn registry_contract() -> Box<dyn Contract<Empty>> {
 pub fn mock_app() -> App {
     let mut app = App::default();
     
-    // Set up initial balances
-    app.init_modules(|router, _api, storage| {
+    // Set up initial balances using properly formatted bech32 addresses
+    app.init_modules(|router, api, storage| {
+        // Create proper addresses using addr_make
+        let owner_addr = api.addr_make(OWNER);
+        let provider_addr = api.addr_make(PROVIDER);
+        let user_addr = api.addr_make(USER);
+        let unauth_addr = api.addr_make(UNAUTHORIZED);
+        
         router.bank.init_balance(
             storage,
-            &Addr::unchecked(OWNER),
+            &owner_addr,
             vec![Coin {
                 denom: ATOM.to_string(),
                 amount: Uint128::new(10000),
@@ -60,7 +66,7 @@ pub fn mock_app() -> App {
         
         router.bank.init_balance(
             storage,
-            &Addr::unchecked(PROVIDER),
+            &provider_addr,
             vec![Coin {
                 denom: ATOM.to_string(),
                 amount: Uint128::new(1000),
@@ -69,7 +75,7 @@ pub fn mock_app() -> App {
         
         router.bank.init_balance(
             storage,
-            &Addr::unchecked(USER),
+            &user_addr,
             vec![Coin {
                 denom: ATOM.to_string(),
                 amount: Uint128::new(5000),
@@ -78,7 +84,7 @@ pub fn mock_app() -> App {
         
         router.bank.init_balance(
             storage,
-            &Addr::unchecked(UNAUTHORIZED),
+            &unauth_addr,
             vec![Coin {
                 denom: ATOM.to_string(),
                 amount: Uint128::new(1000),
@@ -104,11 +110,14 @@ pub fn setup_contracts() -> TestContracts {
     let registry_code_id = app.store_code(registry_contract());
     let escrow_code_id = app.store_code(escrow_contract());
     
+    // Create proper bech32 address for owner
+    let owner_addr = app.api().addr_make(OWNER);
+    
     // Instantiate registry contract
     let registry_addr = app
         .instantiate_contract(
             registry_code_id,
-            Addr::unchecked(OWNER),
+            owner_addr.clone(),
             &RegistryInstantiateMsg {},
             &[],
             "registry",
@@ -120,7 +129,7 @@ pub fn setup_contracts() -> TestContracts {
     let escrow_addr = app
         .instantiate_contract(
             escrow_code_id,
-            Addr::unchecked(OWNER),
+            owner_addr,
             &InstantiateMsg {
                 registry_addr: registry_addr.to_string(),
             },
@@ -144,8 +153,11 @@ pub fn register_tool(
     price: u128,
     sender: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // Create proper bech32 address for sender
+    let sender_addr = contracts.app.api().addr_make(sender);
+    
     contracts.app.execute_contract(
-        Addr::unchecked(sender),
+        sender_addr,
         Addr::unchecked(&contracts.registry_addr),
         &RegistryExecuteMsg::RegisterTool {
             tool_id: tool_id.to_string(),
@@ -169,8 +181,11 @@ pub fn lock_funds(
 ) -> Result<u64, Box<dyn std::error::Error>> {
     let current_height = contracts.app.block_info().height;
     
+    // Create proper bech32 address for sender
+    let sender_addr = contracts.app.api().addr_make(sender);
+    
     let res = contracts.app.execute_contract(
-        Addr::unchecked(sender),
+        sender_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::LockFunds {
             tool_id: tool_id.to_string(),

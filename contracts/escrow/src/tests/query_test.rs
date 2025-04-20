@@ -72,10 +72,15 @@ fn test_query_endpoints() {
         )
         .unwrap();
     
+    // Update the expected user address to match the Bech32-encoded format
+    let expected_user_address = contracts.app.api().addr_make(USER);
+    // Update the expected provider address to match the Bech32-encoded format
+    let expected_provider_address = contracts.app.api().addr_make(PROVIDER);
+
     // Step 4: Verify all returned data matches what was expected
     assert_eq!(escrow_id, query_res.escrow_id);
-    assert_eq!(USER, query_res.caller.as_str());
-    assert_eq!(PROVIDER, query_res.provider.as_str());
+    assert_eq!(expected_user_address.as_str(), query_res.caller.as_str());
+    assert_eq!(expected_provider_address.as_str(), query_res.provider.as_str());
     assert_eq!(Uint128::new(DEFAULT_MAX_FEE), query_res.max_fee);
     assert_eq!(expires, query_res.expires);
     assert_eq!(auth_token_str, query_res.auth_token);

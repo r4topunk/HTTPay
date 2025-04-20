@@ -171,7 +171,7 @@ We will implement ToolPay in 3 distinct phases:
   - [x] Update `lock_funds` helper function to take String directly
   - [x] Replace `"...".as_bytes().to_vec()` with `"...".to_string()` in all test files
   - [x] Remove unnecessary String::from_utf8 conversions
-- [ ] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
+- [x] Correct field name in QueryMsg::GetEscrow (change 'id' to 'escrow_id')
 - [ ] Fix type comparison issues (Addr vs &str)
 - [ ] Correct sudo implementation in frozen_contract_test.rs
 

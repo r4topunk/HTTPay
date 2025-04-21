@@ -6,23 +6,26 @@ This document tracks the implementation progress of the ToolPay MVP, providing o
 
 ### Chunk 1: Project Setup (COMPLETED)
 
-**Overview**: 
+**Overview**:
 The initial project setup has been completed successfully, establishing the foundational structure for the ToolPay MVP. This chunk focused on creating the necessary directory structure and setting up the CosmWasm contracts that will power the system.
 
 **Key Accomplishments**:
 
 1. **Directory Structure**:
+
    - Created `contracts/` directory for CosmWasm smart contracts
    - Created `packages/` directory for future TypeScript packages
    - Created `frontend/` directory as a placeholder with explanatory README
    - Created `scripts/` directory for helper scripts
 
 2. **CosmWasm Contract Templates**:
+
    - Generated registry contract using CosmWasm template
    - Generated escrow contract using CosmWasm template
    - Both contracts were initialized with standard CosmWasm structure
 
 3. **Rust Workspace Setup**:
+
    - Configured Cargo.toml at the project root with proper workspace members
    - Added required dependencies:
      - cosmwasm-std = "1.5"
@@ -48,6 +51,7 @@ The Registry contract has been fully implemented and tested. All required functi
 **Key Accomplishments**:
 
 1. **Contract Logic Implementation**:
+
    - Implemented `instantiate` function with minimal setup
    - Implemented `execute` function with pattern matching for all message variants
    - Created handlers for all required operations:
@@ -57,6 +61,7 @@ The Registry contract has been fully implemented and tested. All required functi
    - Implemented `query` function for retrieving tool information
 
 2. **Error Handling**:
+
    - Added proper error types for contract operations
    - Implemented validation checks for unauthorized access
    - Added error handling for non-existent tools
@@ -81,6 +86,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 **Current Progress**:
 
 1. **Message Types Implementation** (Task 3.1):
+
    - Created `msg.rs` with all required message structures:
      - `InstantiateMsg`: Now includes `registry_addr` parameter to connect with the Registry contract
      - `ExecuteMsg`: Implemented with variants for `LockFunds`, `Release`, and `RefundExpired` operations
@@ -89,6 +95,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
      - `EscrowResponse`: Added response struct for query returns
 
 2. **State Types Implementation** (Task 3.1):
+
    - Created `state.rs` with core data structures:
      - `Escrow`: Struct with fields for `caller`, `provider`, `max_fee`, `auth_token`, and `expires`
      - `Config`: Struct with `frozen` boolean field and `registry_addr` for Registry contract integration
@@ -98,9 +105,11 @@ Work has begun on implementing the Escrow contract. We've completed defining the
        - `CONFIG`: Item to store contract configuration
 
 3. **Registry Interface Implementation** (Task 3.2):
+
    - Created `registry_interface.rs` for interacting with the Registry contract
 
 4. **Integration Testing Setup**:
+
    - Fixed bech32 address encoding issue in `cw-multi-test` environment
    - Updated the test helpers in `setup_contract.rs` to use proper address formatting with `app.api().addr_make()` instead of raw string addresses
    - Implemented `complete_flow_test.rs` that tests the entire workflow from tool registration to fund release
@@ -108,7 +117,8 @@ Work has begun on implementing the Escrow contract. We've completed defining the
    - Implemented `query_tool` function to retrieve tool information
    - Added `ToolResponse` structure matching the Registry contract's response format
 
-4. **LockFunds Implementation** (Task 3.2):
+5. **LockFunds Implementation** (Task 3.2):
+
    - Expanded `error.rs` with specific error types for escrow operations:
      - `Frozen` for when the contract is frozen
      - `ToolNotActive` for when tools don't exist or are inactive
@@ -118,7 +128,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
    - Implemented `instantiate` function:
      - Sets contract version for future migrations
      - Validates and stores registry contract address
-     - Initializes configuration with `frozen: false` 
+     - Initializes configuration with `frozen: false`
      - Sets up escrow ID counter starting at 1
    - Added `execute` function with pattern matching for message types
    - Implemented `lock_funds` handler with all required validations:
@@ -129,7 +139,8 @@ Work has begun on implementing the Escrow contract. We've completed defining the
      - Emits `wasm-toolpay.locked` event with relevant attributes
      - Returns escrow ID to caller
 
-5. **Release Implementation** (Task 3.3):
+6. **Release Implementation** (Task 3.3):
+
    - Implemented `release` handler function:
      - Loads and validates escrow existence by ID
      - Verifies that only the original provider can release funds
@@ -143,7 +154,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
        - escrow_id, provider, caller, usage_fee, refund_amount
    - Fixed warnings and optimized imports in contract.rs
 
-6. **RefundExpired Implementation** (Task 3.4):
+7. **RefundExpired Implementation** (Task 3.4):
    - Implemented `refund_expired` handler function:
      - Loads and validates escrow existence by ID
      - Verifies that only the original caller (not provider) can request refunds
@@ -154,6 +165,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
        - escrow_id, caller, refund_amount
 
 **Key Design Decisions**:
+
 1. **Registry Contract Integration**: The Escrow contract now requires a Registry contract address during instantiation, establishing a clear dependency between the contracts
 2. **Frozen State Check**: All execute operations first check if the contract is frozen, providing a global way to halt operations if needed
 3. **Error Handling**: Comprehensive error types were added for detailed failure reporting
@@ -163,7 +175,7 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 7. **Partial Release Support**: Added support for providers to claim only part of the maximum fee, automatically refunding the remainder
 8. **Security Controls**: Strict verification of caller identity in all operations, ensuring only authorized parties can perform actions
 
-7. **Query and Sudo Implementation** (Task 3.5):
+9. **Query and Sudo Implementation** (Task 3.5):
    - Implemented `query` function for handling `GetEscrow` requests:
      - Added a helper function `query_escrow` that retrieves escrow details by ID
      - Returns properly formatted `EscrowResponse` with all escrow details
@@ -186,6 +198,7 @@ Work has begun on implementing comprehensive unit tests for both the Registry an
 **Current Progress**:
 
 1. **Testing Environment Setup** (Task 4.1):
+
    - Created a well-organized test directory structure for the Escrow contract:
      - Added `tests/mod.rs` as the main entry point for all test modules
      - Set up importing structure for different test categories (lock_funds, release, refund, etc.)
@@ -215,6 +228,7 @@ Work has begun on implementing comprehensive unit tests for both the Registry an
      - Validated escrow data is stored correctly
 
 2. **Happy Path Tests Implementation** (Task 4.2):
+
    - Created comprehensive end-to-end integration tests:
      - Implemented `complete_flow_test.rs` to validate the full escrow lifecycle:
        - Tool registration by provider
@@ -264,22 +278,34 @@ Initial test execution revealed several issues that need to be addressed:
 1. **Registry Import Issues**: The escrow tests are not correctly importing the registry crate. This is causing compilation errors as the tests are trying to use registry modules without proper imports. ✅ FIXED
 
 2. **Type Conversion Problems**: There are issues with converting between data types, specifically:
+
    - Converting `Vec<u8>` to `String` for auth_token ✅ FIXED
    - Comparing `Addr` objects with `&str` values in assertions ✅ FIXED
 
 3. **Field Name Mismatches**: The tests are using incorrect field names in some message variants:
+
    - Using `id` instead of `escrow_id` in `QueryMsg::GetEscrow` ✅ FIXED
 
 4. **Sudo Implementation Issues**: The sudo implementation in the tests is incorrect:
+
    - Passing both contract address and message to the sudo function when it only accepts a message ✅ FIXED
 
 5. **Error Handling in Tests**: Fixed issues in the `exceed_max_ttl_test.rs` test:
+
    - Initially the test was failing with a subtraction overflow error when attempting to validate the MAX_TTL limit of 50 blocks
    - The error occurred because the test was manually executing the contract message, which was encountering issues with the error propagation in the test environment
    - Modified the test to use the `lock_funds` helper function which provides better error handling
    - Updated the error assertion logic to check for the expected error message string instead of trying to directly match against the contract error enum
    - This approach is more resilient because it doesn't rely on the specific error wrapping/unwrapping mechanism used by the cw-multi-test framework
    - The test now correctly verifies that attempts to create escrows with TTL > 50 blocks are rejected with the appropriate error message
+
+6. **Contract Address Reference Issues**: Fixed a critical bug in the partial_fee_test:
+   - The test was failing with "ContractData; key: [...] not found" error when trying to execute the Release operation
+   - The error was due to improper contract address handling when trying to execute the release message
+   - Modified the test to use the standard helper function `release_funds()` from setup_contract.rs instead of attempting direct contract execution
+   - The helper function properly handles address formatting using `contracts.app.api().addr_make(sender)` to create valid bech32 addresses
+   - Also removed all debug print statements to clean up the test output
+   - This fix ensures consistent address handling across all tests and aligns with the established testing patterns
 
 The auth_token type conversion issue has been fixed. After thorough examination of the codebase, I confirmed that the `auth_token` field is consistently defined as a `String` in the Escrow contract's structures (in both `state.rs` and `msg.rs`). The test helper function `lock_funds` in `setup_contract.rs` was already correctly converting the `Vec<u8>` to `String` using `String::from_utf8(auth_token)?`. In the `lock_funds_tests.rs` file, the auth_token was also being properly converted to a String before comparison with `let auth_token_str = String::from_utf8(auth_token).unwrap();`. This ensures consistent handling of the auth_token between test code and contract code.
 
@@ -288,6 +314,7 @@ The auth_token type conversion issue has been fixed. After thorough examination 
 To complete this standardization, a manual search and replace was performed on all test files to replace instances of `".as_bytes().to_vec()"` with `".to_string()"`. This ensures that auth_token is created as String directly in all test files, maintaining type consistency throughout the codebase and eliminating the need for any Vec<u8> to String conversions.
 
 **Key Design Decisions**:
+
 1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
 2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking
 3. **Helper Functions**: Created comprehensive helpers to reduce code duplication in tests
@@ -299,27 +326,27 @@ With the testing environment now configured, the next task is to implement compr
 
 ### Chunk 5: CI & Localnet Configuration (PENDING)
 
-*Implementation notes will be added here once work begins on this chunk.*
+_Implementation notes will be added here once work begins on this chunk._
 
 ## Phase 2: Provider SDK (TypeScript)
 
 ### Chunk 6: Provider SDK (PENDING)
 
-*Implementation notes will be added here once Phase 1 is completed and work begins on Phase 2.*
+_Implementation notes will be added here once Phase 1 is completed and work begins on Phase 2._
 
 ### Chunk 7: CLI Tool for Provider (PENDING)
 
-*Implementation notes will be added here once work begins on this chunk.*
+_Implementation notes will be added here once work begins on this chunk._
 
 ### Chunk 8: AI-Wallet Client Demo & E2E (PENDING)
 
-*Implementation notes will be added here once work begins on this chunk.*
+_Implementation notes will be added here once work begins on this chunk._
 
 ## Phase 3: Documentation & Hardening
 
 ### Chunk 9: Documentation & Hardening (PENDING)
 
-*Implementation notes will be added here once work begins on this chunk.*
+_Implementation notes will be added here once work begins on this chunk._
 
 ---
 
@@ -328,11 +355,13 @@ With the testing environment now configured, the next task is to implement compr
 From the project specification (project.md), the ToolPay MVP implements a pay-per-call workflow for AI tools with the following key components:
 
 1. **Registry Contract**: Manages tool registration and metadata
+
    - Providers register tools with pricing
    - Tools can be paused/resumed
    - Query interface for tool discovery
 
 2. **Escrow Contract**: Handles fund locking and release
+
    - Users lock funds for tool usage
    - Providers verify usage and claim fees
    - Timeout mechanism for refunds

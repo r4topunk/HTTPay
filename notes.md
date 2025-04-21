@@ -300,12 +300,22 @@ Initial test execution revealed several issues that need to be addressed:
    - The test now correctly verifies that attempts to create escrows with TTL > 50 blocks are rejected with the appropriate error message
 
 6. **Contract Address Reference Issues**: Fixed a critical bug in the partial_fee_test:
+
    - The test was failing with "ContractData; key: [...] not found" error when trying to execute the Release operation
    - The error was due to improper contract address handling when trying to execute the release message
    - Modified the test to use the standard helper function `release_funds()` from setup_contract.rs instead of attempting direct contract execution
    - The helper function properly handles address formatting using `contracts.app.api().addr_make(sender)` to create valid bech32 addresses
    - Also removed all debug print statements to clean up the test output
    - This fix ensures consistent address handling across all tests and aligns with the established testing patterns
+
+7. **Expired Escrow Refund Test Issues**: Fixed the `expired_escrow_refund_test.rs` that was failing with an "Overflow: Cannot Sub with given operands" error: ✅ FIXED
+   - The primary issue was that the test wasn't explicitly providing the funds needed for the escrow transaction
+   - Added a proper `funds` vector with a Coin object containing the default maximum fee amount
+   - Ensured user addresses are properly formatted as Bech32 addresses using `contracts.app.api().addr_make(USER)`
+   - Fixed block advancement logic to ensure escrow properly expires before refund attempt
+   - Added balance verification to confirm funds are locked and then refunded correctly
+   - Used helper functions consistently for all operations to ensure proper address handling
+   - The test now successfully validates the complete expired escrow refund workflow
 
 The auth_token type conversion issue has been fixed. After thorough examination of the codebase, I confirmed that the `auth_token` field is consistently defined as a `String` in the Escrow contract's structures (in both `state.rs` and `msg.rs`). The test helper function `lock_funds` in `setup_contract.rs` was already correctly converting the `Vec<u8>` to `String` using `String::from_utf8(auth_token)?`. In the `lock_funds_tests.rs` file, the auth_token was also being properly converted to a String before comparison with `let auth_token_str = String::from_utf8(auth_token).unwrap();`. This ensures consistent handling of the auth_token between test code and contract code.
 

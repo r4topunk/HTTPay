@@ -11,12 +11,10 @@
 //! 3. Funds are properly returned to the original caller
 //! 4. Escrow data is removed after refund
 
-use cosmwasm_std::{Addr, Coin, Uint128};
-use cw_multi_test::Executor;
-use crate::msg::ExecuteMsg;
+use cosmwasm_std::{Coin, Uint128};
 use crate::tests::setup_contract::{
     setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID, 
-    DEFAULT_MAX_FEE, USER, PROVIDER,
+    DEFAULT_MAX_FEE, USER, PROVIDER, refund_expired
 };
 
 /// # Test: Expired Escrow Refund
@@ -45,7 +43,7 @@ fn test_expired_escrow_refund() {
         PROVIDER,
     ).unwrap();
     
-    // Ensure USER and PROVIDER addresses are properly formatted as Bech32
+    // Ensure USER address is properly formatted as Bech32
     let user_addr = contracts.app.api().addr_make(USER);
 
     // Get initial user balance
@@ -58,17 +56,21 @@ fn test_expired_escrow_refund() {
     // Lock funds with a very short TTL (1 block)
     let short_ttl = 1;
     let auth_token = "expired_escrow_test".to_string();
+    
+    // Make sure we're providing enough funds for the escrow
+    let funds = vec![Coin {
+        denom: ATOM.to_string(),
+        amount: Uint128::new(DEFAULT_MAX_FEE),
+    }];
+    
     let escrow_id = lock_funds(
         &mut contracts,
         DEFAULT_TOOL_ID,
         DEFAULT_MAX_FEE,
         short_ttl,
         auth_token,
-        &user_addr.to_string(),
-        &[Coin {
-            denom: ATOM.to_string(),
-            amount: Uint128::new(DEFAULT_MAX_FEE),
-        }],
+        USER,  // Using constant instead of &user_addr.to_string()
+        &funds,
     ).unwrap();
     
     // Verify funds were locked (deducted from user balance)
@@ -88,14 +90,11 @@ fn test_expired_escrow_refund() {
         block.height += 2;
     });
     
-    // Refund the expired escrow
-    contracts.app.execute_contract(
-        user_addr.clone(),
-        Addr::unchecked(&contracts.escrow_addr),
-        &ExecuteMsg::RefundExpired {
-            escrow_id,
-        },
-        &[],
+    // Refund the expired escrow using the helper function
+    refund_expired(
+        &mut contracts,
+        escrow_id,
+        USER,
     ).unwrap();
     
     // Verify funds were returned to the user

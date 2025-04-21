@@ -190,10 +190,10 @@ Work has begun on implementing the Escrow contract. We've completed defining the
 **Next Steps**:
 With the core contract functionality now fully implemented (Tasks 3.1-3.5), the next phase will focus on implementing comprehensive unit tests for the contracts (Chunk 4).
 
-### Chunk 4: Contract Unit Tests (IN PROGRESS)
+### Chunk 4: Contract Unit Tests (ALMOST COMPLETE)
 
 **Overview**:
-Work has begun on implementing comprehensive unit tests for both the Registry and Escrow contracts. The initial focus is on setting up a robust testing environment with cw-multi-test that allows for proper integration testing between contracts.
+Comprehensive unit tests for both the Registry and Escrow contracts have been implemented and are now passing successfully. A robust testing environment with cw-multi-test has been established that allows for proper integration testing between contracts.
 
 **Current Progress**:
 
@@ -364,10 +364,24 @@ These fixes have established an important pattern for CosmWasm testing with cw-m
    - Create reusable helper functions for common operations
    - Use consistent naming conventions across test files
 
-These patterns will be consistently applied to all future tests in the project to ensure robust and reliable test coverage.
+These patterns have been consistently applied to all tests in the project, ensuring robust and reliable test coverage.
+
+**Test Execution Results**:
+All 11 tests are now passing successfully, covering:
+
+- Basic lock funds functionality
+- Complete flow from tool registration to fund release
+- Partial fee usage scenarios
+- Query endpoint functionality
+- Registry contract basic operations
+- Edge cases for TTL limits, excessive fees, authorization checks
+- Expired escrow refund workflows
+- Contract freezing functionality
+
+There is a minor warning about an unused `query_escrow` function in the test setup, which could be addressed in future cleanup.
 
 **Next Steps**:
-With the test infrastructure issues resolved and all tests passing, we can continue implementing comprehensive test coverage for the remaining contract functionalities.
+The test implementation is complete with all tests passing. The only remaining task is to check code coverage (if available). Once this is done, we can move on to Chunk 5: CI & Localnet Configuration.
 
 ### Chunk 5: CI & Localnet Configuration (PENDING)
 

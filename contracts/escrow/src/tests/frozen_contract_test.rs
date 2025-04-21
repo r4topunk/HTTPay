@@ -62,14 +62,15 @@ fn test_frozen_contract() {
     // Freeze the contract using sudo (as contract owner/admin)
     contracts.app.sudo(
         CwSudoMsg::Wasm(cw_multi_test::WasmSudo {
-            contract_addr: contracts.app.api().addr_make(&contracts.escrow_addr),
+            contract_addr: Addr::unchecked(&contracts.escrow_addr),
             message: to_json_binary(&SudoMsg::Freeze {}).unwrap(),
         }),
     ).unwrap();
     
     // SECTION 1: Test locking funds on frozen contract
+    let user_addr = contracts.app.api().addr_make(USER);
     let result = contracts.app.execute_contract(
-        Addr::unchecked(USER),
+        user_addr.clone(),
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::LockFunds {
             tool_id: DEFAULT_TOOL_ID.to_string(),
@@ -92,8 +93,9 @@ fn test_frozen_contract() {
     }
     
     // SECTION 2: Test releasing escrow on frozen contract
+    let provider_addr = contracts.app.api().addr_make(PROVIDER);
     let result = contracts.app.execute_contract(
-        Addr::unchecked(PROVIDER),
+        provider_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::Release {
             escrow_id,
@@ -117,7 +119,7 @@ fn test_frozen_contract() {
     });
     
     let result = contracts.app.execute_contract(
-        Addr::unchecked(USER),
+        user_addr.clone(),
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::RefundExpired {
             escrow_id,

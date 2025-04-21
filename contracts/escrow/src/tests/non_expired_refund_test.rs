@@ -59,8 +59,9 @@ fn test_refund_non_expired_escrow() {
     ).unwrap();
     
     // Try to refund the escrow immediately (before it expires)
+    let user_addr = contracts.app.api().addr_make(USER);
     let result = contracts.app.execute_contract(
-        Addr::unchecked(USER),
+        user_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::RefundExpired {
             escrow_id,
@@ -73,12 +74,10 @@ fn test_refund_non_expired_escrow() {
     
     // Parse the error to verify it's the correct type
     match result.unwrap_err().downcast::<ContractError>() {
-        Ok(contract_error) => match contract_error {
-            ContractError::EscrowNotExpired {} => {
-                // This is the expected error
-            },
-            err => panic!("Unexpected error: {:?}", err),
+        Ok(ContractError::EscrowNotExpired {}) => {
+            // This is the expected error
         },
+        Ok(err) => panic!("Unexpected error: {:?}", err),
         Err(err) => panic!("Wrong error type: {:?}", err),
     }
 }

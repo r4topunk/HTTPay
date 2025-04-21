@@ -309,6 +309,7 @@ Initial test execution revealed several issues that need to be addressed:
    - This fix ensures consistent address handling across all tests and aligns with the established testing patterns
 
 7. **Expired Escrow Refund Test Issues**: Fixed the `expired_escrow_refund_test.rs` that was failing with an "Overflow: Cannot Sub with given operands" error: ✅ FIXED
+
    - The primary issue was that the test wasn't explicitly providing the funds needed for the escrow transaction
    - Added a proper `funds` vector with a Coin object containing the default maximum fee amount
    - Ensured user addresses are properly formatted as Bech32 addresses using `contracts.app.api().addr_make(USER)`
@@ -317,22 +318,56 @@ Initial test execution revealed several issues that need to be addressed:
    - Used helper functions consistently for all operations to ensure proper address handling
    - The test now successfully validates the complete expired escrow refund workflow
 
-The auth_token type conversion issue has been fixed. After thorough examination of the codebase, I confirmed that the `auth_token` field is consistently defined as a `String` in the Escrow contract's structures (in both `state.rs` and `msg.rs`). The test helper function `lock_funds` in `setup_contract.rs` was already correctly converting the `Vec<u8>` to `String` using `String::from_utf8(auth_token)?`. In the `lock_funds_tests.rs` file, the auth_token was also being properly converted to a String before comparison with `let auth_token_str = String::from_utf8(auth_token).unwrap();`. This ensures consistent handling of the auth_token between test code and contract code.
+8. **Address Formatting Issues in Tests**: Fixed critical issues with address handling in tests: ✅ FIXED
 
-**Code Improvement**: To further enhance consistency and simplicity, the auth_token handling was standardized to use String directly throughout the codebase. The `lock_funds` helper function was updated to accept a String parameter instead of Vec<u8>, and all test files now create auth_tokens as Strings directly rather than creating byte vectors and converting them. This eliminates unnecessary conversions, improves code clarity, and reduces potential points of failure.
+   - Multiple tests were failing due to inconsistent address formatting in tests
+   - The errors manifested as "ContractData; key: [...] not found" in tests like `frozen_contract_test`, `non_expired_refund_test`, and `unauthorized_release_test`
+   - The root issue was the inconsistent use of address types between:
+     - `Addr::unchecked(USER)` - Creates an Addr struct but doesn't format it properly for the test environment
+     - `contracts.app.api().addr_make(USER)` - Creates a properly formatted Bech32 address for the test environment
+   - The fix involved:
+     - Using `contracts.app.api().addr_make()` consistently for user/account addresses in all tests
+     - Using `Addr::unchecked(&contracts.escrow_addr)` when referencing contract addresses in function calls
+     - Adding `.clone()` for Addr values when they're used multiple times (since Addr doesn't implement Copy)
+   - This pattern ensures addresses are properly formatted as Bech32 addresses that the test environment can recognize
+   - Consistent address handling is now implemented across all tests
 
-To complete this standardization, a manual search and replace was performed on all test files to replace instances of `".as_bytes().to_vec()"` with `".to_string()"`. This ensures that auth_token is created as String directly in all test files, maintaining type consistency throughout the codebase and eliminating the need for any Vec<u8> to String conversions.
+9. **Error Handling in Tests**: Standardized error handling pattern in tests: ✅ FIXED
+   - Fixed error handling in all test files to use a consistent pattern:
+   ```rust
+   match result.unwrap_err().downcast::<ContractError>() {
+       Ok(ContractError::ExpectedError {}) => {}, // Expected error
+       Ok(err) => panic!("Unexpected error: {:?}", err),
+       Err(err) => panic!("Wrong error type: {:?}", err),
+   }
+   ```
+   - This pattern correctly handles the anyhow error wrapping used by cw-multi-test
+   - First unwraps the Result to get the error, then uses downcast to recover the original ContractError type
+   - Distinguishes between expected errors, unexpected contract errors, and non-contract errors
 
-**Key Design Decisions**:
+These fixes have established an important pattern for CosmWasm testing with cw-multi-test:
 
-1. **Modular Test Structure**: Each test functionality is separated into its own module for better organization
-2. **Integration Testing Focus**: Using cw-multi-test to test real cross-contract interactions rather than just mocking
-3. **Helper Functions**: Created comprehensive helpers to reduce code duplication in tests
-4. **Predefined Constants**: Using test constants for common values to ensure consistency across tests
-5. **Full End-to-End Testing**: Setting up infrastructure to test complete flows rather than isolated functions
+1. **Proper Address Handling**:
+
+   - Use `contracts.app.api().addr_make(USER)` for creating account addresses
+   - Use `Addr::unchecked(&contracts.escrow_addr)` for referencing contract addresses
+   - Remember to clone Addr values when they're used multiple times
+
+2. **Consistent Error Checking**:
+
+   - Always use `downcast::<ContractError>()` to recover the original error type from anyhow errors
+   - Check for specific error variants to ensure the correct error is being returned
+   - Handle all three possible scenarios: expected error, unexpected contract error, wrong error type
+
+3. **Test Organization**:
+   - Separate tests into individual modules based on functionality
+   - Create reusable helper functions for common operations
+   - Use consistent naming conventions across test files
+
+These patterns will be consistently applied to all future tests in the project to ensure robust and reliable test coverage.
 
 **Next Steps**:
-With the testing environment now configured, the next task is to implement comprehensive happy path tests (Task 4.2) that verify the core functionality flows correctly from start to finish.
+With the test infrastructure issues resolved and all tests passing, we can continue implementing comprehensive test coverage for the remaining contract functionalities.
 
 ### Chunk 5: CI & Localnet Configuration (PENDING)
 

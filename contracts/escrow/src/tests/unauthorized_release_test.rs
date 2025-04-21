@@ -63,33 +63,9 @@ fn test_unauthorized_release() {
     let usage_fee = DEFAULT_MAX_FEE / 2; // Use half of max fee
     
     // Execute the release operation with unauthorized user
+    let unauthorized_addr = contracts.app.api().addr_make(UNAUTHORIZED);
     let result = contracts.app.execute_contract(
-        contracts.app.api().addr_make(UNAUTHORIZED), // Not the provider
-        contracts.app.api().addr_make(&contracts.escrow_addr),
-        &ExecuteMsg::Release {
-            escrow_id,
-            usage_fee: Uint128::new(usage_fee),
-        },
-        &[],
-    );
-    
-    // Verify the operation failed
-    assert!(result.is_err());
-    
-    // Parse the error to verify it's the correct type
-    match result.unwrap_err().downcast::<ContractError>() {
-        Ok(contract_error) => match contract_error {
-            ContractError::Unauthorized {} => {
-                // This is the expected error
-            },
-            err => panic!("Unexpected error: {:?}", err),
-        },
-        Err(err) => panic!("Wrong error type: {:?}", err),
-    }
-    
-    // Also try with the escrow user (who is also not authorized to release)
-    let result = contracts.app.execute_contract(
-        Addr::unchecked(USER), // The user who created the escrow, but not the provider
+        unauthorized_addr,
         Addr::unchecked(&contracts.escrow_addr),
         &ExecuteMsg::Release {
             escrow_id,
@@ -103,12 +79,34 @@ fn test_unauthorized_release() {
     
     // Parse the error to verify it's the correct type
     match result.unwrap_err().downcast::<ContractError>() {
-        Ok(contract_error) => match contract_error {
-            ContractError::Unauthorized {} => {
-                // This is the expected error
-            },
-            err => panic!("Unexpected error: {:?}", err),
+        Ok(ContractError::Unauthorized {}) => {
+            // This is the expected error
         },
+        Ok(err) => panic!("Unexpected error: {:?}", err),
+        Err(err) => panic!("Wrong error type: {:?}", err),
+    }
+    
+    // Also try with the escrow user (who is also not authorized to release)
+    let user_addr = contracts.app.api().addr_make(USER);
+    let result = contracts.app.execute_contract(
+        user_addr,
+        Addr::unchecked(&contracts.escrow_addr),
+        &ExecuteMsg::Release {
+            escrow_id,
+            usage_fee: Uint128::new(usage_fee),
+        },
+        &[],
+    );
+    
+    // Verify the operation failed
+    assert!(result.is_err());
+    
+    // Parse the error to verify it's the correct type
+    match result.unwrap_err().downcast::<ContractError>() {
+        Ok(ContractError::Unauthorized {}) => {
+            // This is the expected error
+        },
+        Ok(err) => panic!("Unexpected error: {:?}", err),
         Err(err) => panic!("Wrong error type: {:?}", err),
     }
 }

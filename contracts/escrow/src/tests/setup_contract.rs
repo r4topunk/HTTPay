@@ -261,6 +261,7 @@ pub fn refund_expired(
 }
 
 /// Helper function to get escrow details by ID
+#[allow(dead_code)]
 pub fn query_escrow(
     contracts: &TestContracts, 
     escrow_id: u64,

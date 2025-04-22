@@ -303,11 +303,11 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 9: Documentation & Hardening
 
 ### 9.1 Create comprehensive README
-- [ ] Add project description and architecture diagram
-- [ ] Document installation instructions
-- [ ] Provide quickstart guide
-- [ ] Add examples for each component
-- [ ] Include troubleshooting section
+- [x] Add project description and architecture diagram
+- [x] Document installation instructions
+- [x] Provide quickstart guide
+- [x] Add examples for each component
+- [x] Include troubleshooting section
 
 ### 9.2 Finalize specification
 - [ ] Review and update `project.md` with final implementation details

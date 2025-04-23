@@ -383,6 +383,40 @@ There is a minor warning about an unused `query_escrow` function in the test set
 **Next Steps**:
 The test implementation is complete with all tests passing. The only remaining task is to check code coverage (if available). Once this is done, we can move on to Chunk 5: CI & Localnet Configuration.
 
+**Build System Notes**:
+When working on Apple Silicon (M1/M2) Macs, the following build workflow is recommended for CosmWasm contracts:
+
+1. **For building contract WebAssembly files**:
+   ```fish
+   # Standard development build
+   cargo build --lib --target wasm32-unknown-unknown
+   
+   # Optimized release build
+   cargo build --lib --release --target wasm32-unknown-unknown
+   ```
+
+2. **For generating schemas**:
+   Run these separately for each contract:
+   ```fish
+   cd contracts/registry
+   cargo run --bin schema
+
+   cd contracts/escrow
+   cargo run --bin schema
+   ```
+
+3. **Important Notes**:
+   - Always use the `--lib` flag when building for WebAssembly target to avoid schema generation errors
+   - Generate schemas using native architecture (not WebAssembly)
+   - The standard `cargo wasm` command seen in some tutorials is not a built-in command
+   - For final production builds, use the CosmWasm Optimizer Docker image:
+     ```fish
+     docker run --rm -v (pwd):/code \
+       --mount type=volume,source=(basename (pwd))_cache,target=/target \
+       --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+       cosmwasm/optimizer:0.15.0
+     ```
+
 ### Chunk 5: CI & Localnet Configuration (PENDING)
 
 _Implementation notes will be added here once work begins on this chunk._

@@ -421,6 +421,91 @@ When working on Apple Silicon (M1/M2) Macs, the following build workflow is reco
 
 _Implementation notes will be added here once work begins on this chunk._
 
+## Deployment to Neutron Testnet (pion-1)
+
+### Build Process
+
+To build optimized WASM files for deployment, we used the CosmWasm Rust Optimizer Docker container:
+
+```bash
+docker run --rm -v "$(pwd)":/code \
+  --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+  --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+  cosmwasm/rust-optimizer:0.16.1
+```
+
+This command creates optimized `.wasm` files in the `artifacts/` directory, ready for deployment to the blockchain.
+
+### Deployment Steps
+
+#### 1. Store WASM Code on Chain
+
+Command used to upload the escrow contract to the Neutron testnet:
+
+```bash
+neutrond tx wasm store artifacts/escrow.wasm \
+  --from devwallet \
+  --gas auto --gas-adjustment 1.3 \
+  --fees 30000untrn \
+  --broadcast-mode sync
+```
+
+Transaction hash: `EDB8D5D85D9292F0645C8CFE4708AB4C2081AB1BADDC4641FEC7EC853D73EC2B`  
+Explorer link: [https://neutron.celat.one/pion-1/txs/EDB8D5D85D9292F0645C8CFE4708AB4C2081AB1BADDC4641FEC7EC853D73EC2B](https://neutron.celat.one/pion-1/txs/EDB8D5D85D9292F0645C8CFE4708AB4C2081AB1BADDC4641FEC7EC853D73EC2B)
+
+#### 2. Verify Code ID
+
+After upload, we verified the code ID using:
+
+```bash
+neutrond query wasm code-info 11699
+```
+
+Output:
+```json
+{
+  "code_id": "11699",
+  "creator": "neutron1qtysj94dxxaetzq8tuzl25389suk249rwt4cu3",
+  "data_hash": "762972CC0F7B7C3C7B98008CA7C7F47539B03782B5D83262974A425BD01BAE6E",
+  "instantiate_permission": {
+    "permission": "Everybody",
+    "addresses": []
+  }
+}
+```
+
+#### 3. Instantiate Contract
+
+We then instantiated the contract with the registry address (in this case, using the same account address as a placeholder):
+
+```bash
+neutrond tx wasm instantiate 11699 '{"registry_addr": "neutron1qtysj94dxxaetzq8tuzl25389suk249rwt4cu3"}' \
+  --from devwallet \
+  --label "toolpay" \
+  --no-admin \
+  --gas auto --gas-adjustment 1.3 \
+  --fees 5000untrn \
+  --broadcast-mode sync
+```
+
+Transaction hash: `4F7D07D1EE11FE6FCDE255AD73C9F081D3DD7BADFA5779919BAB8F6BC89145DF`  
+Explorer link: [https://neutron.celat.one/pion-1/txs/4F7D07D1EE11FE6FCDE255AD73C9F081D3DD7BADFA5779919BAB8F6BC89145DF](https://neutron.celat.one/pion-1/txs/4F7D07D1EE11FE6FCDE255AD73C9F081D3DD7BADFA5779919BAB8F6BC89145DF)
+
+### Contract Details
+
+- **Network**: Neutron Testnet (pion-1)
+- **Contract Type**: Escrow (ToolPay)
+- **Code ID**: 11699
+- **Deployer Address**: neutron1qtysj94dxxaetzq8tuzl25389suk249rwt4cu3
+- **Contract Label**: toolpay
+- **Admin**: None (--no-admin flag used)
+
+### Deployment Notes
+
+- The escrow contract was successfully deployed with gas estimates of ~2,120,311 gas for storage and ~246,013 gas for instantiation
+- The contract was deployed with no admin, making it immutable
+- For the registry_addr parameter, we used the deployer's address as a placeholder
+
 ## Phase 2: Provider SDK (TypeScript)
 
 ### Chunk 6: Provider SDK (PENDING)

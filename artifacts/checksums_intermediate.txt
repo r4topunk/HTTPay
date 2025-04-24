@@ -1,0 +1,1 @@
+887f7563c0164d40bc6111d93fdaf8e4d31293940a6c8af7265afcea7f94aa84  ./target/wasm32-unknown-unknown/release/escrow.wasm

@@ -185,42 +185,68 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Reviewed and updated all escrow contract tests to replace `Addr::unchecked` with Bech32-compliant addresses using `addr_make`.
 - [x] Verified and resolved warnings in test files, including unused imports.
 
-## Chunk 5: CI & Localnet Configuration
+## Chunk 5: Deployment to Testnet
 
-### 5.1 Set up GitHub Actions workflow
+### 5.1 Build optimized contracts
+- [x] Use CosmWasm Rust Optimizer to build optimized WASM files
+- [x] Verify WASM files are created in the `artifacts/` directory
+
+### 5.2 Deploy contracts to Neutron testnet
+- [x] Store Escrow contract on-chain
+- [x] Instantiate Escrow contract with a placeholder registry address
+- [ ] Fix Registry contract instantiation issue:
+  - [ ] Investigate instantiation error with Registry contract
+  - [ ] Check entry point annotations and InstantiateMsg structure
+  - [ ] Re-optimize and redeploy Registry contract
+  - [ ] Verify successful Registry contract deployment
+- [ ] Deploy new Escrow contract connected to actual Registry contract:
+  - [ ] Store new Escrow contract on-chain
+  - [ ] Instantiate with correct Registry contract address
+- [ ] Register test tools in Registry contract
+- [ ] Test creating escrows with deployed contracts
+
+### 5.3 Document contract deployment
+- [x] Record code IDs and contract addresses
+- [x] Document deployment steps and commands
+- [x] Note any issues encountered during deployment
+- [ ] Update deployment notes with proper Registry-Escrow connection
+
+## Chunk 6: CI & Localnet Configuration
+
+### 6.1 Set up GitHub Actions workflow
 - [ ] Create `.github/workflows/ci.yml`
 - [ ] Configure Rust build and test steps
 - [ ] Add cargo wasm optimizer step
 - [ ] Set up caching for faster CI builds
 
-### 5.2 Configure Neutron localnet
+### 6.2 Configure Neutron localnet
 - [ ] Create `docker-compose.yml` for Neutron localnet
 - [ ] Configure volumes and networks
 - [ ] Add deployment scripts for contracts
 - [ ] Create convenience scripts for running localnet
 
-### 5.3 Set up TypeScript test environment
+### 6.3 Set up TypeScript test environment
 - [ ] Configure Jest for TypeScript testing
 - [ ] Set up environment variables for test configuration
 - [ ] Integrate TypeScript tests with GitHub Actions
 - [ ] Create integration test scripts that deploy and test contracts
 
-## Chunk 6: Provider SDK (TypeScript)
+## Chunk 7: Provider SDK (TypeScript)
 
-### 6.1 Initialize provider SDK package
+### 7.1 Initialize provider SDK package
 - [ ] Create directory `packages/provider-sdk`
 - [ ] Initialize package with `npm init -y`
 - [ ] Create TypeScript configuration
 - [ ] Set up build and test scripts
 - [ ] Configure package exports and types
 
-### 6.2 Generate TypeScript bindings
+### 7.2 Generate TypeScript bindings
 - [ ] Extract contract schemas: `cargo schema`
 - [ ] Configure Telescope settings
 - [ ] Generate TypeScript types from schemas
 - [ ] Create wrapper classes for contract interaction
 
-### 6.3 Implement escrow verification
+### 7.3 Implement escrow verification
 - [ ] Create `EscrowVerifier` class
 - [ ] Implement `verifyEscrow` method:
   - [ ] Query escrow by ID
@@ -229,7 +255,7 @@ We will implement ToolPay in 3 distinct phases:
   - [ ] Verify provider address
   - [ ] Return boolean result and escrow details
 
-### 6.4 Implement usage posting
+### 7.4 Implement usage posting
 - [ ] Create `UsageReporter` class
 - [ ] Implement `postUsage` method:
   - [ ] Create `Release` message
@@ -237,22 +263,22 @@ We will implement ToolPay in 3 distinct phases:
   - [ ] Handle error states
   - [ ] Return transaction hash and status
 
-### 6.5 Prepare package for publishing
+### 7.5 Prepare package for publishing
 - [ ] Add documentation comments
 - [ ] Create README with examples
 - [ ] Add tests for SDK functions
 - [ ] Create packaged version for local registry
 
-## Chunk 7: CLI Tool for Provider
+## Chunk 8: CLI Tool for Provider
 
-### 7.1 Set up CLI framework
+### 8.1 Set up CLI framework
 - [ ] Create directory `packages/provider-cli`
 - [ ] Install CLI framework: `npm install commander` (or oclif)
 - [ ] Create main entry point
 - [ ] Set up command structure
 - [ ] Configure binary creation
 
-### 7.2 Implement CLI commands
+### 8.2 Implement CLI commands
 - [ ] Implement `register-tool` command:
   - [ ] Parse arguments: tool_id, price
   - [ ] Load wallet from key
@@ -265,28 +291,28 @@ We will implement ToolPay in 3 distinct phases:
   - [ ] Parse arguments: escrow_id, usage_fee
   - [ ] Call escrow contract
 
-### 7.3 Add configuration handling
+### 8.3 Add configuration handling
 - [ ] Create config file structure
 - [ ] Add options for RPC endpoint, chain ID
 - [ ] Add wallet key management
 - [ ] Implement configuration validation
 
-### 7.4 Add CLI tests
+### 8.4 Add CLI tests
 - [ ] Set up test fixtures
 - [ ] Mock contract interactions
 - [ ] Test command parsing
 - [ ] Test configuration loading
 
-## Chunk 8: AI-Wallet Client Demo & E2E
+## Chunk 9: AI-Wallet Client Demo & E2E
 
-### 8.1 Create demo script
+### 9.1 Create demo script
 - [ ] Initialize demo directory
 - [ ] Create wallet generation utilities
 - [ ] Implement tool discovery flow
 - [ ] Implement fund locking and API call flow
 - [ ] Create simple HTTP server for demo provider
 
-### 8.2 Implement E2E test script
+### 9.2 Implement E2E test script
 - [ ] Set up test environment with contracts deployed
 - [ ] Create test wallets with funds
 - [ ] Register test tool
@@ -295,34 +321,34 @@ We will implement ToolPay in 3 distinct phases:
 - [ ] Release funds and verify balances
 - [ ] Test refund flow with timeout
 
-### 8.3 Integrate with CI
+### 9.3 Integrate with CI
 - [ ] Add E2E tests to CI workflow
 - [ ] Configure localnet startup in CI
 - [ ] Ensure tests are isolated and reproducible
 
-## Chunk 9: Documentation & Hardening
+## Chunk 10: Documentation & Hardening
 
-### 9.1 Create comprehensive README
+### 10.1 Create comprehensive README
 - [x] Add project description and architecture diagram
 - [x] Document installation instructions
 - [x] Provide quickstart guide
 - [x] Add examples for each component
 - [x] Include troubleshooting section
 
-### 9.2 Finalize specification
+### 10.2 Finalize specification
 - [ ] Review and update `project.md` with final implementation details
 - [ ] Add links to code repositories
 - [ ] Document any deviations from original spec
 - [ ] Add suggestions for future improvements
 
-### 9.3 Harden implementation
+### 10.3 Harden implementation
 - [ ] Add gas limits to all transactions
 - [ ] Add input validation throughout
 - [ ] Review for security issues (reentrancy, overflow)
 - [ ] Add more edge-case tests
 - [ ] Optimize contract storage patterns
 
-### 9.4 Prepare for release
+### 10.4 Prepare for release
 - [ ] Tag release in git
 - [ ] Prepare crates for publication
 - [ ] Prepare npm packages for publication

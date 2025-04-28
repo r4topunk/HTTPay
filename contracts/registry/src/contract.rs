@@ -1,4 +1,3 @@
-#[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 use cw2::set_contract_version;
@@ -11,7 +10,7 @@ use crate::state::{ToolMeta, TOOLS};
 const CONTRACT_NAME: &str = "crates.io:registry";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn instantiate(
     deps: DepsMut,
     _env: Env,
@@ -27,7 +26,7 @@ pub fn instantiate(
         .add_attribute("owner", info.sender))
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn execute(
     deps: DepsMut,
     _env: Env,
@@ -149,7 +148,7 @@ pub fn execute_resume_tool(
         .add_attribute("tool_id", tool_id))
 }
 
-#[cfg_attr(not(feature = "library"), entry_point)]
+#[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetTool { tool_id } => query_tool(deps, tool_id),

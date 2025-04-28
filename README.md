@@ -209,4 +209,25 @@ MIT
 
 ---
 
+## Deployed Contracts
+
+ToolPay contracts are deployed on Neutron testnet (pion-1) with the following addresses:
+
+| Contract  | Address                                                             |
+|-----------|---------------------------------------------------------------------|
+| Registry  | neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv |
+| Escrow    | neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr |
+
+### Interacting with Deployed Contracts
+
+```fish
+# Query a registered tool
+neutrond query wasm contract-state smart neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv '{"get_tool":{"tool_id":"example-tool"}}'
+
+# Query an escrow by ID
+neutrond query wasm contract-state smart neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr '{"get_escrow":{"escrow_id":1}}'
+```
+
+---
+
 For more details, see the reference files in this repository. Contributions and feedback are welcome!

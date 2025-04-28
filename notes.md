@@ -544,6 +544,31 @@ neutrond tx wasm instantiate 11725 '{"registry_addr": "neutron1mxaqqnh237vu0phcf
 - Both contracts should be deployed with `--no-admin` for immutability unless upgradability is required.
 - Adjust `code_id` and addresses as needed for your deployment.
 
+### Deployed Contract Addresses
+
+ToolPay contracts have been successfully deployed to Neutron testnet (pion-1) with the following addresses:
+
+| Contract  | Address                                                             |
+|-----------|---------------------------------------------------------------------|
+| Registry  | neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv |
+| Escrow    | neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr |
+
+These addresses can be used for integration testing with frontend applications and the provider SDK.
+
+#### Interacting with Deployed Contracts
+
+You can query the deployed contracts using the following commands:
+
+```fish
+# Query a registered tool
+neutrond query wasm contract-state smart neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv '{"get_tool":{"tool_id":"example-tool"}}'
+
+# Query an escrow by ID
+neutrond query wasm contract-state smart neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr '{"get_escrow":{"escrow_id":1}}'
+```
+
+For executing transactions against these contracts, use the addresses above in your commands.
+
 ---
 
 ## Architecture Notes

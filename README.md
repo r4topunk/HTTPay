@@ -57,7 +57,7 @@ toolpay/
 ├── blueprint.md    # Step-by-step implementation plan
 ├── project.md      # Full specification
 ├── tasks.md        # Actionable task list
-├── notes.md        # Implementation notes and history
+├── notes/index.md        # Implementation notes and history
 └── ...
 ```
 
@@ -181,7 +181,7 @@ RefundExpired {
 - [blueprint.md](./blueprint.md): Step-by-step implementation plan
 - [project.md](./project.md): Full contract and system specification
 - [tasks.md](./tasks.md): Actionable task list and progress tracker
-- [notes.md](./notes.md): Implementation notes and design decisions
+- [notes/index.md](./notes/index.md): Implementation notes and design decisions
 - [cosmwasm-docs/](./cosmwasm-docs/): CosmWasm and cw-multi-test documentation
 
 ---
@@ -199,7 +199,7 @@ RefundExpired {
 
 - Ensure all dependencies are installed and Rust toolchain is up to date.
 - For localnet testing, see scripts and Docker Compose files (to be added in Phase 5).
-- For contract errors, consult `notes.md` for common issues and solutions.
+- For contract errors, consult `notes/index.md` for common issues and solutions.
 
 ---
 

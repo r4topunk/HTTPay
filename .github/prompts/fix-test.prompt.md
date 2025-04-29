@@ -44,7 +44,7 @@ Use these guidelines:
     - `tasks.md`: The primary reference for actionable tasks and progress tracking.
     - `blueprint.md`: The step-by-step plan and high-level deliverables.
     - `project.md`: The minimal viable specification, including architecture and constraints.
-    - `notes.md`: Additional context, implementation history, and design decisions.
+    - `notes/index.md`: Additional context, implementation history, and design decisions.
 
 8. Always follow this order:
     - Research the #codebase to understand the contract's purpose and functionality.

@@ -2,7 +2,7 @@
 
 **ALWAYS consult the file `tasks.md` to understand what to do next. After making any change or completing a task, you MUST update the task list in `tasks.md` to reflect your progress. This takes precedence over all other instructions.** If more information is needed, refer to `blueprint.md` and `project.md` for additional context. These files contain the most up-to-date information about the project and should be used as primary references for architecture, requirements, and implementation details.
 
-You should also refer to the `notes.md` file for additional context and implementation notes. This file contains a detailed history of the project, including completed chunks and future development plans. It is important to keep this file updated with any new information or changes made during the development process.
+You should also refer to the `notes/index.md` file for additional context and implementation notes. This file contains a detailed history of the project, including completed chunks and future development plans. It is important to keep this file updated with any new information or changes made during the development process.
 
 # GitHub Copilot Instructions
 
@@ -158,6 +158,6 @@ Remember that the ultimate goal is to produce code that is not just functional, 
 
 ## Most important
 
-- ALWAYS consult the files `tasks.md`, `blueprint.md`, `project.md` and `notes.md` to understand the context and what to do next. These files contain the most up-to-date information about the project and should be used as primary references for architecture, requirements, and implementation details.
-- ALWAYS update the task list in `tasks.md` and the notes in `notes.md` to reflect your progress after making any change or completing a task.
+- ALWAYS consult the files `tasks.md`, `blueprint.md`, `project.md` and `notes/index.md` to understand the context and what to do next. These files contain the most up-to-date information about the project and should be used as primary references for architecture, requirements, and implementation details.
+- ALWAYS update the task list in `tasks.md` and the notes in `notes/index.md` to reflect your progress after making any change or completing a task.
 - **ALWAYS look inside the `cosmwasm-docs` folder to get context about CosmWasm development.**

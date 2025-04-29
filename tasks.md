@@ -194,22 +194,22 @@ We will implement ToolPay in 3 distinct phases:
 ### 5.2 Deploy contracts to Neutron testnet
 - [x] Store Escrow contract on-chain
 - [x] Instantiate Escrow contract with a placeholder registry address
-- [ ] Fix Registry contract instantiation issue:
-  - [ ] Investigate instantiation error with Registry contract
-  - [ ] Check entry point annotations and InstantiateMsg structure
-  - [ ] Re-optimize and redeploy Registry contract
-  - [ ] Verify successful Registry contract deployment
-- [ ] Deploy new Escrow contract connected to actual Registry contract:
-  - [ ] Store new Escrow contract on-chain
-  - [ ] Instantiate with correct Registry contract address
-- [ ] Register test tools in Registry contract
-- [ ] Test creating escrows with deployed contracts
+- [x] Fix Registry contract instantiation issue:
+  - [x] Investigate instantiation error with Registry contract
+  - [x] Check entry point annotations and InstantiateMsg structure
+  - [x] Re-optimize and redeploy Registry contract
+  - [x] Verify successful Registry contract deployment
+- [x] Deploy new Escrow contract connected to actual Registry contract:
+  - [x] Store new Escrow contract on-chain
+  - [x] Instantiate with correct Registry contract address
+- [x] Register test tools in Registry contract
+- [x] Test creating escrows with deployed contracts
 
 ### 5.3 Document contract deployment
 - [x] Record code IDs and contract addresses
 - [x] Document deployment steps and commands
 - [x] Note any issues encountered during deployment
-- [ ] Update deployment notes with proper Registry-Escrow connection
+- [x] Update deployment notes with proper Registry-Escrow connection
 
 ## Chunk 6: CI & Localnet Configuration
 

@@ -2,6 +2,8 @@
 
 The ToolPay Provider SDK enables tool providers to interact with ToolPay smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
 
+**Current Status: Phase 3 Complete (Core SDK Implementation)**
+
 ## Features
 
 - **Escrow Verification**: Verify escrow existence, validity, and authorization

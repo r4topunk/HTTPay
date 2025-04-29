@@ -54,21 +54,21 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 
 ## Phase 3: Core SDK Classes
 
-- [ ] **3.1 EscrowVerifier**
-  - [ ] Implement `EscrowVerifier` class in `src/escrowVerifier.ts`.
-  - [ ] Implement `verifyEscrow(escrowId, authToken, providerAddr, nowBlockHeight): Promise<VerificationResult>`.
-  - [ ] Use the generated Escrow contract client for queries.
-  - [ ] Add detailed error messages for each failure case.
-- [ ] **3.2 UsageReporter**
-  - [ ] Implement `UsageReporter` class in `src/usageReporter.ts`.
-  - [ ] Implement `postUsage(escrowId, usageFee, wallet, options): Promise<PostUsageResult>`.
-  - [ ] Support both direct signing (with mnemonic/private key) and external signing (via CosmJS).
-  - [ ] Handle transaction errors and retries.
-- [ ] **3.3 ToolPaySDK Main Class**
-  - [ ] Implement `ToolPaySDK` as the main entry point for the SDK (see README usage example).
-  - [ ] Aggregate RegistryClient, EscrowClient, EscrowVerifier, and UsageReporter under a unified API.
-  - [ ] Support configuration for network, contract addresses, and wallet integration.
-  - [ ] Provide clear error handling and documentation for all methods.
+- [x] **3.1 EscrowVerifier**
+  - [x] Implement `EscrowVerifier` class in `src/escrowVerifier.ts`.
+  - [x] Implement `verifyEscrow(escrowId, authToken, providerAddr, nowBlockHeight): Promise<VerificationResult>`.
+  - [x] Use the generated Escrow contract client for queries.
+  - [x] Add detailed error messages for each failure case.
+- [x] **3.2 UsageReporter**
+  - [x] Implement `UsageReporter` class in `src/usageReporter.ts`.
+  - [x] Implement `postUsage(escrowId, usageFee, wallet, options): Promise<PostUsageResult>`.
+  - [x] Support both direct signing (with mnemonic/private key) and external signing (via CosmJS).
+  - [x] Handle transaction errors and retries.
+- [x] **3.3 ToolPaySDK Main Class**
+  - [x] Implement `ToolPaySDK` as the main entry point for the SDK (see README usage example).
+  - [x] Aggregate RegistryClient, EscrowClient, EscrowVerifier, and UsageReporter under a unified API.
+  - [x] Support configuration for network, contract addresses, and wallet integration.
+  - [x] Provide clear error handling and documentation for all methods.
 
 ---
 

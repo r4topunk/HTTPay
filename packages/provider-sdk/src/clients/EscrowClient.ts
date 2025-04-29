@@ -35,6 +35,15 @@ export class EscrowClient {
   getContractAddress(): string {
     return this.contractAddress;
   }
+  
+  /**
+   * Get the underlying CosmWasm client
+   * 
+   * @returns The CosmWasm client
+   */
+  getClient(): CosmWasmClient | SigningCosmWasmClient {
+    return this.client;
+  }
 
   /**
    * Query information about a specific escrow
@@ -64,11 +73,13 @@ export class EscrowClient {
   /**
    * Lock funds for a tool provider with an authentication token
    * 
+   * @param senderAddress - The address executing the transaction
    * @param toolId - The tool ID in the registry
    * @param maxFee - The maximum fee the caller is willing to pay
    * @param authToken - Authentication token for the tool to verify the escrow
    * @param expires - Block height when this escrow expires
-   * @param funds - Funds to send with the transaction (should include the maxFee)
+   * @param funds - Optional array of coins to send with the transaction
+   * @param memo - Optional transaction memo
    * @returns Transaction hash
    */
   async lockFunds(
@@ -77,7 +88,8 @@ export class EscrowClient {
     maxFee: Uint128,
     authToken: string,
     expires: number,
-    funds: Coin[]
+    funds: readonly Coin[] = [],
+    memo?: string,
   ): Promise<string> {
     const signingClient = this.getSigningClient();
 
@@ -95,7 +107,7 @@ export class EscrowClient {
       this.contractAddress,
       msg,
       'auto',
-      undefined,
+      memo,
       funds
     );
 
@@ -108,15 +120,17 @@ export class EscrowClient {
    * @param senderAddress - The address executing the transaction
    * @param escrowId - The escrow ID to release funds from
    * @param usageFee - The actual usage fee to charge (must be ≤ max_fee)
-   * @param funds - Funds to send with the transaction (if required)
-   * @returns Transaction hash
+   * @param funds - Optional array of coins to send with the transaction
+   * @param memo - Optional memo for the transaction
+   * @returns Transaction result
    */
   async releaseFunds(
     senderAddress: string,
     escrowId: number,
     usageFee: Uint128,
-    funds: Coin[] = []
-  ): Promise<string> {
+    funds: readonly Coin[] = [],
+    memo?: string,
+  ): Promise<any> {
     const signingClient = this.getSigningClient();
 
     const msg: EscrowExecuteMsg = {
@@ -131,7 +145,7 @@ export class EscrowClient {
       this.contractAddress,
       msg,
       'auto',
-      undefined,
+      memo,
       funds
     );
 
@@ -143,14 +157,16 @@ export class EscrowClient {
    * 
    * @param senderAddress - The address executing the transaction
    * @param escrowId - The escrow ID to refund
-   * @param funds - Funds to send with the transaction (if required)
-   * @returns Transaction hash
+   * @param funds - Optional array of coins to send with the transaction
+   * @param memo - Optional memo for the transaction
+   * @returns Transaction result
    */
   async refundExpired(
     senderAddress: string,
     escrowId: number,
-    funds: Coin[] = []
-  ): Promise<string> {
+    funds: readonly Coin[] = [],
+    memo?: string,
+  ): Promise<any> {
     const signingClient = this.getSigningClient();
 
     const msg: EscrowExecuteMsg = {
@@ -164,7 +180,7 @@ export class EscrowClient {
       this.contractAddress,
       msg,
       'auto',
-      undefined,
+      memo,
       funds
     );
 

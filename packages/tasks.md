@@ -1,3 +1,5 @@
+<!-- Updated based on project-nav.md, blueprint.md, and project.md: Added ToolPaySDK main class, AI-Wallet demo, and E2E testing tasks. All deliverables and flows from the MVP spec are now reflected. -->
+
 # ToolPay Provider SDK (TypeScript) – Implementation Task List
 
 ## Overview
@@ -62,6 +64,11 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
   - [ ] Implement `postUsage(escrowId, usageFee, wallet, options): Promise<PostUsageResult>`.
   - [ ] Support both direct signing (with mnemonic/private key) and external signing (via CosmJS).
   - [ ] Handle transaction errors and retries.
+- [ ] **3.3 ToolPaySDK Main Class**
+  - [ ] Implement `ToolPaySDK` as the main entry point for the SDK (see README usage example).
+  - [ ] Aggregate RegistryClient, EscrowClient, EscrowVerifier, and UsageReporter under a unified API.
+  - [ ] Support configuration for network, contract addresses, and wallet integration.
+  - [ ] Provide clear error handling and documentation for all methods.
 
 ---
 
@@ -90,6 +97,10 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
   - [ ] Mock contract responses for unit tests.
   - [ ] Add integration tests that connect to a localnet or testnet (optional).
   - [ ] Test all edge cases: invalid escrow, expired, wrong provider, etc.
+- [ ] **5.3 AI-Wallet Client Demo & E2E Testing**
+  - [ ] Implement AI-Wallet client demo script using the SDK (see blueprint.md and project.md for flow).
+  - [ ] Add E2E test scenarios covering the full pay-per-call workflow on localnet/testnet.
+  - [ ] Document usage examples and best practices for SDK consumers.
 
 ---
 

@@ -20,4 +20,26 @@ The Provider SDK project setup has been completed successfully, establishing the
 - Added JSDoc comments to exported functionality
 
 ## Next Steps
-The SDK project setup is now complete. The next phase will focus on implementing Contract Bindings and Types by generating TypeScript interfaces from contract schemas.
+The SDK project setup is now complete. The current phase is focusing on implementing Contract Bindings and Types.
+
+## Contract Bindings Implementation
+We have completed implementing the contract bindings for both Registry and Escrow contracts:
+
+### Type Definitions
+- Created TypeScript interfaces for all contract messages and responses
+- Implemented `common.ts` with shared types like `Uint128`
+- Added type definitions for both Registry and Escrow contracts
+- Ensured all types are properly exported from the package
+
+### Client Classes
+- Implemented `RegistryClient` class for Registry contract interactions:
+  - Query methods: `getTool`
+  - Execute methods: `registerTool`, `updatePrice`, `pauseTool`, `resumeTool`
+  - Proper error handling and client type checking
+
+- Implemented `EscrowClient` class for Escrow contract interactions:
+  - Query methods: `getEscrow`
+  - Execute methods: `lockFunds`, `releaseFunds`, `refundExpired`
+  - Proper error handling and client type checking
+
+Both clients follow CosmJS patterns and support both read-only (`CosmWasmClient`) and signing (`SigningCosmWasmClient`) operations, with appropriate runtime checks.

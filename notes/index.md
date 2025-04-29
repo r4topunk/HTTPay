@@ -9,7 +9,7 @@ This file serves as an index and guide to the implementation notes for the ToolP
 - **phase1-chunk3.md**: Escrow contract implementation (Phase 1, Chunk 3)
 - **phase1-chunk4.md**: Contract unit tests and test environment (Phase 1, Chunk 4)
 - **phase1-chunk5.md**: CI & Localnet configuration (Phase 1, Chunk 5)
-- **phase2-chunk1.md**: Provider SDK project setup (Phase 2, Chunk 1)
+- **phase2-chunk1.md**: Provider SDK project setup and contract bindings (Phase 2, Chunk 1)
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
 

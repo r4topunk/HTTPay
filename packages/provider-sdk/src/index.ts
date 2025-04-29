@@ -7,19 +7,14 @@
  * @packageDocumentation
  */
 
-// Re-export main classes (to be implemented)
-// export { EscrowVerifier } from './escrowVerifier';
-// export { UsageReporter } from './usageReporter';
-// export { RegistryClient } from './registryClient';
-// export { EscrowClient } from './escrowClient';
+// Export contract clients
+export { RegistryClient, EscrowClient } from './clients/index.js';
+
+// Export types
+export * from './types/index.js';
 
 // Version export
 export const SDK_VERSION = '0.1.0';
-
-/**
- * A placeholder function that will be removed once actual SDK functionality is implemented.
- * @returns A simple welcome message
- */
 export function getSDKInfo(): string {
   return `ToolPay Provider SDK v${SDK_VERSION} - Setup Complete`;
 }

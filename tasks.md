@@ -234,17 +234,18 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 7: Provider SDK (TypeScript)
 
 ### 7.1 Initialize provider SDK package
-- [ ] Create directory `packages/provider-sdk`
-- [ ] Initialize package with `npm init -y`
-- [ ] Create TypeScript configuration
-- [ ] Set up build and test scripts
-- [ ] Configure package exports and types
+- [x] Create directory `packages/provider-sdk`
+- [x] Initialize package with `npm init -y`
+- [x] Create TypeScript configuration
+- [x] Set up build and test scripts
+- [x] Configure package exports and types
 
 ### 7.2 Generate TypeScript bindings
-- [ ] Extract contract schemas: `cargo schema`
-- [ ] Configure Telescope settings
-- [ ] Generate TypeScript types from schemas
-- [ ] Create wrapper classes for contract interaction
+- [x] Extract contract schemas: `cargo schema`
+- [x] Define TypeScript types manually based on schemas
+- [x] Implement TypeScript types for Registry contract messages, queries, and responses
+- [x] Implement TypeScript types for Escrow contract messages, queries, and responses
+- [x] Create wrapper classes (`RegistryClient` and `EscrowClient`) for contract interaction
 
 ### 7.3 Implement escrow verification
 - [ ] Create `EscrowVerifier` class

@@ -1,0 +1,39 @@
+{
+  "name": "@toolpay/provider-sdk",
+  "version": "0.1.0",
+  "description": "ToolPay Provider SDK for interacting with ToolPay smart contracts on Neutron",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
+  },
+  "keywords": [
+    "cosmos",
+    "neutron",
+    "cosmwasm",
+    "blockchain",
+    "escrow",
+    "toolpay",
+    "sdk",
+    "api"
+  ],
+  "author": "ToolPay Team",
+  "license": "MIT",
+  "packageManager": "pnpm@10.6.5"
+}

@@ -20,18 +20,18 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 
 ## Phase 1: Project Initialization
 
-- [ ] **1.1 Directory and Package Setup**
-  - [ ] Create `packages/provider-sdk` directory.
-  - [ ] Initialize with `pnpm init`.
-  - [ ] Add a `README.md` with project overview and usage examples.
-  - [ ] Add a `.gitignore` for Node/TypeScript artifacts.
-- [ ] **1.2 TypeScript Configuration**
-  - [ ] Add `tsconfig.json` with strict settings, targeting Node 20+ and ES2022 modules.
-  - [ ] Configure type declarations and source/output directories (`src/`, `dist/`).
-- [ ] **1.3 Tooling and Scripts**
-  - [ ] Add build scripts (`tsc`, `build`, `clean`) to `package.json`.
-  - [ ] Add test scripts (Jest or Vitest).
-  - [ ] Add linting (ESLint) and formatting (Prettier) configs.
+- [x] **1.1 Directory and Package Setup**
+  - [x] Create `packages/provider-sdk` directory.
+  - [x] Initialize with `pnpm init`.
+  - [x] Add a `README.md` with project overview and usage examples.
+  - [x] Add a `.gitignore` for Node/TypeScript artifacts.
+- [x] **1.2 TypeScript Configuration**
+  - [x] Add `tsconfig.json` with strict settings, targeting Node 20+ and ES2022 modules.
+  - [x] Configure type declarations and source/output directories (`src/`, `dist/`).
+- [x] **1.3 Tooling and Scripts**
+  - [x] Add build scripts (`tsc`, `build`, `clean`) to `package.json`.
+  - [x] Add test scripts (Jest or Vitest).
+  - [x] Add linting (ESLint) and formatting (Prettier) configs.
 
 ---
 

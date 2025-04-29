@@ -37,16 +37,16 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 
 ## Phase 2: Contract Bindings and Types
 
-- [ ] **2.1 Extract Contract Schemas**
-  - [ ] Run `cargo schema` in both `contracts/registry` and `contracts/escrow` to generate up-to-date JSON schemas.
-- [ ] **2.2 Generate TypeScript Types**
-  - [ ] Use `npx @neutron-org/contracts2ts --src <path to contracts> --out <path to output>` to generate types and client classes from the schemas.
-  - [ ] Place generated types in `src/types/` or `src/bindings/`.
-  - [ ] Ensure all contract messages, queries, and responses are strongly typed.
-- [ ] **2.3 Write Wrapper Classes**
-  - [ ] Create `RegistryClient` and `EscrowClient` classes that wrap the generated CosmJS/Telescope clients.
-  - [ ] Expose high-level methods for all contract operations (register, update, lock, release, refund, etc.).
-  - [ ] Handle address formatting, coin types, and error normalization.
+- [x] **2.1 Extract Contract Schemas**
+  - [x] Run `cargo schema` in both `contracts/registry` and `contracts/escrow` to generate up-to-date JSON schemas.
+- [x] **2.2 Generate TypeScript Types**
+  - [x] Use `npx @neutron-org/contracts2ts --src <path to contracts> --out <path to output>` to generate types and client classes from the schemas.
+  - [x] Place generated types in `src/types/` or `src/bindings/`.
+  - [x] Ensure all contract messages, queries, and responses are strongly typed.
+- [x] **2.3 Write Wrapper Classes**
+  - [x] Create `RegistryClient` and `EscrowClient` classes that wrap the generated CosmJS/Telescope clients.
+  - [x] Expose high-level methods for all contract operations (register, update, lock, release, refund, etc.).
+  - [x] Handle address formatting, coin types, and error normalization.
 
 ---
 

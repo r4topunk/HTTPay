@@ -50,7 +50,7 @@ describe('EscrowVerifier', () => {
       escrowId: '123',
       authToken: 'test-token',
       providerAddr: 'neutron1provider',
-      currentBlockHeight: 100 // Current block height is 100
+      nowBlockHeight: 100 // Current block height is 100
     };
 
     // Act
@@ -80,7 +80,7 @@ describe('EscrowVerifier', () => {
       escrowId: '456',
       authToken: 'test-token',
       providerAddr: 'neutron1provider',
-      currentBlockHeight: 100 // Current block height is 100
+      nowBlockHeight: 100 // Current block height is 100
     };
 
     // Act
@@ -110,7 +110,7 @@ describe('EscrowVerifier', () => {
       escrowId: '789',
       authToken: 'test-token',
       providerAddr: 'neutron1wrong', // Wrong provider address
-      currentBlockHeight: 100
+      nowBlockHeight: 100
     };
 
     // Act
@@ -139,7 +139,7 @@ describe('EscrowVerifier', () => {
       escrowId: '123',
       authToken: 'wrong-token', // Wrong auth token
       providerAddr: 'neutron1provider',
-      currentBlockHeight: 100
+      nowBlockHeight: 100
     };
 
     // Act
@@ -159,7 +159,7 @@ describe('EscrowVerifier', () => {
       escrowId: '999',
       authToken: 'test-token',
       providerAddr: 'neutron1provider',
-      currentBlockHeight: 100
+      nowBlockHeight: 100
     };
 
     // Act
@@ -177,7 +177,7 @@ describe('EscrowVerifier', () => {
       escrowId: 'not-a-number',
       authToken: 'test-token',
       providerAddr: 'neutron1provider',
-      currentBlockHeight: 100
+      nowBlockHeight: 100
     };
 
     // Act

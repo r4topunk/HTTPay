@@ -72,26 +72,29 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 
 ---
 
+
 ## Phase 4: Utilities and Configuration
 
-- [ ] **4.1 Network and Contract Configuration**
-  - [ ] Allow SDK users to specify RPC endpoint, chain ID, and contract addresses.
-  - [ ] Provide a config object or environment variable support.
-  - [ ] Validate configuration at initialization.
-- [ ] **4.2 Wallet Integration**
-  - [ ] Support loading wallets from mnemonic, private key, or CosmJS signer.
-  - [ ] Provide helper functions for wallet management.
+- [x] **4.1 Network and Contract Configuration**
+  - [x] Allow SDK users to specify RPC endpoint, chain ID, and contract addresses.  
+  - [x] Provide a config object or environment variable support.  
+  - [ ] Validate configuration at initialization.  
+- [x] **4.2 Wallet Integration**
+  - [x] Support loading wallets from mnemonic, private key, or CosmJS signer.  
+  - [ ] Provide helper functions for wallet management.  
 - [ ] **4.3 Error Handling**
   - [ ] Define custom error classes for common failure modes (network, contract, validation).
   - [ ] Ensure all SDK methods return clear, actionable errors.
 
 ---
 
+
 ## Phase 5: Documentation and Testing
 
 - [ ] **5.1 Documentation**
   - [ ] Add JSDoc/TSDoc comments to all public classes and methods.
-  - [ ] Write a comprehensive `README.md` with installation, usage, configuration, and troubleshooting.
+  - [x] Write a comprehensive `README.md` with installation, usage, configuration, and troubleshooting.  
+    _Done: README.md covers installation, usage, config, and troubleshooting._
 - [ ] **5.2 Unit and Integration Tests**
   - [ ] Use Jest for testing.
   - [ ] Mock contract responses for unit tests.

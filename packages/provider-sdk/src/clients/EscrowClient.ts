@@ -130,7 +130,7 @@ export class EscrowClient {
     usageFee: Uint128,
     funds: readonly Coin[] = [],
     memo?: string,
-  ): Promise<any> {
+  ): Promise<string> {
     const signingClient = this.getSigningClient();
 
     const msg: EscrowExecuteMsg = {
@@ -166,7 +166,7 @@ export class EscrowClient {
     escrowId: number,
     funds: readonly Coin[] = [],
     memo?: string,
-  ): Promise<any> {
+  ): Promise<string> {
     const signingClient = this.getSigningClient();
 
     const msg: EscrowExecuteMsg = {

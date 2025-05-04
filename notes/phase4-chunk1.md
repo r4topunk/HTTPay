@@ -51,7 +51,8 @@ Modified the main ToolPaySDK class to use these new utilities:
 ## Challenges and Solutions
 
 - **TypeScript Errors**: Fixed several TypeScript compilation errors related to error handling and type narrowing:
-  - Added explicit type annotations (error: any) to catch blocks
+  - Removed all usages of the `any` type in SDK source files for improved type safety
+  - Used type guards and type assertions with `unknown` instead of `any` in error handling
   - Fixed null checks for arrays and potential undefined values
   - Added workaround for accessing the signer (which is private in SigningCosmWasmClient)
 

@@ -93,7 +93,12 @@ export function normalizeError(error: unknown, defaultMessage = 'Unknown error')
 
   // Type guard for objects with a message property
   function hasMessage(obj: unknown): obj is { message: string } {
-    return typeof obj === 'object' && obj !== null && 'message' in obj && typeof (obj as any).message === 'string';
+    return (
+      typeof obj === 'object' &&
+      obj !== null &&
+      'message' in obj &&
+      typeof (obj as { message?: unknown }).message === 'string'
+    );
   }
 
   const message = hasMessage(error) ? error.message : defaultMessage;

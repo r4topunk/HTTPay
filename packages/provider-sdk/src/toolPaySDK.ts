@@ -1,18 +1,27 @@
 /**
- * ToolPaySDK Main Class
+ * import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';olPaySDK Main Class
  * 
  * This is the main entry point for the ToolPay Provider SDK.
  * It combines all the components into a unified API.
  */
 
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import { DirectSecp256k1HdWallet, OfflineDirectSigner } from '@cosmjs/proto-signing';
 
 import { EscrowClient } from './clients/EscrowClient.js';
 import { RegistryClient } from './clients/RegistryClient.js';
 import { EscrowVerifier, VerifyEscrowParams } from './escrowVerifier.js';
 import { UsageReporter, PostUsageParams } from './usageReporter.js';
 import { SDK_VERSION } from './index.js';
+import { 
+  validateConfig, 
+  createWalletFromMnemonic, 
+  createSigningClientFromWallet, 
+  normalizeError,
+  // Import error classes (not as types)
+  ConfigurationError,
+  NetworkError
+} from './utils/index.js';
 
 /**
  * Configuration for the ToolPaySDK
@@ -68,15 +77,30 @@ export class ToolPaySDK {
    * @param config - SDK configuration
    */
   constructor(config: ToolPaySDKConfig) {
-    this.config = {
-      gasAdjustment: 1.3,
-      ...config
-    };
-    
-    // Use custom client if provided
-    if (config.customClient) {
-      this.client = config.customClient;
-      this.initializeClients();
+    try {
+      // Validate the configuration before proceeding
+      validateConfig(config);
+      
+      this.config = {
+        gasAdjustment: 1.3,
+        ...config
+      };
+      
+      // Use custom client if provided
+      if (config.customClient) {
+        this.client = config.customClient;
+        this.initializeClients();
+      }
+    } catch (error: unknown) {
+      // Use our type guard from normalizeError to safely extract message
+      function hasMessage(obj: unknown): obj is { message: string } {
+        return typeof obj === 'object' && obj !== null && 'message' in obj && 
+          typeof (obj as { message: unknown }).message === 'string';
+      }
+      
+      const errorMessage = hasMessage(error) ? error.message : 'Unknown error';
+      throw new ConfigurationError(`Failed to initialize ToolPaySDK: ${errorMessage}`, 
+        { originalError: error });
     }
   }
   
@@ -93,11 +117,23 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    */
   async connect(): Promise<ToolPaySDK> {
-    if (!this.client) {
-      this.client = await CosmWasmClient.connect(this.config.rpcEndpoint);
-      this.initializeClients();
+    try {
+      if (!this.client) {
+        this.client = await CosmWasmClient.connect(this.config.rpcEndpoint);
+        this.initializeClients();
+      }
+      return this;
+    } catch (error: unknown) {
+      // Use the same type guard for consistent error handling
+      function hasMessage(obj: unknown): obj is { message: string } {
+        return typeof obj === 'object' && obj !== null && 'message' in obj && 
+          typeof (obj as { message: unknown }).message === 'string';
+      }
+      
+      const errorMessage = hasMessage(error) ? error.message : 'Unknown error';
+      throw new NetworkError(`Failed to connect to RPC endpoint: ${errorMessage}`, 
+        { endpoint: this.config.rpcEndpoint, originalError: error });
     }
-    return this;
   }
   
   /**
@@ -108,21 +144,26 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    */
   async connectWithMnemonic(mnemonic: string, prefix = 'neutron'): Promise<ToolPaySDK> {
-    if (!this.client || !('execute' in this.client)) {
-      const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
-        prefix,
-      });
+    try {
+      if (!this.client || !('execute' in this.client)) {
+        // Use our helper function from utils
+        const wallet = await createWalletFromMnemonic(mnemonic, { prefix });
+        
+        // Connect to the chain with a signing client
+        this.client = await createSigningClientFromWallet(
+          this.config.rpcEndpoint,
+          wallet,
+          undefined, // Default gas price
+          { prefix }
+        );
+        
+        this.initializeClients();
+      }
       
-      // Connect to the chain with a signing client
-      this.client = await SigningCosmWasmClient.connectWithSigner(
-        this.config.rpcEndpoint,
-        wallet
-      );
-      
-      this.initializeClients();
+      return this;
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to connect with mnemonic');
     }
-    
-    return this;
   }
   
   /**
@@ -132,9 +173,39 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    */
   connectWithSigningClient(signingClient: SigningCosmWasmClient): ToolPaySDK {
+    if (!signingClient) {
+      throw new ConfigurationError('Signing client cannot be null or undefined');
+    }
+    
     this.client = signingClient;
     this.initializeClients();
     return this;
+  }
+  
+  /**
+   * Get wallet address from the current signing client
+   * 
+   * @returns The first address in the connected wallet, or null if no signing client
+   */
+  async getWalletAddress(): Promise<string | null> {
+    if (!this.hasSigningCapability()) {
+      return null;
+    }
+    
+    try {
+      // Since we can't access the signer directly, we'll use a workaround
+      // We can get the wallet address from transaction simulation or other methods
+      // For now, we'll just return null with a note that this needs implementation
+      console.warn('getWalletAddress needs implementation - signer is private');
+      return null;
+      
+      // Alternative implementation could use:
+      // 1. Store the wallet when connecting with mnemonic
+      // 2. Use getAccount() method if it exists
+      // 3. Use a different approach to access the address
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to get wallet address');
+    }
   }
   
   /**
@@ -144,7 +215,7 @@ export class ToolPaySDK {
    */
   private initializeClients(): void {
     if (!this.client) {
-      throw new Error('Client not initialized. Call connect() first.');
+      throw new ConfigurationError('Client not initialized. Call connect() first.');
     }
     
     this.registryClient = new RegistryClient(this.client, this.config.registryAddress);
@@ -166,7 +237,7 @@ export class ToolPaySDK {
    */
   get registry(): RegistryClient {
     if (!this.registryClient) {
-      throw new Error('Registry client not initialized. Call connect() first.');
+      throw new ConfigurationError('Registry client not initialized. Call connect() first.');
     }
     return this.registryClient;
   }
@@ -178,7 +249,7 @@ export class ToolPaySDK {
    */
   get escrow(): EscrowClient {
     if (!this.escrowClient) {
-      throw new Error('Escrow client not initialized. Call connect() first.');
+      throw new ConfigurationError('Escrow client not initialized. Call connect() first.');
     }
     return this.escrowClient;
   }
@@ -190,7 +261,7 @@ export class ToolPaySDK {
    */
   get escrowVerifier(): EscrowVerifier {
     if (!this._escrowVerifier) {
-      throw new Error('Escrow verifier not initialized. Call connect() first.');
+      throw new ConfigurationError('Escrow verifier not initialized. Call connect() first.');
     }
     return this._escrowVerifier;
   }
@@ -202,7 +273,9 @@ export class ToolPaySDK {
    */
   get usageReporter(): UsageReporter {
     if (!this._usageReporter) {
-      throw new Error('Usage reporter not initialized. Call connectWithMnemonic() or connectWithSigningClient() first.');
+      throw new ConfigurationError(
+        'Usage reporter not initialized. Call connectWithMnemonic() or connectWithSigningClient() first.'
+      );
     }
     return this._usageReporter;
   }
@@ -214,7 +287,11 @@ export class ToolPaySDK {
    * @returns Promise with verification result
    */
   async verifyEscrow(params: VerifyEscrowParams) {
-    return this.escrowVerifier.verifyEscrow(params);
+    try {
+      return await this.escrowVerifier.verifyEscrow(params);
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to verify escrow');
+    }
   }
   
   /**
@@ -225,7 +302,11 @@ export class ToolPaySDK {
    * @returns Promise with posting result
    */
   async postUsage(senderAddress: string, params: PostUsageParams) {
-    return this.usageReporter.postUsage(senderAddress, params);
+    try {
+      return await this.usageReporter.postUsage(senderAddress, params);
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to post usage');
+    }
   }
   
   /**

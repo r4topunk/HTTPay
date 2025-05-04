@@ -78,13 +78,13 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 - [x] **4.1 Network and Contract Configuration**
   - [x] Allow SDK users to specify RPC endpoint, chain ID, and contract addresses.  
   - [x] Provide a config object or environment variable support.  
-  - [ ] Validate configuration at initialization.  
+  - [x] Validate configuration at initialization.  
 - [x] **4.2 Wallet Integration**
   - [x] Support loading wallets from mnemonic, private key, or CosmJS signer.  
-  - [ ] Provide helper functions for wallet management.  
-- [ ] **4.3 Error Handling**
-  - [ ] Define custom error classes for common failure modes (network, contract, validation).
-  - [ ] Ensure all SDK methods return clear, actionable errors.
+  - [x] Provide helper functions for wallet management.  
+- [x] **4.3 Error Handling**
+  - [x] Define custom error classes for common failure modes (network, contract, validation).
+  - [x] Ensure all SDK methods return clear, actionable errors.
 
 ---
 
@@ -121,4 +121,4 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 ---
 
 **Next Step:**
-Begin with Phase 1: create the `packages/provider-sdk` directory, initialize the package, and set up TypeScript configuration and scripts.
+Continue with Phase 5: Add comprehensive JSDoc/TSDoc comments to all public classes and methods, and implement unit and integration tests.

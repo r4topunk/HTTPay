@@ -6,8 +6,6 @@
  */
 
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet, OfflineDirectSigner } from '@cosmjs/proto-signing';
-
 import { EscrowClient } from './clients/EscrowClient.js';
 import { RegistryClient } from './clients/RegistryClient.js';
 import { EscrowVerifier, VerifyEscrowParams } from './escrowVerifier.js';

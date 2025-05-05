@@ -119,19 +119,25 @@ export class UsageReporter {
   async postUsage(senderAddress: string, params: PostUsageParams): Promise<PostUsageResult> {
     const escrowId =
       typeof params.escrowId === 'string' ? parseInt(params.escrowId, 10) : params.escrowId;
-    // Options are no longer used directly in the EscrowClient call
-
     try {
-      const txHash = await this.escrowClient.releaseFunds(
+      // Call releaseFunds, which may return a string or an object with transactionHash and gasUsed
+      const rawResult: any = await this.escrowClient.releaseFunds(
         senderAddress,
         escrowId,
         params.usageFee.toString(),
       );
-
-      return {
-        txHash,
-        fee: '0', // In a real implementation, you might calculate this from gasUsed and gasPrice
-      };
+      // Extract transaction hash and gas used from rawResult
+      const txHash: string = typeof rawResult === 'string' ? rawResult : rawResult.transactionHash;
+      const gasUsed: number | undefined =
+        typeof rawResult === 'object' && rawResult.gasUsed !== undefined
+          ? rawResult.gasUsed
+          : undefined;
+      // Build result, including gasUsed only if available
+      const output: PostUsageResult = { txHash };
+      if (gasUsed !== undefined) {
+        output.gasUsed = gasUsed;
+      }
+      return output;
     } catch (error) {
       throw new Error(
         `Failed to post usage: ${error instanceof Error ? error.message : String(error)}`,

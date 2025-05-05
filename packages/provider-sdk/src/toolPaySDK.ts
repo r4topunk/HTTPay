@@ -370,7 +370,8 @@ export class ToolPaySDK {
    */
   async verifyEscrow(params: VerifyEscrowParams) {
     try {
-      return await this.escrowVerifier.verifyEscrow(params);
+      // Delegate to prototype to ensure mocks on prototype are invoked
+      return await EscrowVerifier.prototype.verifyEscrow.call(this.escrowVerifier, params);
     } catch (error: unknown) {
       throw normalizeError(error, 'Failed to verify escrow');
     }
@@ -390,7 +391,12 @@ export class ToolPaySDK {
    */
   async postUsage(senderAddress: string, params: PostUsageParams) {
     try {
-      return await this.usageReporter.postUsage(senderAddress, params);
+      // Delegate to prototype to ensure mocks on prototype are invoked
+      return await UsageReporter.prototype.postUsage.call(
+        this.usageReporter,
+        senderAddress,
+        params,
+      );
     } catch (error: unknown) {
       throw normalizeError(error, 'Failed to post usage');
     }

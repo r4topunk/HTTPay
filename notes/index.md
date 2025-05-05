@@ -12,6 +12,7 @@ This file serves as an index and guide to the implementation notes for the ToolP
 - **phase2-chunk1.md**: Provider SDK project setup and contract bindings (Phase 2, Chunk 1) – Phase 2 completed, see this file for details.
 - **phase3-chunk1.md**: Core SDK Classes implementation (Phase 3, Chunk 1) – Phase 3 completed, see this file for details.
 - **phase4-chunk1.md**: Utilities and Configuration implementation (Phase 4, Chunk 1) – Phase 4 completed, see this file for details.
+- **phase5-chunk1.md**: Documentation, Testing, and AI-Wallet Demo (Phase 5, Chunk 1) – Phase 5 completed, see this file for details.
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
 

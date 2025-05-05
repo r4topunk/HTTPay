@@ -122,15 +122,14 @@ export class UsageReporter {
     // Options are no longer used directly in the EscrowClient call
 
     try {
-      const result = await this.escrowClient.releaseFunds(
+      const txHash = await this.escrowClient.releaseFunds(
         senderAddress,
         escrowId,
         params.usageFee.toString(),
       );
 
       return {
-        txHash: result.transactionHash,
-        gasUsed: result.gasUsed,
+        txHash,
         fee: '0', // In a real implementation, you might calculate this from gasUsed and gasPrice
       };
     } catch (error) {

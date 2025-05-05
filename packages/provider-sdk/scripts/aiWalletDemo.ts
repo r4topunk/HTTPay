@@ -14,7 +14,6 @@
  */
 
 import { ToolPaySDK } from '../src/toolPaySDK.js';
-import { GasPrice } from '@cosmjs/stargate';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import { randomBytes } from 'crypto';
 
@@ -99,6 +98,9 @@ async function runDemo() {
 
     // Current block height for expiration calculation
     const client = clientSDK.getClient();
+    if (!client) {
+      throw new Error('Failed to get client');
+    }
     const currentHeight = await client.getHeight();
     const expiresAt = currentHeight + 50; // Expires in 50 blocks
 
@@ -127,7 +129,7 @@ async function runDemo() {
       providerAddr: providerAddress,
     });
 
-    if (verificationResult.isValid) {
+    if (verificationResult.isValid && verificationResult.escrow) {
       console.log('Escrow verified successfully!', {
         escrowId: verificationResult.escrow.escrow_id,
         maxFee: verificationResult.escrow.max_fee,

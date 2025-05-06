@@ -248,29 +248,29 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Create wrapper classes (`RegistryClient` and `EscrowClient`) for contract interaction
 
 ### 7.3 Implement escrow verification
-- [ ] Create `EscrowVerifier` class
-- [ ] Implement `verifyEscrow` method:
-  - [ ] Query escrow by ID
-  - [ ] Validate auth token
-  - [ ] Check expiration
-  - [ ] Verify provider address
-  - [ ] Return boolean result and escrow details
+- [x] Create `EscrowVerifier` class
+- [x] Implement `verifyEscrow` method:
+  - [x] Query escrow by ID
+  - [x] Validate auth token
+  - [x] Check expiration
+  - [x] Verify provider address
+  - [x] Return boolean result and escrow details
 
 ### 7.4 Implement usage posting
-- [ ] Create `UsageReporter` class
-- [ ] Implement `postUsage` method:
-  - [ ] Create `Release` message
-  - [ ] Sign and broadcast transaction
-  - [ ] Handle error states
-  - [ ] Return transaction hash and status
+- [x] Create `UsageReporter` class
+- [x] Implement `postUsage` method:
+  - [x] Create `Release` message
+  - [x] Sign and broadcast transaction
+  - [x] Handle error states
+  - [x] Return transaction hash and status
 
 ### 7.5 Prepare package for publishing
-- [ ] Add documentation comments
-- [ ] Create README with examples
-- [ ] Add tests for SDK functions
+- [x] Add documentation comments
+- [x] Create README with examples
+- [x] Add tests for SDK functions
 - [ ] Create packaged version for local registry
 
-## Chunk 8: CLI Tool for Provider
+## Chunk 8: CLI Tool for Provider (do not implement this)
 
 ### 8.1 Set up CLI framework
 - [ ] Create directory `packages/provider-cli`
@@ -307,19 +307,19 @@ We will implement ToolPay in 3 distinct phases:
 ## Chunk 9: AI-Wallet Client Demo & E2E
 
 ### 9.1 Create demo script
-- [ ] Initialize demo directory
-- [ ] Create wallet generation utilities
-- [ ] Implement tool discovery flow
-- [ ] Implement fund locking and API call flow
+- [x] Initialize demo directory
+- [x] Create wallet generation utilities
+- [x] Implement tool discovery flow
+- [x] Implement fund locking and API call flow
 - [ ] Create simple HTTP server for demo provider
 
 ### 9.2 Implement E2E test script
 - [ ] Set up test environment with contracts deployed
-- [ ] Create test wallets with funds
-- [ ] Register test tool
-- [ ] Lock funds and verify escrow
-- [ ] Mock API call with auth token
-- [ ] Release funds and verify balances
+- [x] Create test wallets with funds
+- [x] Register test tool
+- [x] Lock funds and verify escrow
+- [x] Mock API call with auth token
+- [x] Release funds and verify balances
 - [ ] Test refund flow with timeout
 
 ### 9.3 Integrate with CI

@@ -14,7 +14,7 @@
  */
 
 import { ToolPaySDK } from '../src/toolPaySDK.js';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import { createWalletFromMnemonic, getWalletAddress } from '../src/utils/wallet.js';
 import { randomBytes } from 'crypto';
 
 // Configuration
@@ -36,16 +36,6 @@ const TOOL_ID = 'sentiment-api';
 const TOOL_PRICE = '1000000'; // 1 NTRN assuming 6 decimals
 const AUTH_TOKEN = randomBytes(16).toString('base64');
 
-// Helpers
-async function createWallet(mnemonic: string) {
-  return DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix: 'neutron' });
-}
-
-async function getAddress(wallet: DirectSecp256k1HdWallet) {
-  const accounts = await wallet.getAccounts();
-  return accounts[0].address;
-}
-
 /**
  * Main demo function
  */
@@ -57,8 +47,8 @@ async function runDemo() {
   try {
     // Provider setup
     console.log('\n🔧 Setting up provider wallet and SDK...');
-    const providerWallet = await createWallet(providerMnemonic);
-    const providerAddress = await getAddress(providerWallet);
+    const providerWallet = await createWalletFromMnemonic(providerMnemonic);
+    const providerAddress = await getWalletAddress(providerWallet);
     console.log(`Provider address: ${providerAddress}`);
 
     const providerSDK = new ToolPaySDK(config);
@@ -67,8 +57,8 @@ async function runDemo() {
 
     // Client setup
     console.log('\n🔧 Setting up client wallet and SDK...');
-    const clientWallet = await createWallet(clientMnemonic);
-    const clientAddress = await getAddress(clientWallet);
+    const clientWallet = await createWalletFromMnemonic(clientMnemonic);
+    const clientAddress = await getWalletAddress(clientWallet);
     console.log(`Client address: ${clientAddress}`);
 
     const clientSDK = new ToolPaySDK(config);

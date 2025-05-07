@@ -100,6 +100,49 @@ async function runDemo() {
     const clientWallet = await createWalletFromPrivateKey(clientPrivateKey);
     const clientAddress = await getWalletAddress(clientWallet);
     console.log(`Client address: ${clientAddress} (from private key)`);
+
+    // Query and log initial balances
+    console.log('\\n💰 Querying initial wallet balances...');
+    const tempSDK = new ToolPaySDK(config); // Temporary SDK to get a client for balance query
+    
+    // Attempt to connect the temporary SDK to fetch balances
+    try {
+      // Connect with one of the keys to initialize the internal client for balance fetching
+      await tempSDK.connectWithPrivateKey(providerPrivateKey); // Using providerPrivateKey, clientPrivateKey would also work
+      const cosmWasmClient = tempSDK.getClient();
+
+      if (cosmWasmClient) {
+        let denomForBalance = 'untrn'; // Default denom
+
+        if (config.gasPrice && typeof config.gasPrice === 'string') {
+          const match = config.gasPrice.match(/[a-zA-Z]+$/); // Extracts trailing letters (denom)
+          if (match && match[0]) {
+            denomForBalance = match[0];
+          } else {
+            console.warn(`Could not parse denom from gasPrice: '${config.gasPrice}'. Using default '${denomForBalance}'.`);
+          }
+        } else {
+          console.warn(`config.gasPrice is undefined or not a string. Using default denom '${denomForBalance}' for balance query.`);
+        }
+
+        try {
+          const providerBalance = await cosmWasmClient.getBalance(providerAddress, denomForBalance);
+          console.log(`Provider initial balance: ${providerBalance.amount}${providerBalance.denom}`);
+        } catch (e) {
+          console.warn(`Could not fetch provider balance for denom '${denomForBalance}': ${(e as Error).message}`);
+        }
+        try {
+          const clientBalance = await cosmWasmClient.getBalance(clientAddress, denomForBalance);
+          console.log(`Client initial balance: ${clientBalance.amount}${clientBalance.denom}`);
+        } catch (e) {
+          console.warn(`Could not fetch client balance for denom '${denomForBalance}': ${(e as Error).message}`);
+        }
+      } else {
+        console.warn('Could not get CosmWasmClient to query balances after SDK connection.');
+      }
+    } catch (error) {
+      console.warn(`Failed to connect temporary SDK for balance query: ${(error as Error).message}`);
+    }
     
     // Provider setup
     console.log('\n🔧 Setting up provider SDK...');
@@ -217,13 +260,13 @@ async function runDemo() {
     // Step 3: Client locks funds in escrow
     console.log('\n💰 Step 3: Client locks funds in escrow...');
 
+    let currentHeight: number; // Declare currentHeight here
     // Current block height for expiration calculation
     const client = clientSDK.getClient();
     if (!client) {
       throw new Error('Failed to get client');
     }
     
-    let currentHeight: number;
     try {
       currentHeight = await client.getHeight();
     } catch (error) {

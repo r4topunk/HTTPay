@@ -31,7 +31,7 @@ const sdk = new ToolPaySDK({
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
   registryAddress: 'neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv',
-  escrowAddress: 'neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr',
+  escrowAddress: 'neutron15pc80qem8vn8g6nazjs8nayx625x6g0wy9kte4y56ru7k3d6ek0shmc92y',
 });
 
 // Verify an escrow using the escrow verifier

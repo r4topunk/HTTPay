@@ -216,7 +216,7 @@ ToolPay contracts are deployed on Neutron testnet (pion-1) with the following ad
 | Contract  | Address                                                             |
 |-----------|---------------------------------------------------------------------|
 | Registry  | neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv |
-| Escrow    | neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr |
+| Escrow    | neutron15pc80qem8vn8g6nazjs8nayx625x6g0wy9kte4y56ru7k3d6ek0shmc92y |
 
 ### Interacting with Deployed Contracts
 
@@ -225,7 +225,7 @@ ToolPay contracts are deployed on Neutron testnet (pion-1) with the following ad
 neutrond query wasm contract-state smart neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv '{"get_tool":{"tool_id":"example-tool"}}'
 
 # Query an escrow by ID
-neutrond query wasm contract-state smart neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr '{"get_escrow":{"escrow_id":1}}'
+neutrond query wasm contract-state smart neutron15pc80qem8vn8g6nazjs8nayx625x6g0wy9kte4y56ru7k3d6ek0shmc92y '{"get_escrow":{"escrow_id":1}}'
 ```
 
 ---

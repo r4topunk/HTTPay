@@ -20,7 +20,7 @@ This file documents the build and deployment sequence for ToolPay contracts on t
 
 ### Deployed Contract Addresses
 - Registry: neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv
-- Escrow: neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsacjsfu0lytrupm3h42sag09wr
+- Escrow: neutron15pc80qem8vn8g6nazjs8nayx625x6g0wy9kte4y56ru7k3d6ek0shmc92y
 
 ### Notes
 - Always deploy and instantiate the Registry contract before the Escrow contract

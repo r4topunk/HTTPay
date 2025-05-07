@@ -2,7 +2,8 @@
  * Wallet utilities for ToolPaySDK
  */
 
-import { DirectSecp256k1HdWallet, OfflineDirectSigner } from '@cosmjs/proto-signing';
+import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import type { OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { GasPrice } from '@cosmjs/stargate';
 

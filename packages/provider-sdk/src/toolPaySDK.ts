@@ -39,8 +39,10 @@
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { EscrowClient } from './clients/EscrowClient.js';
 import { RegistryClient } from './clients/RegistryClient.js';
-import { EscrowVerifier, VerifyEscrowParams } from './escrowVerifier.js';
-import { UsageReporter, PostUsageParams } from './usageReporter.js';
+import { EscrowVerifier } from './escrowVerifier.js';
+import type { VerifyEscrowParams } from './escrowVerifier.js';
+import { UsageReporter } from './usageReporter.js';
+import type { PostUsageParams } from './usageReporter.js';
 import { SDK_VERSION } from './index.js';
 import {
   validateConfig,

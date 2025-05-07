@@ -5,9 +5,9 @@
  */
 
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Coin } from '@cosmjs/stargate';
-import { Uint128 } from '../types/common.js';
-import { RegistryExecuteMsg, ToolResponse } from '../types/registry.js';
+import type { Coin } from '@cosmjs/stargate';
+import type { Uint128 } from '../types/common.js';
+import type { RegistryExecuteMsg, ToolResponse } from '../types/registry.js';
 
 /**
  * Client for interacting with the ToolPay Registry contract

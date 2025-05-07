@@ -25,7 +25,7 @@
  */
 
 import { EscrowClient } from './clients/EscrowClient.js';
-import { Uint128 } from './types/common.js';
+import type { Uint128 } from './types/common.js';
 
 /**
  * Options for posting usage

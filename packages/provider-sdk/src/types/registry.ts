@@ -4,7 +4,7 @@
  * These types define the messages, queries, and responses for interacting with
  * the Registry contract.
  */
-import { Uint128 } from "./common.js";
+import type { Uint128 } from "./common.js";
 
 /**
  * InstantiateMsg for the Registry contract

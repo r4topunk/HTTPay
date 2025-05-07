@@ -2,7 +2,7 @@
  * Configuration utilities for ToolPaySDK
  */
 
-import { ToolPaySDKConfig } from '../toolPaySDK.js';
+import type { ToolPaySDKConfig } from '../toolPaySDK.js';
 
 /**
  * Validates ToolPay SDK configuration

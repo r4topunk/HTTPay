@@ -31,7 +31,7 @@
  */
 
 import { EscrowClient } from './clients/EscrowClient.js';
-import { EscrowResponse } from './types/escrow.js';
+import type { EscrowResponse } from './types/escrow.js';
 
 /**
  * Result of an escrow verification

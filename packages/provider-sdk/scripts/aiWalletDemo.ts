@@ -27,7 +27,7 @@ import { randomBytes } from 'crypto';
 import { ConfigurationError, NetworkError } from '../src/utils/errors.js';
 
 // Get network configuration with defaults (override with environment variables)
-const networkType = (process.env.NETWORK || 'local') as 'mainnet' | 'testnet' | 'local';
+const networkType = (process.env.NETWORK || 'testnet') as 'mainnet' | 'testnet' | 'local';
 const networkDefaults = getNetworkDefaults(networkType);
 
 // Configuration with type safety
@@ -245,7 +245,10 @@ async function runDemo() {
 }
 
 // Run the demo if this script is executed directly
-if (require.main === module) {
+// In ES modules, we can check if the current module is the main module by checking import.meta.url
+// against the Node.js process's entry point
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
   runDemo().catch((error) => {
     console.error('Unhandled error in demo:', error);
     process.exit(1);

@@ -311,6 +311,7 @@ We will implement ToolPay in 3 distinct phases:
 - [x] Create wallet generation utilities
 - [x] Implement tool discovery flow
 - [x] Implement fund locking and API call flow
+- [x] Update client authentication to use private key instead of mnemonic
 - [ ] Create simple HTTP server for demo provider
 
 ### 9.2 Implement E2E test script

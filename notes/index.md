@@ -15,6 +15,7 @@ This file serves as an index and guide to the implementation notes for the ToolP
 - **phase5-chunk1.md**: Documentation, Testing, and AI-Wallet Demo (Phase 5, Chunk 1) – Phase 5 completed, see this file for details.
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
+- **client-auth-update.md**: Client authentication updated to use private key instead of mnemonic
 
 _All files are now located in the `notes/` folder._
 

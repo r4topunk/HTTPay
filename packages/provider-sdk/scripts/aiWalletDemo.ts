@@ -19,7 +19,7 @@
  * - REGISTRY_ADDRESS: The address of the registry contract (default: 'neutron1registry')
  * - ESCROW_ADDRESS: The address of the escrow contract (default: 'neutron1escrow')
  * - PROVIDER_PRIVATE_KEY: The private key to use for the provider (default: test key)
- * - CLIENT_MNEMONIC: The mnemonic to use for the client (default: test mnemonic)
+ * - CLIENT_PRIVATE_KEY: The private key to use for the client (default: test key)
  * - TOOL_ID: The ID of the tool to use
  * - TOOL_PRICE: The price of the tool in untrn
  */
@@ -61,18 +61,18 @@ const config = {
   gasPrice: networkDefaults.gasPrice,
 };
 
-// Get private key and mnemonic from environment variables or use defaults for testing
+// Get private keys from environment variables or use defaults for testing
 // (never use these defaults in production!)
 const providerPrivateKey = process.env.PROVIDER_PRIVATE_KEY as string;
-const clientMnemonic = process.env.CLIENT_MNEMONIC as string;
+const clientPrivateKey = process.env.CLIENT_PRIVATE_KEY as string;
 
 if (!providerPrivateKey) {
   console.error('Provider private key is required. Set PROVIDER_PRIVATE_KEY environment variable.');
   process.exit(1);
 }
 
-if (!clientMnemonic) {
-  console.error('Client mnemonic is required. Set CLIENT_MNEMONIC environment variable.');
+if (!clientPrivateKey) {
+  console.error('Client private key is required. Set CLIENT_PRIVATE_KEY environment variable.');
   process.exit(1);
 }
 
@@ -97,9 +97,9 @@ async function runDemo() {
     const providerAddress = await getWalletAddress(providerWallet);
     console.log(`Provider address: ${providerAddress} (from private key)`);
 
-    const clientWallet = await createWalletFromMnemonic(clientMnemonic);
+    const clientWallet = await createWalletFromPrivateKey(clientPrivateKey);
     const clientAddress = await getWalletAddress(clientWallet);
-    console.log(`Client address: ${clientAddress}`);
+    console.log(`Client address: ${clientAddress} (from private key)`);
     
     // Provider setup
     console.log('\n🔧 Setting up provider SDK...');
@@ -125,8 +125,8 @@ async function runDemo() {
     const clientSDK = new ToolPaySDK(config);
     
     try {
-      await clientSDK.connectWithMnemonic(clientMnemonic);
-      console.log('Client SDK connected successfully');
+      await clientSDK.connectWithPrivateKey(clientPrivateKey);
+      console.log('Client SDK connected successfully using private key');
     } catch (error) {
       if (error instanceof NetworkError) {
         console.error(`Network error: ${error.message}`);

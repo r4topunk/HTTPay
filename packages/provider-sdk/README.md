@@ -122,7 +122,7 @@ The demo script supports the following environment variables:
 | `REGISTRY_ADDRESS` | Registry contract address | Default test address |
 | `ESCROW_ADDRESS` | Escrow contract address | Default test address |
 | `PROVIDER_PRIVATE_KEY` | Provider's private key | None (required) |
-| `CLIENT_MNEMONIC` | Client's mnemonic | None (required) |
+| `CLIENT_PRIVATE_KEY` | Client's mnemonic | None (required) |
 | `TOOL_ID` | Tool ID to use | 'sentiment-api' |
 | `TOOL_PRICE` | Tool price in untrn | '1000' |
 

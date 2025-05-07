@@ -92,7 +92,7 @@ export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Pa
       };
     case 'testnet':
       return {
-        rpcEndpoint: 'https://rpc-lb-pion.ntrn.tech',
+        rpcEndpoint: 'https://rpc-falcron.pion-1.ntrn.tech:443',
         chainId: 'pion-1',
         gasPrice: '0.0053untrn',
       };

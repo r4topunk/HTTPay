@@ -47,6 +47,7 @@ import { SDK_VERSION } from './index.js';
 import {
   validateConfig,
   createWalletFromMnemonic,
+  createWalletFromPrivateKey,
   createSigningClientFromWallet,
   normalizeError,
   // Import error classes (not as types)
@@ -227,6 +228,41 @@ export class ToolPaySDK {
       return this;
     } catch (error: unknown) {
       throw normalizeError(error, 'Failed to connect with mnemonic');
+    }
+  }
+
+  /**
+   * Connect to the chain with a signing client using a private key
+   *
+   * This method establishes a connection to the blockchain using
+   * a signing client that can send transactions. The client is created
+   * from a hex-encoded private key.
+   *
+   * @param privateKeyHex - The hex-encoded private key (without 0x prefix)
+   * @param prefix - Optional bech32 prefix (default: "neutron")
+   * @returns This SDK instance for chaining
+   * @throws NetworkError if connection fails
+   */
+  async connectWithPrivateKey(privateKeyHex: string, prefix = 'neutron'): Promise<ToolPaySDK> {
+    try {
+      if (!this.client || !('execute' in this.client)) {
+        // Use our helper function from utils
+        const wallet = await createWalletFromPrivateKey(privateKeyHex, { prefix });
+
+        // Connect to the chain with a signing client
+        this.client = await createSigningClientFromWallet(
+          this.config.rpcEndpoint,
+          wallet,
+          this.config.gasPrice, // Use gas price from config
+          { prefix },
+        );
+
+        this.initializeClients();
+      }
+
+      return this;
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to connect with private key');
     }
   }
 

@@ -2,7 +2,7 @@
  * Wallet utilities for ToolPaySDK
  */
 
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
+import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
 import type { OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { GasPrice } from '@cosmjs/stargate';
@@ -52,6 +52,35 @@ export async function createWalletFromMnemonic(
   // We just use the options without the hdPath to avoid type issues
   const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, walletOptions);
 
+  return wallet;
+}
+
+/**
+ * Creates a wallet from a private key
+ * 
+ * @param privateKeyHex - Hex-encoded private key (without 0x prefix)
+ * @param options - Optional wallet creation options
+ * @returns A CosmJS direct signer
+ */
+export async function createWalletFromPrivateKey(
+  privateKeyHex: string,
+  options: { prefix?: string } = {},
+): Promise<OfflineDirectSigner> {
+  // Validate the private key format
+  if (!privateKeyHex || !/^[0-9a-fA-F]{64}$/.test(privateKeyHex)) {
+    throw new Error('Invalid private key. Must be a 64-character hex string.');
+  }
+
+  // Convert hex string to Uint8Array
+  const privateKey = new Uint8Array(
+    privateKeyHex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []
+  );
+  
+  const { prefix = 'neutron' } = options;
+  
+  // Create wallet from private key
+  const wallet = await DirectSecp256k1Wallet.fromKey(privateKey, prefix);
+  
   return wallet;
 }
 

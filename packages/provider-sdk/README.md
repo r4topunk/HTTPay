@@ -81,6 +81,51 @@ const testnetSdk = new ToolPaySDK({
 });
 ```
 
+## Demo Script
+
+The SDK includes a demo script that simulates a full ToolPay workflow:
+
+1. Tool registration by a provider
+2. Tool discovery by a client
+3. Fund locking in an escrow
+4. Escrow verification by the provider
+5. Service provision and usage reporting
+6. Fund claiming by the provider
+
+### Running the Demo
+
+1. Copy the environment configuration file:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file with your private key, mnemonic, and other settings.
+
+3. Run the demo script:
+   ```bash
+   # Build the SDK first
+   pnpm build
+   
+   # Run the demo script
+   node dist-scripts/scripts/aiWalletDemo.js
+   ```
+
+### Environment Variables
+
+The demo script supports the following environment variables:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NETWORK` | Network to connect to ('mainnet', 'testnet', 'local') | 'testnet' |
+| `RPC_ENDPOINT` | RPC endpoint | Based on `NETWORK` |
+| `CHAIN_ID` | Chain ID | Based on `NETWORK` |
+| `REGISTRY_ADDRESS` | Registry contract address | Default test address |
+| `ESCROW_ADDRESS` | Escrow contract address | Default test address |
+| `PROVIDER_PRIVATE_KEY` | Provider's private key | None (required) |
+| `CLIENT_MNEMONIC` | Client's mnemonic | None (required) |
+| `TOOL_ID` | Tool ID to use | 'sentiment-api' |
+| `TOOL_PRICE` | Tool price in untrn | '1000' |
+
 ## License
 
 MIT

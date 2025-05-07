@@ -18,10 +18,31 @@
  * - CHAIN_ID: Override the chain ID (default: based on network)
  * - REGISTRY_ADDRESS: The address of the registry contract (default: 'neutron1registry')
  * - ESCROW_ADDRESS: The address of the escrow contract (default: 'neutron1escrow')
+ * - PROVIDER_PRIVATE_KEY: The private key to use for the provider (default: test key)
+ * - CLIENT_MNEMONIC: The mnemonic to use for the client (default: test mnemonic)
+ * - TOOL_ID: The ID of the tool to use
+ * - TOOL_PRICE: The price of the tool in untrn
  */
 
+// Load environment variables from .env file
+import 'dotenv/config';
+import * as path from 'path';
+import * as fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Try to load .env file from the package root directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, '..', '.env');
+
+// Check if .env file exists
+if (!fs.existsSync(envPath)) {
+  console.log(`Warning: No .env file found at ${envPath}. Using environment variables or defaults.`);
+  console.log('You can create a .env file by copying .env.example and filling in your values.');
+}
+
 import { ToolPaySDK } from '../src/toolPaySDK.js';
-import { createWalletFromMnemonic, getWalletAddress } from '../src/utils/wallet.js';
+import { createWalletFromMnemonic, createWalletFromPrivateKey, getWalletAddress } from '../src/utils/wallet.js';
 import { getNetworkDefaults } from '../src/utils/config.js';
 import { randomBytes } from 'crypto';
 import { ConfigurationError, NetworkError } from '../src/utils/errors.js';
@@ -34,20 +55,30 @@ const networkDefaults = getNetworkDefaults(networkType);
 const config = {
   rpcEndpoint: process.env.RPC_ENDPOINT || networkDefaults.rpcEndpoint || 'http://localhost:26657',
   chainId: process.env.CHAIN_ID || networkDefaults.chainId || 'local-testnet',
-  registryAddress: process.env.REGISTRY_ADDRESS || 'neutron1registry',
-  escrowAddress: process.env.ESCROW_ADDRESS || 'neutron1escrow',
+  registryAddress: process.env.REGISTRY_ADDRESS || 'neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv',
+  escrowAddress: process.env.ESCROW_ADDRESS || 'neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsfu0lytrupm3h42sag09wr',
   gasAdjustment: 1.3,
+  gasPrice: networkDefaults.gasPrice,
 };
 
-// Test mnemonics (don't use these in production!)
-const providerMnemonic =
-  'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
-const clientMnemonic =
-  'notice oak worry limit wrap speak medal online prefer cluster roof addict wrist behave treat actual wasp year salad speed social layer crew genius';
+// Get private key and mnemonic from environment variables or use defaults for testing
+// (never use these defaults in production!)
+const providerPrivateKey = process.env.PROVIDER_PRIVATE_KEY as string;
+const clientMnemonic = process.env.CLIENT_MNEMONIC as string;
+
+if (!providerPrivateKey) {
+  console.error('Provider private key is required. Set PROVIDER_PRIVATE_KEY environment variable.');
+  process.exit(1);
+}
+
+if (!clientMnemonic) {
+  console.error('Client mnemonic is required. Set CLIENT_MNEMONIC environment variable.');
+  process.exit(1);
+}
 
 // Tool details
-const TOOL_ID = 'sentiment-api';
-const TOOL_PRICE = '1000000'; // 1 NTRN assuming 6 decimals
+const TOOL_ID = process.env.TOOL_ID || 'sentiment-api';
+const TOOL_PRICE = process.env.TOOL_PRICE || '1000'; // 0.001 NTRN assuming 6 decimals
 const AUTH_TOKEN = randomBytes(16).toString('base64');
 
 /**
@@ -62,9 +93,9 @@ async function runDemo() {
   try {
     // Create wallets first to get addresses
     console.log('\n🔧 Creating wallets...');
-    const providerWallet = await createWalletFromMnemonic(providerMnemonic);
+    const providerWallet = await createWalletFromPrivateKey(providerPrivateKey);
     const providerAddress = await getWalletAddress(providerWallet);
-    console.log(`Provider address: ${providerAddress}`);
+    console.log(`Provider address: ${providerAddress} (from private key)`);
 
     const clientWallet = await createWalletFromMnemonic(clientMnemonic);
     const clientAddress = await getWalletAddress(clientWallet);
@@ -75,8 +106,8 @@ async function runDemo() {
     const providerSDK = new ToolPaySDK(config);
     
     try {
-      await providerSDK.connectWithMnemonic(providerMnemonic);
-      console.log('Provider SDK connected successfully');
+      await providerSDK.connectWithPrivateKey(providerPrivateKey);
+      console.log('Provider SDK connected successfully using private key');
     } catch (error) {
       if (error instanceof NetworkError) {
         console.error(`Network error: ${error.message}`);
@@ -108,18 +139,53 @@ async function runDemo() {
       }
     }
 
-    // Step 1: Provider registers a tool
-    console.log('\n📝 Step 1: Provider registers a tool...');
+    // Step 1: Provider registers a tool (skip if already registered)
+    console.log('\n📝 Step 1: Checking if tool already registered...');
+    
+    let toolAlreadyRegistered = false;
     try {
-      await providerSDK.registry.registerTool(providerAddress, TOOL_ID, TOOL_PRICE);
-      console.log(`Tool '${TOOL_ID}' registered successfully`);
+      // First try to get the tool to see if it's already registered
+      const existingTool = await providerSDK.registry.getTool(TOOL_ID);
+      if (existingTool) {
+        console.log(`Tool '${TOOL_ID}' is already registered with provider: ${existingTool.provider}`);
+        toolAlreadyRegistered = true;
+      }
     } catch (error) {
-      // For demo purposes, we'll continue if tool is already registered
-      console.log(`Tool likely already registered: ${error.message}`);
+      // Tool not found, we'll try to register it
+      console.log(`Tool not found, will attempt to register it...`);
+    }
+    
+    // Only try to register if not already registered
+    if (!toolAlreadyRegistered) {
+      try {
+        // Note: The registry contract requires a significant deposit for tool registration
+        // For this demo, we'll skip actual registration if we get insufficient funds
+        await providerSDK.registry.registerTool(
+          providerAddress, 
+          TOOL_ID, 
+          TOOL_PRICE,
+          // Include funds for registration deposit if required by contract
+          // This is commented out as it depends on contract requirements
+          // [{ denom: 'untrn', amount: '1000000000' }]
+        );
+        console.log(`Tool '${TOOL_ID}' registered successfully`);
+      } catch (error) {
+        // For demo purposes, we'll continue if registration fails
+        console.log(`Tool registration skipped: ${error.message}`);
+        console.log('Continuing with demo using existing tool or simulated registration...');
+      }
     }
 
     // Step 2: Client discovers the tool
     console.log('\n🔍 Step 2: Client discovers the tool...');
+    
+    interface ToolInfo {
+      id: string;
+      provider: string;
+      price: string;
+    }
+    
+    let toolInfo: ToolInfo;
     try {
       const tool = await clientSDK.registry.getTool(TOOL_ID);
       
@@ -127,14 +193,25 @@ async function runDemo() {
         throw new Error('Tool not found in registry');
       }
       
-      console.log('Tool discovered:', {
+      toolInfo = {
         id: TOOL_ID,
         provider: tool.provider,
         price: tool.price,
-      });
+      };
+      
+      console.log('Tool discovered:', toolInfo);
     } catch (error) {
-      console.error(`Failed to discover tool: ${error.message}`);
-      process.exit(1);
+      console.log(`Tool discovery failed: ${error.message}`);
+      console.log('For demo purposes, continuing with simulated tool data...');
+      
+      // Create simulated tool data for demo purposes
+      toolInfo = {
+        id: TOOL_ID,
+        provider: providerAddress, // Use the provider address we have
+        price: TOOL_PRICE
+      };
+      
+      console.log('Using simulated tool data:', toolInfo);
     }
 
     // Step 3: Client locks funds in escrow

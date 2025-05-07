@@ -122,7 +122,7 @@ pub fn lock_funds(
     let attached_funds = info
         .funds
         .iter()
-        .find(|c| c.denom == "uatom")  // Using uatom as an example, adjust based on your chain
+        .find(|c| c.denom == "untrn")
         .map(|c| c.amount)
         .unwrap_or(Uint128::zero());
 
@@ -218,7 +218,7 @@ pub fn release(
         messages.push(CosmosMsg::Bank(BankMsg::Send {
             to_address: escrow.provider.to_string(),
             amount: vec![Coin {
-                denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+                denom: "untrn".to_string(),
                 amount: usage_fee,
             }],
         }));
@@ -229,7 +229,7 @@ pub fn release(
         messages.push(CosmosMsg::Bank(BankMsg::Send {
             to_address: escrow.caller.to_string(),
             amount: vec![Coin {
-                denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+                denom: "untrn".to_string(),
                 amount: refund_amount,
             }],
         }));
@@ -279,7 +279,7 @@ pub fn refund_expired(
     let refund_msg = CosmosMsg::Bank(BankMsg::Send {
         to_address: escrow.caller.to_string(),
         amount: vec![Coin {
-            denom: "uatom".to_string(), // Using uatom as an example; adjust based on your chain
+            denom: "untrn".to_string(),
             amount: escrow.max_fee,
         }],
     });

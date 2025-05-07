@@ -14,7 +14,7 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use registry::msg::{ExecuteMsg as RegistryExecuteMsg, InstantiateMsg as RegistryInstantiateMsg};
 
 // Define constants for testing
-pub const ATOM: &str = "uatom";
+pub const ATOM: &str = "untrn";
 pub const DEFAULT_MAX_FEE: u128 = 100;
 pub const DEFAULT_USAGE_FEE: u128 = 50;
 pub const DEFAULT_TOOL_ID: &str = "testtool";

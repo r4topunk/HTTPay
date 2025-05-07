@@ -41,12 +41,32 @@ export class RegistryClient {
    * 
    * @param toolId - ID of the tool to query
    * @returns Tool information if found
+   * @throws Error if tool not found or query fails
    */
   async getTool(toolId: string): Promise<ToolResponse> {
     const query = {
       get_tool: { tool_id: toolId }
     };
-    return await this.client.queryContractSmart(this.contractAddress, query);
+    
+    try {
+      const response = await this.client.queryContractSmart(this.contractAddress, query);
+      
+      // Validate response has expected structure
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response from registry contract');
+      }
+      
+      return response;
+    } catch (error) {
+      // Normalize error message for better debugging
+      if (error instanceof Error) {
+        if (error.message.includes('not found') || error.message.includes('No such tool')) {
+          throw new Error(`Tool '${toolId}' not found in registry`);
+        }
+        throw error;
+      }
+      throw new Error(`Failed to query tool: ${String(error)}`);
+    }
   }
 
   /**

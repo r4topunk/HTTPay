@@ -122,6 +122,11 @@ async function runDemo() {
     console.log('\n🔍 Step 2: Client discovers the tool...');
     try {
       const tool = await clientSDK.registry.getTool(TOOL_ID);
+      
+      if (!tool) {
+        throw new Error('Tool not found in registry');
+      }
+      
       console.log('Tool discovered:', {
         id: TOOL_ID,
         provider: tool.provider,

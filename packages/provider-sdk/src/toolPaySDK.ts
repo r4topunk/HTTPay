@@ -73,6 +73,9 @@ export interface ToolPaySDKConfig {
   /** Escrow contract address */
   escrowAddress: string;
 
+  /** Optional: Gas price in denom format (e.g., "0.025untrn") */
+  gasPrice?: string;
+  
   /** Optional: Gas adjustment factor (default: 1.3) */
   gasAdjustment?: number;
 
@@ -214,7 +217,7 @@ export class ToolPaySDK {
         this.client = await createSigningClientFromWallet(
           this.config.rpcEndpoint,
           wallet,
-          undefined, // Default gas price
+          this.config.gasPrice, // Use gas price from config
           { prefix },
         );
 

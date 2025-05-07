@@ -88,16 +88,19 @@ export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Pa
       return {
         rpcEndpoint: 'https://rpc.neutron.org',
         chainId: 'neutron-1',
+        gasPrice: '0.025untrn',
       };
     case 'testnet':
       return {
         rpcEndpoint: 'https://rpc-lb-pion.ntrn.tech',
         chainId: 'pion-1',
+        gasPrice: '0.025untrn',
       };
     case 'local':
       return {
         rpcEndpoint: 'http://localhost:26657',
         chainId: 'testing',
+        gasPrice: '0.025untrn',
       };
     default:
       return {};

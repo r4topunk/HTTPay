@@ -91,7 +91,7 @@ export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Pa
       };
     case 'testnet':
       return {
-        rpcEndpoint: 'https://rpc-pion-1.neutron.org',
+        rpcEndpoint: 'https://rpc-lb-pion.ntrn.tech',
         chainId: 'pion-1',
       };
     case 'local':

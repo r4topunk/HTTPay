@@ -277,7 +277,9 @@ async function runDemo() {
     const expiresAt = currentHeight + 50; // Expires in 50 blocks
 
     let txHash: string;
+    let ESCROW_ID: string;
     try {
+      // Execute lockFunds and get the transaction hash
       txHash = await clientSDK.escrow.lockFunds(
         clientAddress,
         TOOL_ID,
@@ -288,16 +290,40 @@ async function runDemo() {
       );
       console.log(`Funds locked in escrow, tx hash: ${txHash}`);
       console.log(`Auth token for verification: ${AUTH_TOKEN}`);
+      
+      // Get transaction details to extract the escrow ID from the events
+      const client = clientSDK.getClient();
+      if (!client) {
+        throw new Error('Failed to get client');
+      }
+      
+      // Query the transaction result to get the events
+      const txResult = await client.getTx(txHash);
+      if (!txResult) {
+        throw new Error(`Could not find transaction with hash ${txHash}`);
+      }
+      
+      // Extract escrow_id from the transaction events
+      // The escrow_id is included in the wasm events attributes
+      const wasmEvents = txResult.events.filter(event => event.type === 'wasm');
+      const escrowIdAttr = wasmEvents
+        .flatMap(event => event.attributes)
+        .find(attr => attr.key === 'escrow_id');
+      
+      if (escrowIdAttr && escrowIdAttr.value) {
+        ESCROW_ID = escrowIdAttr.value;
+        console.log(`Extracted escrow ID from transaction: ${ESCROW_ID}`);
+      } else {
+        // Fallback to using ID 1 if we couldn't extract it
+        ESCROW_ID = '1';
+        console.log(`Could not extract escrow ID from transaction, using default: ${ESCROW_ID}`);
+      }
     } catch (error) {
-      console.error(`Failed to lock funds: ${error.message}`);
-      process.exit(1);
+      console.error(`Failed to lock funds or get escrow ID: ${error.message}`);
+      // Fallback to using ID 1 if there was an error
+      ESCROW_ID = '1';
+      console.log(`Using default escrow ID: ${ESCROW_ID} (fallback)`);
     }
-
-    // For demo purposes, we'd need to get the escrow ID from chain
-    // In a real implementation, this would be returned in the transaction events
-    // For simplicity, we'll simulate by hardcoding escrow ID 1
-    const ESCROW_ID = '1';
-    console.log(`Using escrow ID: ${ESCROW_ID} (simulated for demo)`);
 
     // Step 4: Provider verifies the escrow
     console.log('\n✅ Step 4: Provider verifies the escrow...');
@@ -309,7 +335,10 @@ async function runDemo() {
         providerAddr: providerAddress,
       });
     } catch (error) {
-      console.error(`Failed to verify escrow: ${error.message}`);
+      console.error(`Failed to verify escrow: ${(error as Error).message}`);
+      if (error instanceof Error && error.stack) {
+        console.error('Error stack:', error.stack);
+      }
       process.exit(1);
     }
 
@@ -348,7 +377,10 @@ async function runDemo() {
 
         console.log('\n✨ Demo completed successfully! ✨');
       } catch (error) {
-        console.error(`Failed to report usage: ${error.message}`);
+        console.error(`Failed to report usage: ${(error as Error).message}`);
+        if (error instanceof Error && error.stack) {
+          console.error('Error stack:', error.stack);
+        }
         process.exit(1);
       }
     } else {

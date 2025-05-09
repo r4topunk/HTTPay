@@ -26,8 +26,8 @@
 
 // Load environment variables from .env file
 import 'dotenv/config';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 // Try to load .env file from the package root directory
@@ -41,11 +41,11 @@ if (!fs.existsSync(envPath)) {
   console.log('You can create a .env file by copying .env.example and filling in your values.');
 }
 
-import { ToolPaySDK } from '../src/toolPaySDK.js';
-import { createWalletFromMnemonic, createWalletFromPrivateKey, getWalletAddress } from '../src/utils/wallet.js';
-import { getNetworkDefaults } from '../src/utils/config.js';
 import { randomBytes } from 'crypto';
+import { ToolPaySDK } from '../src/toolPaySDK.js';
+import { getNetworkDefaults } from '../src/utils/config.js';
 import { ConfigurationError, NetworkError } from '../src/utils/errors.js';
+import { createWalletFromPrivateKey, getWalletAddress } from '../src/utils/wallet.js';
 
 // Get network configuration with defaults (override with environment variables)
 const networkType = (process.env.NETWORK || 'testnet') as 'mainnet' | 'testnet' | 'local';

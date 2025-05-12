@@ -64,6 +64,16 @@ export interface EscrowResponse {
 }
 
 /**
+ * LockFundsResponse from the Escrow contract
+ * 
+ * This is the return type for a LockFunds execute method
+ * returned in the response data field
+ */
+export interface LockFundsResponse {
+  escrow_id: number; // uint64
+}
+
+/**
  * SudoMsg for the Escrow contract
  * 
  * A union type representing all possible sudo messages that can be sent

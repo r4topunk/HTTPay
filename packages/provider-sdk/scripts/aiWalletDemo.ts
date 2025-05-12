@@ -281,7 +281,7 @@ async function lockFundsInEscrow(
   
   try {
     // Lock funds
-    const txHash = await sdk.escrow.lockFunds(
+    const lockResult = await sdk.escrow.lockFunds(
       clientAddress,
       TOOL_ID,
       TOOL_PRICE,
@@ -289,24 +289,11 @@ async function lockFundsInEscrow(
       expiresAt,
       [{ denom: 'untrn', amount: TOOL_PRICE }]
     );
-    console.log(`Funds locked, tx hash: ${txHash}`);
-    
-    // Extract escrow ID from transaction
-    const txResult = await client.getTx(txHash);
-    if (!txResult) {
-      throw new Error(`Transaction not found: ${txHash}`);
-    }
-    
-    const wasmEvents = txResult.events.filter(event => event.type === 'wasm');
-    const escrowIdAttr = wasmEvents
-      .flatMap(event => event.attributes)
-      .find(attr => attr.key === 'escrow_id');
-    
-    const escrowId = escrowIdAttr?.value || '1';
-    console.log(`Escrow ID: ${escrowId}, Auth Token: ${AUTH_TOKEN}`);
+    console.log(`Funds locked, tx hash: ${lockResult.transactionHash}`);
+    console.log(`Escrow ID: ${lockResult.escrowId}, Auth Token: ${AUTH_TOKEN}`);
     
     return {
-      escrowId,
+      escrowId: lockResult.escrowId.toString(),
       authToken: AUTH_TOKEN,
       expiresAt
     };

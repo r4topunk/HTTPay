@@ -54,6 +54,13 @@ pub struct EscrowResponse {
     pub auth_token: String,
 }
 
+/// Response type for LockFunds execute method
+/// This is encoded and returned in the response data field
+#[cw_serde]
+pub struct LockFundsResponse {
+    pub escrow_id: u64,
+}
+
 /// Message type for sudo calls
 #[cw_serde]
 pub enum SudoMsg {

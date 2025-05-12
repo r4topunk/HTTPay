@@ -2,13 +2,13 @@
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
     BankMsg, Binary, Coin, CosmosMsg, Deps, DepsMut, Env, Event, MessageInfo, 
-    Response, StdResult, Uint128,
+    Response, StdResult, Uint128, to_json_binary,
 };
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse};
-use cosmwasm_std::{to_json_binary, StdError};
+use cosmwasm_std::StdError;
 use crate::registry_interface::query_tool;
 use crate::state::{Config, Escrow, CONFIG, ESCROWS, NEXT_ID};
 
@@ -168,12 +168,16 @@ pub fn lock_funds(
         .add_attribute("caller", info.sender)
         .add_attribute("max_fee", max_fee.to_string())
         .add_attribute("expires", expires.to_string());
+    
+    // Create response data with escrow_id
+    let response_data = to_json_binary(&crate::msg::LockFundsResponse { escrow_id: id })?;
 
     // Return success response with escrow_id
     Ok(Response::new()
         .add_event(event)
         .add_attribute("action", "lock_funds")
-        .add_attribute("escrow_id", id.to_string()))
+        .add_attribute("escrow_id", id.to_string())
+        .set_data(response_data))
 }
 
 // Implementation of Release functionality

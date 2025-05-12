@@ -197,21 +197,44 @@ pub fn lock_funds(
     )?;
     
     // Extract escrow_id from the response
-    // The attribute is expected to be in the format "escrow_id=X"
-    let escrow_id = res
-        .events
-        .iter()
-        .find_map(|e| {
-            if e.ty == "wasm" {
-                e.attributes
+    // First try to decode from response data (if available)
+    let escrow_id = if let Some(data) = res.data {
+        // Try to decode the data
+        match cosmwasm_std::from_json::<crate::msg::LockFundsResponse>(&data) {
+            Ok(resp) => resp.escrow_id,
+            Err(_) => {
+                // If decoding fails, fall back to event attributes
+                res.events
                     .iter()
-                    .find(|attr| attr.key == "escrow_id")
-                    .map(|attr| attr.value.parse::<u64>().unwrap_or(0))
-            } else {
-                None
+                    .find_map(|e| {
+                        if e.ty == "wasm" {
+                            e.attributes
+                                .iter()
+                                .find(|attr| attr.key == "escrow_id")
+                                .map(|attr| attr.value.parse::<u64>().unwrap_or(0))
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or(0)
             }
-        })
-        .unwrap_or(0);
+        }
+    } else {
+        // No data available, use event attributes
+        res.events
+            .iter()
+            .find_map(|e| {
+                if e.ty == "wasm" {
+                    e.attributes
+                        .iter()
+                        .find(|attr| attr.key == "escrow_id")
+                        .map(|attr| attr.value.parse::<u64>().unwrap_or(0))
+                } else {
+                    None
+                }
+            })
+            .unwrap_or(0)
+    };
     
     Ok(escrow_id)
 }

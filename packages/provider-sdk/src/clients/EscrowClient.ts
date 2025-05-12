@@ -10,6 +10,22 @@ import type { Uint128 } from '../types/common.js';
 import type { EscrowExecuteMsg, EscrowResponse } from '../types/escrow.js';
 
 /**
+ * Result type for lockFunds transaction
+ */
+export interface LockFundsResult {
+  transactionHash: string;
+  escrowId: number;
+}
+
+/**
+ * Result type for lockFunds transaction
+ */
+export interface LockFundsResult {
+  transactionHash: string;
+  escrowId: number;
+}
+
+/**
  * Client for interacting with the ToolPay Escrow contract
  */
 export class EscrowClient {
@@ -80,7 +96,7 @@ export class EscrowClient {
    * @param expires - Block height when this escrow expires
    * @param funds - Optional array of coins to send with the transaction
    * @param memo - Optional transaction memo
-   * @returns Transaction hash
+   * @returns Object containing transactionHash and escrowId
    */
   async lockFunds(
     senderAddress: string,
@@ -90,7 +106,7 @@ export class EscrowClient {
     expires: number,
     funds: readonly Coin[] = [],
     memo?: string,
-  ): Promise<string> {
+  ): Promise<LockFundsResult> {
     const signingClient = this.getSigningClient();
 
     const msg: EscrowExecuteMsg = {
@@ -111,7 +127,24 @@ export class EscrowClient {
       funds
     );
 
-    return result.transactionHash;
+    // Extract escrow_id from the event attributes
+    let escrowId: number = 0;
+    
+    for (const event of result.events) {
+      if (event.type === 'wasm') {
+        for (const attr of event.attributes) {
+          if (attr.key === 'escrow_id') {
+            escrowId = parseInt(attr.value);
+            break;
+          }
+        }
+      }
+    }
+
+    return {
+      transactionHash: result.transactionHash,
+      escrowId,
+    };
   }
 
   /**

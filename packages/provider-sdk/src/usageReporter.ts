@@ -24,8 +24,8 @@
  * ```
  */
 
-import { EscrowClient } from './clients/EscrowClient.js';
-import type { Uint128 } from './types/common.js';
+import { EscrowClient } from './clients/EscrowClient';
+import type { Uint128 } from './types/common';
 
 /**
  * Options for posting usage

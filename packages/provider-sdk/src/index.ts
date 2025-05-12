@@ -8,20 +8,20 @@
  */
 
 // Export main SDK class
-export { ToolPaySDK } from './toolPaySDK.js';
+export { ToolPaySDK } from './toolPaySDK';
 
 // Export core functionality
-export { EscrowVerifier } from './escrowVerifier.js';
-export { UsageReporter } from './usageReporter.js';
+export { EscrowVerifier } from './escrowVerifier';
+export { UsageReporter } from './usageReporter';
 
 // Export contract clients
-export { RegistryClient, EscrowClient } from './clients/index.js';
+export { RegistryClient, EscrowClient } from './clients/index';
 
 // Export types
-export * from './types/index.js';
-export * from './escrowVerifier.js';
-export * from './usageReporter.js';
-export * from './toolPaySDK.js';
+export * from './types/index';
+export * from './escrowVerifier';
+export * from './usageReporter';
+export * from './toolPaySDK';
 
 // Version export
 export const SDK_VERSION = '0.1.0';

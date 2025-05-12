@@ -30,8 +30,8 @@
  * ```
  */
 
-import { EscrowClient } from './clients/EscrowClient.js';
-import type { EscrowResponse } from './types/escrow.js';
+import { EscrowClient } from './clients/EscrowClient';
+import type { EscrowResponse } from './types/escrow';
 
 /**
  * Result of an escrow verification

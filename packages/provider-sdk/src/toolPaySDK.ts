@@ -37,13 +37,13 @@
  */
 
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { EscrowClient } from './clients/EscrowClient.js';
-import { RegistryClient } from './clients/RegistryClient.js';
-import { EscrowVerifier } from './escrowVerifier.js';
-import type { VerifyEscrowParams } from './escrowVerifier.js';
-import { UsageReporter } from './usageReporter.js';
-import type { PostUsageParams } from './usageReporter.js';
-import { SDK_VERSION } from './index.js';
+import { EscrowClient } from './clients/EscrowClient';
+import { RegistryClient } from './clients/RegistryClient';
+import { EscrowVerifier } from './escrowVerifier';
+import type { VerifyEscrowParams } from './escrowVerifier';
+import { UsageReporter } from './usageReporter';
+import type { PostUsageParams } from './usageReporter';
+import { SDK_VERSION } from './index';
 import {
   validateConfig,
   createWalletFromMnemonic,
@@ -53,7 +53,7 @@ import {
   // Import error classes (not as types)
   ConfigurationError,
   NetworkError,
-} from './utils/index.js';
+} from './utils/index';
 
 /**
  * Configuration for the ToolPaySDK

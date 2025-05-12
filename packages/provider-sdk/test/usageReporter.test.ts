@@ -1,6 +1,15 @@
-import { UsageReporter, PostUsageParams } from '../src/usageReporter';
+import { UsageReporter } from '../src/usageReporter';
 import { EscrowClient } from '../src/clients/EscrowClient';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+
+// Define PostUsageParams type to avoid import issues
+interface PostUsageParams {
+  escrowId: number | string;
+  usageFee: string;
+  options?: {
+    memo?: string;
+  };
+}
 
 // Mock the EscrowClient
 jest.mock('../src/clients/EscrowClient', () => {

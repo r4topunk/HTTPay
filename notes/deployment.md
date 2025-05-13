@@ -1,6 +1,6 @@
 # Deployment to Neutron Testnet (pion-1)
 
-This file documents the build and deployment sequence for ToolPay contracts on the Neutron testnet (pion-1), including contract addresses and example commands.
+This file documents the build and deployment sequence for Pay-Per-Tool contracts on the Neutron testnet (pion-1), including contract addresses and example commands.
 
 ## Build and Deployment Sequence
 1. Build and optimize both contracts

@@ -1,5 +1,5 @@
 /**
- * Utility exports for ToolPay SDK
+ * Utility exports for Pay-Per-Tool SDK
  */
 
 export * from './config';

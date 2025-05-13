@@ -1,6 +1,6 @@
-# ToolPay Architecture Notes
+# Pay-Per-Tool Architecture Notes
 
-This file summarizes the high-level architecture and design of the ToolPay MVP, as described in project.md and blueprint.md.
+This file summarizes the high-level architecture and design of the Pay-Per-Tool MVP, as described in project.md and blueprint.md.
 
 ## Key Components
 1. **Registry Contract**: Manages tool registration and metadata

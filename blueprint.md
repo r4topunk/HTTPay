@@ -1,11 +1,11 @@
-# Blueprint for ToolPay MVP
+# Blueprint for Pay-Per-Tool MVP
 
-This document defines a step-by-step plan to build the ToolPay MVP. It is organized into three distinct implementation phases with clear deliverables for each phase.
+This document defines a step-by-step plan to build the Pay-Per-Tool MVP. It is organized into three distinct implementation phases with clear deliverables for each phase.
 
 ## Implementation Phases
 
 ### Phase 1: Smart Contracts & Testing
-Focus on implementing and thoroughly testing the core CosmWasm contracts that power the ToolPay system.
+Focus on implementing and thoroughly testing the core CosmWasm contracts that power the Pay-Per-Tool system.
 
 ### Phase 2: Provider SDK & Tools
 Develop the TypeScript SDK and CLI tools for providers once the contracts are stable and tested.

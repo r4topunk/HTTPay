@@ -1,6 +1,6 @@
-# ToolPay Frontend
+# Pay-Per-Tool Frontend
 
-This directory will contain the user-facing application for the ToolPay project, which will be built with shadcn UI.
+This directory will contain the user-facing application for the Pay-Per-Tool project, which will be built with shadcn UI.
 
 ## Development Status
 

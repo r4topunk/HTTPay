@@ -1,7 +1,7 @@
 /**
  * AI-Wallet Client Demo Script
  *
- * This script demonstrates a full ToolPay workflow from both the client and provider perspectives.
+ * This script demonstrates a full Pay-Per-Tool workflow from both the client and provider perspectives.
  * It simulates:
  * 1. Tool registration by a provider
  * 2. Tool discovery by a client
@@ -10,7 +10,7 @@
  * 5. Service provision and usage reporting
  * 6. Fund claiming by the provider
  *
- * This is meant to be run in a local/test environment with the ToolPay contracts deployed.
+ * This is meant to be run in a local/test environment with the Pay-Per-Tool contracts deployed.
  * 
  * Environment Variables:
  * - NETWORK: The network to connect to ('mainnet', 'testnet', or 'local', default: 'local')
@@ -30,7 +30,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { randomBytes } from 'crypto';
-import { ToolPaySDK } from '../src/toolPaySDK.js';
+import { Pay-Per-ToolSDK } from '../src/toolPaySDK.js';
 import { getNetworkDefaults } from '../src/utils/config.js';
 import { ConfigurationError, NetworkError } from '../src/utils/errors.js';
 import { createWalletFromPrivateKey, getWalletAddress } from '../src/utils/wallet.js';
@@ -43,8 +43,8 @@ interface WalletInfo {
 }
 
 interface SDKs {
-  provider: ToolPaySDK;
-  client: ToolPaySDK;
+  provider: Pay-Per-ToolSDK;
+  client: Pay-Per-ToolSDK;
 }
 
 interface ToolInfo {
@@ -129,7 +129,7 @@ async function setupWallets(): Promise<{ provider: WalletInfo; client: WalletInf
  */
 async function checkBalances(providerAddress: string, clientAddress: string): Promise<void> {
   console.log('\n💰 Querying wallet balances...');
-  const tempSDK = new ToolPaySDK(config);
+  const tempSDK = new Pay-Per-ToolSDK(config);
   
   try {
     await tempSDK.connectWithPrivateKey(providerPrivateKey);
@@ -163,13 +163,13 @@ async function initializeSDKs(): Promise<SDKs> {
   console.log('\n🔧 Initializing SDKs...');
   
   // Provider SDK
-  const providerSDK = new ToolPaySDK(config);
+  const providerSDK = new Pay-Per-ToolSDK(config);
   await providerSDK.connectWithPrivateKey(providerPrivateKey)
     .catch(handleConnectionError);
   console.log('Provider SDK connected');
   
   // Client SDK
-  const clientSDK = new ToolPaySDK(config);
+  const clientSDK = new Pay-Per-ToolSDK(config);
   await clientSDK.connectWithPrivateKey(clientPrivateKey)
     .catch(handleConnectionError);
   console.log('Client SDK connected');
@@ -181,7 +181,7 @@ async function initializeSDKs(): Promise<SDKs> {
  * Register a tool if it's not already registered
  */
 async function registerTool(
-  sdk: ToolPaySDK, 
+  sdk: Pay-Per-ToolSDK, 
   providerAddress: string
 ): Promise<ToolInfo> {
   console.log('\n📝 Step 1: Registering tool...');
@@ -225,7 +225,7 @@ async function registerTool(
  * Client discovers a tool by ID
  */
 async function discoverTool(
-  sdk: ToolPaySDK, 
+  sdk: Pay-Per-ToolSDK, 
   providerAddress: string
 ): Promise<ToolInfo> {
   console.log('\n🔍 Step 2: Discovering tool...');
@@ -265,7 +265,7 @@ async function discoverTool(
  * Client locks funds in escrow for using the tool
  */
 async function lockFundsInEscrow(
-  sdk: ToolPaySDK, 
+  sdk: Pay-Per-ToolSDK, 
   clientAddress: string
 ): Promise<EscrowDetails> {
   console.log('\n💰 Step 3: Locking funds in escrow...');
@@ -313,7 +313,7 @@ async function lockFundsInEscrow(
  * Provider verifies the escrow
  */
 async function verifyEscrow(
-  sdk: ToolPaySDK, 
+  sdk: Pay-Per-ToolSDK, 
   escrow: EscrowDetails, 
   providerAddress: string
 ): Promise<boolean> {
@@ -347,7 +347,7 @@ async function verifyEscrow(
  * Provider completes service and claims payment
  */
 async function deliverServiceAndClaim(
-  sdk: ToolPaySDK, 
+  sdk: Pay-Per-ToolSDK, 
   escrow: EscrowDetails, 
   providerAddress: string
 ): Promise<boolean> {
@@ -399,7 +399,7 @@ function handleConnectionError(error: any): never {
  * Main demo function using all the helper functions
  */
 async function runDemo() {
-  console.log('Starting ToolPay AI-Wallet Client Demo');
+  console.log('Starting Pay-Per-Tool AI-Wallet Client Demo');
   console.log('======================================');
   console.log('Network:', networkType);
   

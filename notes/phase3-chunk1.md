@@ -1,9 +1,9 @@
 # Phase 3, Chunk 1: Core SDK Classes Implementation
 
-This file documents the implementation notes for Phase 3, Chunk 1 of the ToolPay MVP: Core SDK Classes Implementation.
+This file documents the implementation notes for Phase 3, Chunk 1 of the Pay-Per-Tool MVP: Core SDK Classes Implementation.
 
 ## Overview
-The Core SDK Classes implementation has been completed successfully, providing the essential functionality needed for tool providers to interact with the ToolPay smart contracts. This phase focused on implementing the main verification and reporting logic needed by tool providers.
+The Core SDK Classes implementation has been completed successfully, providing the essential functionality needed for tool providers to interact with the Pay-Per-Tool smart contracts. This phase focused on implementing the main verification and reporting logic needed by tool providers.
 
 ## Key Accomplishments
 
@@ -24,8 +24,8 @@ The Core SDK Classes implementation has been completed successfully, providing t
 - Created well-defined TypeScript interfaces for reporting parameters and results
 - Built in safety checks to prevent claiming more than the maximum fee
 
-### ToolPaySDK Main Class Implementation
-- Created `ToolPaySDK` class as the main entry point for the SDK
+### Pay-Per-ToolSDK Main Class Implementation
+- Created `Pay-Per-ToolSDK` class as the main entry point for the SDK
 - Implemented configuration options for network, contracts, and gas settings
 - Added connection methods for:
   - Read-only queries (`connect()`)

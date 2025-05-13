@@ -1,16 +1,16 @@
 /**
- * Configuration utilities for ToolPaySDK
+ * Configuration utilities for Pay-Per-ToolSDK
  */
 
-import type { ToolPaySDKConfig } from '../toolPaySDK.js';
+import type { Pay-Per-ToolSDKConfig } from '../toolPaySDK.js';
 
 /**
- * Validates ToolPay SDK configuration
+ * Validates Pay-Per-Tool SDK configuration
  * 
  * @param config - The configuration object to validate
  * @throws Error if the configuration is invalid
  */
-export function validateConfig(config: ToolPaySDKConfig): void {
+export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
   if (!config) {
     throw new Error('Configuration object is required');
   }
@@ -82,7 +82,7 @@ export function validateConfig(config: ToolPaySDKConfig): void {
  * @param network - 'mainnet', 'testnet', or 'local'
  * @returns Partial configuration with network-specific values
  */
-export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Partial<ToolPaySDKConfig> {
+export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Partial<Pay-Per-ToolSDKConfig> {
   switch (network) {
     case 'mainnet':
       return {

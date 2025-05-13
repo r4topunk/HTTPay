@@ -1,4 +1,4 @@
-# ToolPay
+# Pay-Per-Tool
 
 **Pay-per-call escrow for AI tools on Neutron (CosmWasm 1.5 + TypeScript SDK)**
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-ToolPay is a minimal, secure, and extensible pay-per-call escrow system for AI tool providers and consumers, built on the Neutron blockchain using CosmWasm smart contracts. It enables users to lock funds for a tool call, providers to verify and claim fees, and ensures refunds if a provider does not deliver within a set time window.
+Pay-Per-Tool is a minimal, secure, and extensible pay-per-call escrow system for AI tool providers and consumers, built on the Neutron blockchain using CosmWasm smart contracts. It enables users to lock funds for a tool call, providers to verify and claim fees, and ensures refunds if a provider does not deliver within a set time window.
 
 ---
 
@@ -211,7 +211,7 @@ MIT
 
 ## Deployed Contracts
 
-ToolPay contracts are deployed on Neutron testnet (pion-1) with the following addresses:
+Pay-Per-Tool contracts are deployed on Neutron testnet (pion-1) with the following addresses:
 
 | Contract  | Address                                                             |
 |-----------|---------------------------------------------------------------------|

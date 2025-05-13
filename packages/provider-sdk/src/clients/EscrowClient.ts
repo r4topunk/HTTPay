@@ -26,7 +26,7 @@ export interface LockFundsResult {
 }
 
 /**
- * Client for interacting with the ToolPay Escrow contract
+ * Client for interacting with the Pay-Per-Tool Escrow contract
  */
 export class EscrowClient {
   private readonly client: CosmWasmClient | SigningCosmWasmClient;

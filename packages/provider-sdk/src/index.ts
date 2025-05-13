@@ -1,14 +1,14 @@
 /**
- * ToolPay Provider SDK
+ * Pay-Per-Tool Provider SDK
  *
- * The main entry point for the ToolPay Provider SDK. This SDK enables tool providers
- * to interact with ToolPay smart contracts (Registry and Escrow) on Neutron.
+ * The main entry point for the Pay-Per-Tool Provider SDK. This SDK enables tool providers
+ * to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron.
  *
  * @packageDocumentation
  */
 
 // Export main SDK class
-export { ToolPaySDK } from './toolPaySDK';
+export { Pay-Per-ToolSDK } from './toolPaySDK';
 
 // Export core functionality
 export { EscrowVerifier } from './escrowVerifier';
@@ -26,5 +26,5 @@ export * from './toolPaySDK';
 // Version export
 export const SDK_VERSION = '0.1.0';
 export function getSDKInfo(): string {
-  return `ToolPay Provider SDK v${SDK_VERSION}`;
+  return `Pay-Per-Tool Provider SDK v${SDK_VERSION}`;
 }

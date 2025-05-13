@@ -1,9 +1,9 @@
-<!-- Updated based on project-nav.md, blueprint.md, and project.md: Added ToolPaySDK main class, AI-Wallet demo, and E2E testing tasks. All deliverables and flows from the MVP spec are now reflected. -->
+<!-- Updated based on project-nav.md, blueprint.md, and project.md: Added Pay-Per-ToolSDK main class, AI-Wallet demo, and E2E testing tasks. All deliverables and flows from the MVP spec are now reflected. -->
 
-# ToolPay Provider SDK (TypeScript) – Implementation Task List
+# Pay-Per-Tool Provider SDK (TypeScript) – Implementation Task List
 
 ## Overview
-The Provider SDK enables tool providers to interact with ToolPay smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
+The Provider SDK enables tool providers to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
 
 ---
 
@@ -64,8 +64,8 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
   - [x] Implement `postUsage(escrowId, usageFee, wallet, options): Promise<PostUsageResult>`.
   - [x] Support both direct signing (with mnemonic/private key) and external signing (via CosmJS).
   - [x] Handle transaction errors and retries.
-- [x] **3.3 ToolPaySDK Main Class**
-  - [x] Implement `ToolPaySDK` as the main entry point for the SDK (see README usage example).
+- [x] **3.3 Pay-Per-ToolSDK Main Class**
+  - [x] Implement `Pay-Per-ToolSDK` as the main entry point for the SDK (see README usage example).
   - [x] Aggregate RegistryClient, EscrowClient, EscrowVerifier, and UsageReporter under a unified API.
   - [x] Support configuration for network, contract addresses, and wallet integration.
   - [x] Provide clear error handling and documentation for all methods.
@@ -93,12 +93,12 @@ The Provider SDK enables tool providers to interact with ToolPay smart contracts
 
 - [x] **5.1 Documentation**
   - [x] Add JSDoc/TSDoc comments to all public classes and methods.  
-    _Done: Comprehensive JSDoc/TSDoc comments added to EscrowVerifier, UsageReporter, ToolPaySDK, and other classes._
+    _Done: Comprehensive JSDoc/TSDoc comments added to EscrowVerifier, UsageReporter, Pay-Per-ToolSDK, and other classes._
   - [x] Write a comprehensive `README.md` with installation, usage, configuration, and troubleshooting.  
     _Done: README.md covers installation, usage, config, and troubleshooting._
 - [x] **5.2 Unit and Integration Tests**
   - [x] Use Jest for testing.  
-    _Done: Test files set up for ToolPaySDK and UsageReporter using Jest._
+    _Done: Test files set up for Pay-Per-ToolSDK and UsageReporter using Jest._
   - [x] Mock contract responses for unit tests.  
     _Done: Mock implementations created for EscrowClient, RegistryClient, and other dependencies._
   - [ ] Add integration tests that connect to a localnet or testnet (optional).

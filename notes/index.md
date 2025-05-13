@@ -1,6 +1,6 @@
-# ToolPay Implementation Notes Index
+# Pay-Per-Tool Implementation Notes Index
 
-This file serves as an index and guide to the implementation notes for the ToolPay MVP. Each phase and chunk of the project has its own dedicated notes file, making it easy to navigate and maintain detailed documentation as the project evolves.
+This file serves as an index and guide to the implementation notes for the Pay-Per-Tool MVP. Each phase and chunk of the project has its own dedicated notes file, making it easy to navigate and maintain detailed documentation as the project evolves.
 
 ## Notes File Structure
 

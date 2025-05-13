@@ -1,9 +1,9 @@
 # Phase 1, Chunk 1: Project Setup
 
-This file documents the implementation notes for Phase 1, Chunk 1 of the ToolPay MVP: Project Setup.
+This file documents the implementation notes for Phase 1, Chunk 1 of the Pay-Per-Tool MVP: Project Setup.
 
 ## Overview
-The initial project setup has been completed successfully, establishing the foundational structure for the ToolPay MVP. This chunk focused on creating the necessary directory structure and setting up the CosmWasm contracts that will power the system.
+The initial project setup has been completed successfully, establishing the foundational structure for the Pay-Per-Tool MVP. This chunk focused on creating the necessary directory structure and setting up the CosmWasm contracts that will power the system.
 
 ## Key Accomplishments
 - Created `contracts/` directory for CosmWasm smart contracts

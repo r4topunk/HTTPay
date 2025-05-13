@@ -1,11 +1,11 @@
 /**
- * Error classes for ToolPay SDK
+ * Error classes for Pay-Per-Tool SDK
  */
 
 /**
- * Base class for all ToolPay SDK errors
+ * Base class for all Pay-Per-Tool SDK errors
  */
-export class ToolPayError extends Error {
+export class Pay-Per-ToolError extends Error {
   /** Error code */
   code: string;
   
@@ -28,7 +28,7 @@ export class ToolPayError extends Error {
 /**
  * Error thrown for configuration issues
  */
-export class ConfigurationError extends ToolPayError {
+export class ConfigurationError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONFIGURATION_ERROR', details);
   }
@@ -37,7 +37,7 @@ export class ConfigurationError extends ToolPayError {
 /**
  * Error thrown for network-related issues (RPC connection, timeouts, etc)
  */
-export class NetworkError extends ToolPayError {
+export class NetworkError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'NETWORK_ERROR', details);
   }
@@ -46,7 +46,7 @@ export class NetworkError extends ToolPayError {
 /**
  * Error thrown for contract execution failures
  */
-export class ContractError extends ToolPayError {
+export class ContractError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONTRACT_ERROR', details);
   }
@@ -55,7 +55,7 @@ export class ContractError extends ToolPayError {
 /**
  * Error thrown when escrow verification fails
  */
-export class EscrowVerificationError extends ToolPayError {
+export class EscrowVerificationError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'ESCROW_VERIFICATION_ERROR', details);
   }
@@ -64,7 +64,7 @@ export class EscrowVerificationError extends ToolPayError {
 /**
  * Error thrown for usage reporting failures
  */
-export class UsageReportingError extends ToolPayError {
+export class UsageReportingError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'USAGE_REPORTING_ERROR', details);
   }
@@ -73,21 +73,21 @@ export class UsageReportingError extends ToolPayError {
 /**
  * Error thrown for wallet-related issues
  */
-export class WalletError extends ToolPayError {
+export class WalletError extends Pay-Per-ToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'WALLET_ERROR', details);
   }
 }
 
 /**
- * Convert any error to a ToolPayError
+ * Convert any error to a Pay-Per-ToolError
  * 
  * @param error - The error to convert
  * @param defaultMessage - Default message if error doesn't have one
- * @returns A ToolPayError or subclass
+ * @returns A Pay-Per-ToolError or subclass
  */
-export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): ToolPayError {
-  if (error instanceof ToolPayError) {
+export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): Pay-Per-ToolError {
+  if (error instanceof Pay-Per-ToolError) {
     return error;
   }
 
@@ -116,6 +116,6 @@ export function normalizeError(error: unknown, defaultMessage = 'Unknown error')
     return new ContractError(message, { originalError: error });
   }
   
-  // Default to generic ToolPayError
-  return new ToolPayError(message, 'UNKNOWN_ERROR', { originalError: error });
+  // Default to generic Pay-Per-ToolError
+  return new Pay-Per-ToolError(message, 'UNKNOWN_ERROR', { originalError: error });
 }

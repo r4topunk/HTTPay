@@ -10,7 +10,7 @@ import type { Uint128 } from '../types/common.js';
 import type { RegistryExecuteMsg, ToolResponse } from '../types/registry.js';
 
 /**
- * Client for interacting with the ToolPay Registry contract
+ * Client for interacting with the Pay-Per-Tool Registry contract
  */
 export class RegistryClient {
   private readonly client: CosmWasmClient | SigningCosmWasmClient;

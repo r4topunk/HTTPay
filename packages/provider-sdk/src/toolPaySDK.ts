@@ -1,14 +1,14 @@
 /**
- * ToolPaySDK Main Class
+ * Pay-Per-ToolSDK Main Class
  *
- * This is the main entry point for the ToolPay Provider SDK.
+ * This is the main entry point for the Pay-Per-Tool Provider SDK.
  * It combines all the components into a unified API for interacting
- * with ToolPay smart contracts on the Neutron blockchain.
+ * with Pay-Per-Tool smart contracts on the Neutron blockchain.
  *
  * @example
  * ```typescript
  * // Initialize the SDK
- * const sdk = new ToolPaySDK({
+ * const sdk = new Pay-Per-ToolSDK({
  *   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
  *   chainId: 'pion-1',
  *   registryAddress: 'neutron1...',
@@ -56,12 +56,12 @@ import {
 } from './utils/index';
 
 /**
- * Configuration for the ToolPaySDK
+ * Configuration for the Pay-Per-ToolSDK
  *
  * Contains all the parameters needed to connect to the blockchain and
- * interact with ToolPay smart contracts.
+ * interact with Pay-Per-Tool smart contracts.
  */
-export interface ToolPaySDKConfig {
+export interface Pay-Per-ToolSDKConfig {
   /** RPC endpoint URL for connecting to the chain */
   rpcEndpoint: string;
 
@@ -85,18 +85,18 @@ export interface ToolPaySDKConfig {
 }
 
 /**
- * Main SDK class for ToolPay Provider SDK
+ * Main SDK class for Pay-Per-Tool Provider SDK
  *
- * This class provides a unified API for interacting with ToolPay smart contracts.
+ * This class provides a unified API for interacting with Pay-Per-Tool smart contracts.
  * It combines all the components of the SDK (EscrowVerifier, UsageReporter, etc.)
  * into a single interface with convenient methods for common operations.
  */
-export class ToolPaySDK {
+export class Pay-Per-ToolSDK {
   /** SDK version for compatibility checks */
   static readonly VERSION = SDK_VERSION;
 
   /** Configuration for this SDK instance */
-  private readonly config: ToolPaySDKConfig;
+  private readonly config: Pay-Per-ToolSDKConfig;
 
   /** Client for CosmWasm interaction */
   private client?: CosmWasmClient | SigningCosmWasmClient;
@@ -114,12 +114,12 @@ export class ToolPaySDK {
   private _usageReporter?: UsageReporter;
 
   /**
-   * Create a new ToolPaySDK instance
+   * Create a new Pay-Per-ToolSDK instance
    *
    * @param config - SDK configuration with network and contract details
    * @throws ConfigurationError if the configuration is invalid
    */
-  constructor(config: ToolPaySDKConfig) {
+  constructor(config: Pay-Per-ToolSDKConfig) {
     try {
       // Validate the configuration before proceeding
       validateConfig(config);
@@ -146,7 +146,7 @@ export class ToolPaySDK {
       }
 
       const errorMessage = hasMessage(error) ? error.message : 'Unknown error';
-      throw new ConfigurationError(`Failed to initialize ToolPaySDK: ${errorMessage}`, {
+      throw new ConfigurationError(`Failed to initialize Pay-Per-ToolSDK: ${errorMessage}`, {
         originalError: error,
       });
     }
@@ -158,7 +158,7 @@ export class ToolPaySDK {
    * @returns The version of the SDK
    */
   get version(): string {
-    return ToolPaySDK.VERSION;
+    return Pay-Per-ToolSDK.VERSION;
   }
 
   /**
@@ -170,7 +170,7 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connect(): Promise<ToolPaySDK> {
+  async connect(): Promise<Pay-Per-ToolSDK> {
     try {
       if (!this.client) {
         this.client = await CosmWasmClient.connect(this.config.rpcEndpoint);
@@ -208,7 +208,7 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connectWithMnemonic(mnemonic: string, prefix = 'neutron'): Promise<ToolPaySDK> {
+  async connectWithMnemonic(mnemonic: string, prefix = 'neutron'): Promise<Pay-Per-ToolSDK> {
     try {
       if (!this.client || !('execute' in this.client)) {
         // Use our helper function from utils
@@ -243,7 +243,7 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connectWithPrivateKey(privateKeyHex: string, prefix = 'neutron'): Promise<ToolPaySDK> {
+  async connectWithPrivateKey(privateKeyHex: string, prefix = 'neutron'): Promise<Pay-Per-ToolSDK> {
     try {
       if (!this.client || !('execute' in this.client)) {
         // Use our helper function from utils
@@ -278,7 +278,7 @@ export class ToolPaySDK {
    * @returns This SDK instance for chaining
    * @throws ConfigurationError if the signing client is invalid
    */
-  connectWithSigningClient(signingClient: SigningCosmWasmClient): ToolPaySDK {
+  connectWithSigningClient(signingClient: SigningCosmWasmClient): Pay-Per-ToolSDK {
     if (!signingClient) {
       throw new ConfigurationError('Signing client cannot be null or undefined');
     }

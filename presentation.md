@@ -8,209 +8,209 @@ p {
 }
 </style>
 
-# ToolPay – Pagamentos Autônomos para a era IA + Web3
+# ToolPay – Autonomous Payments for the AI + Web3 Era
 
 ---
 
-## Tópicos Principais
+## Key Topics
 
-- Integra IA e blockchain para pagamentos automatizados
-- Capacita agentes de IA para transações autônomas
-- Infraestrutura para economia de agentes
+- Integrates AI and blockchain for automated payments
+- Empowers AI agents for autonomous transactions
+- Infrastructure for the agent economy
 
 ![bg right:40% 60%](https://upload.wikimedia.org/wikipedia/commons/4/4a/Cosmos-SDK-Logo.svg)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Boa tarde, jurados. Apresentamos o ToolPay, uma plataforma que une Inteligência Artificial e Web3 para permitir que agentes autônomos realizem pagamentos de forma segura e automatizada. Nosso projeto surge para acompanhar a convergência entre IA e blockchain – duas tendências tecnológicas chave – criando uma infraestrutura essencial para uma futura economia de agentes autônomos (máquinas negociando com máquinas). Em resumo, o ToolPay capacita agentes de IA a pagar e receber entre si sem intervenção humana, de modo confiável. Vamos mostrar como isso traz valor de mercado e impacto estratégico, apoiado em tecnologia Cosmos de ponta.”
-
----
-
-# Problema & Oportunidade
+> “Good afternoon, judges. I present ToolPay, a platform that unites Artificial Intelligence and Web3 to enable autonomous agents to make payments securely and automatically. My project arises to accompany the convergence between AI and blockchain – two key technological trends – creating essential infrastructure for a future economy of autonomous agents (machines negotiating with machines). In short, ToolPay empowers AI agents to pay and receive from each other without human intervention, reliably. I will show how this brings market value and strategic impact, supported by cutting-edge Cosmos technology.”
 
 ---
 
-## Tópicos Principais
+# Problem & Opportunity
 
-- Agentes de IA precisam acessar serviços pagos
-- Falta meio confiável para transações autônomas
-- Pagamentos tradicionais impedem automação completa
-- Barreira técnica para autonomia de IAs
+---
+
+## Key Topics
+
+- AI agents need to access paid services
+- Lack of a reliable means for autonomous transactions
+- Traditional payments hinder full automation
+- Technical barrier to AI autonomy
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/3062/3062634.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Qual o problema que queremos resolver? Com a ascensão de agentes de IA cada vez mais capazes (pensem em assistentes baseados em GPT como o AutoGPT), esbarramos numa limitação prática: esses agentes não conseguem pagar por recursos ou serviços por conta própria. Se uma IA precisa acessar uma API paga, contratar um serviço online ou remunerar outra IA, ela depende que um humano intervenga e faça o pagamento. Isso cria fricção, atrasos e custos – exatamente o oposto da eficiência que se espera da automação. Os métodos de pagamento atuais (cartão, gateways centralizados) simplesmente não foram feitos para decisões autônomas em tempo real. Assim, há uma grande oportunidade: a organização ou plataforma que resolver essa lacuna – permitindo pagamentos autônomos seguros – desbloqueará um novo patamar de serviços automatizados e eficientes.”
-
----
-
-# Solução – O que é o ToolPay?
+> “What problem do I want to solve? With the rise of increasingly capable AI agents (think GPT-based assistants like AutoGPT), we encounter a practical limitation: these agents cannot pay for resources or services on their own. If an AI needs to access a paid API, hire an online service, or remunerate another AI, it depends on a human to intervene and make the payment. This creates friction, delays, and costs – exactly the opposite of the efficiency expected from automation. Current payment methods (credit cards, centralized gateways) were simply not designed for real-time autonomous decisions. Thus, there is a great opportunity: the organization or platform that solves this gap – enabling secure autonomous payments – will unlock a new level of automated and efficient services.”
 
 ---
 
-## Tópicos Principais
+# Solution – What is ToolPay?
 
-- Plataforma de pagamentos para agentes de IA
-- Transações autônomas sem intervenção humana
-- Smart contracts garantem confiança e regras automáticas
-- API simples para integração com IAs
+---
+
+## Key Topics
+
+- Payment platform for AI agents
+- Autonomous transactions without human intervention
+- Smart contracts ensure trust and automatic rules
+- Simple API for integration with AIs
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/2721/2721296.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Conheçam nossa solução: ToolPay é uma plataforma de pagamentos descentralizada feita sob medida para agentes autônomos. Na prática, o ToolPay funciona como a “carteira digital e orquestrador” de pagamentos de uma IA. Com ele, um agente de IA pode enviar e receber pagamentos automaticamente, seguindo regras pré-definidas em smart contracts. Por exemplo, uma IA pode remunerar outra por um serviço prestado ou pagar por acesso a uma API, tudo isso sem precisar de um humano para autorizar. Construímos essas regras usando Contratos Inteligentes CosmWasm na blockchain Cosmos – o que garante que cada transação obedeça condições programadas e seja transparente e segura. E para facilitar a adoção, oferecemos uma integração simples via API: os desenvolvedores podem conectar seus agentes ao ToolPay com poucas linhas de código, habilitando pagamentos autônomos rapidamente.”
-
----
-
-# Proposta de Valor & Impacto Estratégico
+> “Meet my solution: ToolPay is a decentralized payment platform tailor-made for autonomous agents. In practice, ToolPay functions as the “digital wallet and payment orchestrator” for an AI. With it, an AI agent can send and receive payments automatically, following predefined rules in smart contracts. For example, an AI can remunerate another for a service rendered or pay for access to an API, all without needing a human to authorize it. I built these rules using CosmWasm Smart Contracts on the Cosmos blockchain – which ensures that each transaction obeys programmed conditions and is transparent and secure. And to facilitate adoption, I offer simple integration via API: developers can connect their agents to ToolPay with a few lines of code, enabling autonomous payments quickly.”
 
 ---
 
-## Tópicos Principais
+# Value Proposition & Strategic Impact
 
-- Habilita serviços automatizados 24/7
-- Reduz custos em microtransações frequentes
-- Posiciona Cosmos na vanguarda IA + Web3
-- Mercado em expansão: confluência de indústrias bilionárias
+---
+
+## Key Topics
+
+- Enables 24/7 automated services
+- Reduces costs in frequent microtransactions
+- Positions Cosmos at the forefront of AI + Web3
+- Expanding market: confluence of billion-dollar industries
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/1828/1828843.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Qual é o valor que o ToolPay entrega e por que isso importa estrategicamente? Primeiro, nossa plataforma destrava uma nova geração de serviços automatizados. Imagine ecossistemas onde IAs podem contratar outras IAs, ou dispositivos IoT negociam recursos entre si, 24 horas por dia – isso se torna viável quando eliminamos a barreira do pagamento manual. O ToolPay reduz drasticamente a fricção e o custo dessas microtransações frequentes, tornando viável economicamente o que antes não era. Estrategicamente, ao unir IA e blockchain, posicionamos o ecossistema Cosmos na vanguarda dessa convergência tecnológica. Isso atrai novos desenvolvedores e usuários para Cosmos, mostrando um caso de uso inovador e alinhado às maiores tendências do momento. Por fim, o potencial de mercado aqui é enorme: estamos na interseção de duas indústrias bilionárias em crescimento explosivo. Em outras palavras, o impacto do ToolPay pode ser global, servindo de infraestrutura para um mercado emergente e altamente valioso.”
-
----
-
-# Tendências – Convergência de IA + Web3
+> “What is the value that ToolPay delivers and why is this strategically important? First, my platform unlocks a new generation of automated services. Imagine ecosystems where AIs can hire other AIs, or IoT devices negotiate resources among themselves, 24 hours a day – this becomes viable when we eliminate the barrier of manual payment. ToolPay drastically reduces the friction and cost of these frequent microtransactions, making economically viable what was not before. Strategically, by uniting AI and blockchain, I position the Cosmos ecosystem at the forefront of this technological convergence. This attracts new developers and users to Cosmos, showcasing an innovative use case aligned with the biggest trends of the moment. Finally, the market potential here is enormous: we are at the intersection of two billion-dollar industries in explosive growth. In other words, ToolPay's impact can be global, serving as infrastructure for an emerging and highly valuable market.”
 
 ---
 
-## Tópicos Principais
+# Trends – Convergence of AI + Web3
 
-- Ascensão da IA Generativa e agentes autônomos
-- Web3 oferece confiança descentralizada
-- Crescimento no mercado IA-blockchain
-- ToolPay: decisão autônoma + execução financeira segura
+---
+
+## Key Topics
+
+- Rise of Generative AI and autonomous agents
+- Web3 offers decentralized trust
+- Growth in the AI-blockchain market
+- ToolPay: autonomous decision + secure financial execution
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/3062/3062634.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Vale destacar o timing da nossa solução em relação às tendências. Estamos vivenciando duas revoluções tecnológicas simultâneas: de um lado, a explosão da IA generativa e dos agentes autônomos capazes de executar tarefas complexas (vemos exemplos como o ChatGPT e iniciativas como AutoGPT evoluindo rapidamente); de outro, o avanço do Web3 e das blockchains, que oferecem um ambiente sem confiança central e com ativos digitais programáveis. É natural que esses dois mundos comecem a convergir – e de fato, já vemos grandes empresas e startups investindo pesado nessa interseção entre IA e blockchain. O ToolPay nasce exatamente nesse contexto: nossa plataforma aproveita o melhor dos dois universos, juntando a capacidade de decisão autônoma que a IA traz com a capacidade de execução financeira segura que o blockchain proporciona. Estamos posicionados na crista dessa onda de convergência, o que aumenta as chances de adoção e relevância da nossa solução.”
-
----
-
-# Tecnologia & Integração Cosmos
+> “It's worth highlighting the timing of my solution in relation to trends. We are experiencing two simultaneous technological revolutions: on one hand, the explosion of generative AI and autonomous agents capable of executing complex tasks (we see examples like ChatGPT and initiatives like AutoGPT evolving rapidly); on the other, the advancement of Web3 and blockchains, which offer an environment without central trust and with programmable digital assets. It is natural for these two worlds to begin to converge – and indeed, we already see large companies and startups investing heavily in this intersection between AI and blockchain. ToolPay is born precisely in this context: my platform leverages the best of both universes, joining the autonomous decision-making capacity that AI brings with the secure financial execution capacity that blockchain provides. I am positioned at the crest of this wave of convergence, which increases the chances of adoption and relevance of my solution.”
 
 ---
 
-## Tópicos Principais
+# Technology & Cosmos Integration
 
-- Cosmos + CosmWasm: flexibilidade e agilidade
-- IBC: pagamentos entre redes diversas
-- Alta escalabilidade e baixas taxas
-- Segurança via rede descentralizada
+---
+
+## Key Topics
+
+- Cosmos + CosmWasm: flexibility and agility
+- IBC: payments between diverse networks
+- High scalability and low fees
+- Security via decentralized network
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/2721/2721296.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Vamos falar da tecnologia por trás do ToolPay e por que escolhemos o Cosmos. Desenvolvemos nossa solução diretamente na plataforma Cosmos, aproveitando CosmWasm para escrever os smart contracts que gerenciam os pagamentos dos agentes. O CosmWasm nos dá flexibilidade para programar lógicas complexas de forma rápida e segura, ideal no contexto de hackathon e além. Outra vantagem chave do Cosmos é o IBC – Inter-Blockchain Communication: com ele, o ToolPay não fica restrito a uma única cadeia, podendo transitar valor entre múltiplas blockchains do ecossistema. Isso significa que um agente em uma rede pode pagar outro agente em outra rede de forma transparente, ampliando muito o alcance da solução. Tecnicamente, o Cosmos também nos fornece a escalabilidade e as taxas baixas necessárias para suportar um grande volume de microtransações (que é o caso de agentes trocando valor frequentemente). E tudo isso vem junto com a robustez de uma rede descentralizada de múltiplos nós validadores, garantindo a segurança e a confiabilidade que uma infraestrutura de pagamentos autônomos exige.”
-
----
-
-# Caso de Uso – Agente Autônomo em Ação
+> “Let's talk about the technology behind ToolPay and why I chose Cosmos. I developed my solution directly on the Cosmos platform, leveraging CosmWasm to write the smart contracts that manage agent payments. CosmWasm gives me the flexibility to program complex logic quickly and securely, ideal in the hackathon context and beyond. Another key advantage of Cosmos is IBC – Inter-Blockchain Communication: with it, ToolPay is not restricted to a single chain, and can transfer value between multiple blockchains in the ecosystem. This means an agent on one network can pay another agent on another network transparently, greatly expanding the solution's reach. Technically, Cosmos also provides the scalability and low fees necessary to support a large volume of microtransactions (which is the case for agents frequently exchanging value). And all this comes with the robustness of a decentralized network of multiple validator nodes, ensuring the security and reliability that an autonomous payment infrastructure demands.”
 
 ---
 
-## Tópicos Principais
+# Use Case – Autonomous Agent in Action
 
-- IA compra dados externos via pagamento autônomo
-- Smart contract garante liberação após entrega
-- Todo processo sem intervenção humana
-- Transação rápida, confiável e rastreável
+---
+
+## Key Topics
+
+- AI buys external data via autonomous payment
+- Smart contract ensures release after delivery
+- Entire process without human intervention
+- Fast, reliable, and traceable transaction
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/3062/3062634.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Para tornar tudo mais concreto, vamos a um caso de uso. Imaginem um assistente virtual de vendas, uma IA autônoma, que identificou um potencial cliente e quer impressioná-lo com uma análise de mercado personalizada. Para isso, essa IA precisa de dados financeiros atualizados de uma fonte externa que cobra pelo acesso. Em vez de acionar uma pessoa para aprovar a compra desses dados, o próprio agente de IA realiza o pagamento usando o ToolPay. O contrato inteligente do ToolPay entra em cena: ele segura o valor em escrow e só libera o pagamento para a API depois que os dados forem entregues de volta ao agente. Tudo fica registrado na blockchain para transparência. No fim, a tarefa foi concluída sem qualquer intervenção humana – o agente conseguiu comprar a informação necessária de forma autônoma, rápida e confiável, graças ao ToolPay.”
-
----
-
-# Diferencial Competitivo
+> “To make everything more concrete, let's look at a use case. Imagine a virtual sales assistant, an autonomous AI, that has identified a potential client and wants to impress them with a personalized market analysis. For this, this AI needs updated financial data from an external source that charges for access. Instead of triggering a person to approve the purchase of this data, the AI agent itself makes the payment using ToolPay. The ToolPay smart contract comes into play: it holds the value in escrow and only releases the payment to the API after the data is delivered back to the agent. Everything is recorded on the blockchain for transparency. In the end, the task was completed without any human intervention – the agent managed to buy the necessary information autonomously, quickly, and reliably, thanks to ToolPay.”
 
 ---
 
-## Tópicos Principais
+# Competitive Differentiator
 
-- Alternativas dependem de intermediários centralizados
-- Blockchains genéricas não otimizam microtransações automáticas
-- Design específico para agentes de IA
-- Único no Cosmos com alcance multi-chain via IBC
+---
+
+## Key Topics
+
+- Alternatives depend on centralized intermediaries
+- Generic blockchains do not optimize automatic microtransactions
+- Specific design for AI agents
+- Unique in Cosmos with multi-chain reach via IBC
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/1828/1828843.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Como nos posicionamos em relação a possíveis soluções existentes? Hoje, mesmo as poucas tentativas de habilitar pagamentos para IAs acabam dependendo de intermediários. Por exemplo, usar um provedor de pagamentos centralizado ou guardar um cartão de crédito em um serviço – isso exige confiança em terceiros e tira a autonomia do agente. Por outro lado, as plataformas blockchain genéricas atuais não foram desenhadas pensando em agentes de IA: elas não lidam bem com milhares de microtransações automatizadas, nem fornecem gatilhos fáceis para uma IA iniciar pagamentos sozinha. O ToolPay se diferencia exatamente por esse foco. Desde o início, concebemos a plataforma orientada às necessidades de agentes autônomos: automação de ponta a ponta (do disparo ao settlement), integração nativa com sistemas de IA e otimização para transações frequentes e pequenas. Além disso, no ecossistema Cosmos não há nada igual – somos pioneiros nessa proposta aqui. Enquanto outras soluções podem ficar limitadas a uma única rede ou token, com o ToolPay, graças ao IBC, operamos de forma multi-chain, dando aos agentes flexibilidade máxima de onde e como transacionar. Em resumo, oferecemos autonomia verdadeira, otimização técnica e alcance ampliado – um conjunto de diferenciais difícil de igualar.”
-
----
-
-# Visão de Futuro – Infraestrutura para a Economia de Agentes
+> “How do I position myself in relation to possible existing solutions? Today, even the few attempts to enable payments for AIs end up depending on intermediaries. For example, using a centralized payment provider or storing a credit card in a service – this requires trust in third parties and removes the agent's autonomy. On the other hand, current generic blockchain platforms were not designed with AI agents in mind: they do not handle thousands of automated microtransactions well, nor do they provide easy triggers for an AI to initiate payments on its own. ToolPay differentiates itself precisely because of this focus. From the beginning, I conceived the platform oriented to the needs of autonomous agents: end-to-end automation (from trigger to settlement), native integration with AI systems, and optimization for frequent and small transactions. Furthermore, in the Cosmos ecosystem, there is nothing like it – I am a pioneer in this proposal here. While other solutions may be limited to a single network or token, with ToolPay, thanks to IBC, we operate multi-chain, giving agents maximum flexibility on where and how to transact. In summary, I offer true autonomy, technical optimization, and expanded reach – a set of differentiators difficult to match.”
 
 ---
 
-## Tópicos Principais
+# Future Vision – Infrastructure for the Agent Economy
 
-- Escala para milhões de agentes em múltiplas redes
-- Base para economia machine-to-machine
-- Identidade e reputação descentralizadas
-- Padronização e adoção ampla do protocolo
+---
+
+## Key Topics
+
+- Scale to millions of agents on multiple networks
+- Foundation for a machine-to-machine economy
+- Decentralized identity and reputation
+- Standardization and broad adoption of the protocol
 
 ![bg right:40% 60%](https://cdn-icons-png.flaticon.com/512/3062/3062634.png)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Olhando adiante, vemos o ToolPay evoluindo para se tornar uma infraestrutura fundamental na economia de agentes autônomos que está emergindo. Nossa arquitetura já nasceu pensando em escalabilidade – queremos suportar, no futuro, milhões de agentes transacionando simultaneamente através de múltiplas redes blockchain interconectadas. Imaginamos o ToolPay como um pilar central de uma economia machine-to-machine, na qual agentes automatizados negociam serviços, fecham contratos e efetuam pagamentos uns aos outros sem qualquer intervenção humana. Para chegar lá, planejamos integrar recursos como identidade descentralizada e sistemas de reputação de agentes, permitindo que cada agente tenha credenciais confiáveis on-chain. Também enxergamos a importância de padronizar nosso protocolo e colaborar com a comunidade – queremos que o ToolPay seja adotado amplamente por projetos de IA, IoT e até em aplicações DeFi que envolvam automação. Em suma, nossa visão é que o ToolPay se torne a espinha dorsal da economia autônoma, onde não só pessoas, mas máquinas e agentes inteligentes, participam ativamente e com segurança.”
-
----
-
-# Conclusão & Próximos Passos
+> “Looking ahead, I see ToolPay evolving to become a fundamental infrastructure in the emerging autonomous agent economy. My architecture was born with scalability in mind – I want to support, in the future, millions of agents transacting simultaneously across multiple interconnected blockchain networks. I envision ToolPay as a central pillar of a machine-to-machine economy, in which automated agents negotiate services, close contracts, and make payments to each other without any human intervention. To get there, I plan to integrate features like decentralized identity and agent reputation systems, allowing each agent to have reliable on-chain credentials. I also see the importance of standardizing my protocol and collaborating with the community – I want ToolPay to be widely adopted by AI, IoT projects, and even in DeFi applications involving automation. In short, my vision is for ToolPay to become the backbone of the autonomous economy, where not only people, but machines and intelligent agents, participate actively and securely.”
 
 ---
 
-## Tópicos Principais
+# Conclusion & Next Steps
 
-- União inovadora: IA + Web3 em solução funcional
-- MVP completo com contratos operacionais
-- Evoluções pós-hackathon: escala, segurança e parcerias
-- Oportunidade de liderança no Cosmos
+---
+
+## Key Topics
+
+- Innovative union: AI + Web3 in a functional solution
+- Complete MVP with operational contracts
+- Post-hackathon evolutions: scale, security, and partnerships
+- Leadership opportunity in Cosmos
 
 ![bg right:40% 60%](https://upload.wikimedia.org/wikipedia/commons/4/4a/Cosmos-SDK-Logo.svg)
 
 ---
 
-### Texto para Apresentador
+### Presenter Notes
 
-> “Para concluir, o ToolPay mostra como é possível conectar duas das maiores tendências tecnológicas do momento – IA e Web3 – em uma solução prática, inovadora e funcional. Durante o hackathon, conseguimos desenvolver um MVP totalmente operacional usando contratos CosmWasm, provando a viabilidade técnica da ideia (ou seja, agentes de IA já conseguem realizar pagamentos em nosso protótipo). E isso é apenas o começo: estamos prontos para levar o ToolPay além do protótipo do hackathon. Temos um plano claro de próximos passos, incluindo aprimoramentos técnicos de escala e segurança, e buscamos parcerias estratégicas no ecossistema (tanto na comunidade Cosmos quanto com projetos de IA) para acelerar a adoção. Enxergamos aqui uma grande oportunidade de o ecossistema Cosmos liderar a inovação na economia de agentes autônomos, e nossa equipe está motivada e preparada para impulsionar essa visão adiante. Agradecemos a atenção de todos – muito obrigado!”
+> “To conclude, ToolPay shows how it is possible to connect two of the biggest technological trends of the moment – AI and Web3 – in a practical, innovative, and functional solution. During the hackathon, I managed to develop a fully operational MVP using CosmWasm contracts, proving the technical feasibility of the idea (i.e., AI agents can already make payments in my prototype). And this is just the beginning: I am ready to take ToolPay beyond the hackathon prototype. I have a clear plan for next steps, including technical improvements in scale and security, and I am seeking strategic partnerships in the ecosystem (both in the Cosmos community and with AI projects) to accelerate adoption. I see a great opportunity here for the Cosmos ecosystem to lead innovation in the autonomous agent economy, and I am motivated and prepared to drive this vision forward. Thank you all for your attention – thank you very much!”

@@ -82,7 +82,7 @@ const config = {
   chainId: process.env.CHAIN_ID || networkDefaults.chainId || 'local-testnet',
   registryAddress:
     process.env.REGISTRY_ADDRESS ||
-    'neutron1mxaqqnh237vu0phcfh6ut8gx3att2dza49r5x9h52fey9gspy5nq54cjhv',
+    'neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8',
   escrowAddress:
     process.env.ESCROW_ADDRESS || 'neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsfu0lytrupm3h42sag09wr',
   gasAdjustment: 1.3,

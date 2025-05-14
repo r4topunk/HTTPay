@@ -15,14 +15,7 @@ import type { EscrowExecuteMsg, EscrowResponse } from '../types/escrow.js';
 export interface LockFundsResult {
   transactionHash: string;
   escrowId: number;
-}
-
-/**
- * Result type for lockFunds transaction
- */
-export interface LockFundsResult {
-  transactionHash: string;
-  escrowId: number;
+  denom: string | undefined;
 }
 
 /**
@@ -127,15 +120,18 @@ export class EscrowClient {
       funds
     );
 
-    // Extract escrow_id from the event attributes
+    // Extract escrow_id and denom from the event attributes
     let escrowId: number = 0;
+    let denom: string | undefined;
     
     for (const event of result.events) {
       if (event.type === 'wasm') {
         for (const attr of event.attributes) {
           if (attr.key === 'escrow_id') {
             escrowId = parseInt(attr.value);
-            break;
+          }
+          if (attr.key === 'denom') {
+            denom = attr.value;
           }
         }
       }
@@ -144,6 +140,7 @@ export class EscrowClient {
     return {
       transactionHash: result.transactionHash,
       escrowId,
+      denom,
     };
   }
 

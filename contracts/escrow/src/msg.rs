@@ -50,6 +50,7 @@ pub struct EscrowResponse {
     pub caller: Addr,
     pub provider: Addr,
     pub max_fee: Uint128,
+    pub denom: String,
     pub expires: u64,
     pub auth_token: String,
 }
@@ -59,6 +60,7 @@ pub struct EscrowResponse {
 #[cw_serde]
 pub struct LockFundsResponse {
     pub escrow_id: u64,
+    pub denom: String,
 }
 
 /// Message type for sudo calls

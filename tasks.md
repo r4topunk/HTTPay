@@ -323,34 +323,57 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Release funds and verify balances
 - [ ] Test refund flow with timeout
 
-### 9.3 Integrate with CI
-- [ ] Add E2E tests to CI workflow
-- [ ] Configure localnet startup in CI
-- [ ] Ensure tests are isolated and reproducible
+## Chunk 10: Multi-Denomination Token Support
 
-## Chunk 10: Documentation & Hardening
+### 10.1 Registry Contract Multi-Denom Support
+- [x] Create PRD/TDD for multi-denomination token support
+- [x] Update `ToolMeta` struct with `denom` field
+- [x] Add optional `denom` parameter to `RegisterTool` message
+- [x] Create `UpdateDenom` message type
+- [x] Implement `execute_update_denom` handler function
+- [x] Update query responses to include denom information
+- [x] Add default "untrn" token for backward compatibility
 
-### 10.1 Create comprehensive README
+### 10.2 Escrow Contract Multi-Denom Support
+- [x] Update `Escrow` struct with `denom` field
+- [x] Modify `lock_funds` to validate token denomination
+- [x] Update `release` and `refund_expired` to use stored denom
+- [x] Add appropriate error types for denom-related issues
+- [x] Add denom field to events and responses
+
+### 10.3 TypeScript SDK Multi-Denom Support
+- [x] Update registry and escrow types to include denom
+- [x] Update RegistryClient with denom support
+- [x] Modify EscrowClient to handle denom information
+- [x] Create implementation notes
+
+### 10.4 Testing and Documentation
+- [ ] Add comprehensive tests for multi-denomination support
+- [ ] Update documentation with multi-denom usage examples
+
+## Chunk 11: Documentation & Hardening
+
+### 11.1 Create comprehensive README
 - [x] Add project description and architecture diagram
 - [x] Document installation instructions
 - [x] Provide quickstart guide
 - [x] Add examples for each component
 - [x] Include troubleshooting section
 
-### 10.2 Finalize specification
+### 11.2 Finalize specification
 - [ ] Review and update `project.md` with final implementation details
 - [ ] Add links to code repositories
 - [ ] Document any deviations from original spec
 - [ ] Add suggestions for future improvements
 
-### 10.3 Harden implementation
+### 11.3 Harden implementation
 - [ ] Add gas limits to all transactions
 - [ ] Add input validation throughout
 - [ ] Review for security issues (reentrancy, overflow)
 - [ ] Add more edge-case tests
 - [ ] Optimize contract storage patterns
 
-### 10.4 Prepare for release
+### 11.4 Prepare for release
 - [ ] Tag release in git
 - [ ] Prepare crates for publication
 - [ ] Prepare npm packages for publication

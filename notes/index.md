@@ -16,6 +16,8 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
 - **client-auth-update.md**: Client authentication updated to use private key instead of mnemonic
+- **multidenom-support.md**: Implementation of multi-denomination token support (IBC tokens) - Completed
+- **multidenom-prd-tdd.md**: PRD/TDD for multi-denomination token support - Completed
 
 _All files are now located in the `notes/` folder._
 

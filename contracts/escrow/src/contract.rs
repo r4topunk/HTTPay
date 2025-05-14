@@ -91,6 +91,7 @@ fn query_escrow(deps: Deps, escrow_id: u64) -> StdResult<EscrowResponse> {
         caller: escrow.caller,
         provider: escrow.provider,
         max_fee: escrow.max_fee,
+        denom: escrow.denom,
         expires: escrow.expires,
         auth_token: escrow.auth_token,
     })
@@ -118,14 +119,22 @@ pub fn lock_funds(
         return Err(ContractError::ToolNotActive {});
     }
 
-    // Validate that max_fee doesn't exceed attached funds
+    // Find the funds with the matching denom
     let attached_funds = info
         .funds
         .iter()
-        .find(|c| c.denom == "untrn")
+        .find(|c| c.denom == tool.denom)
         .map(|c| c.amount)
         .unwrap_or(Uint128::zero());
 
+    // Check if any funds with the correct denom were provided
+    if attached_funds.is_zero() {
+        return Err(ContractError::NoDenomFunds { 
+            denom: tool.denom.clone() 
+        });
+    }
+
+    // Validate that max_fee doesn't exceed attached funds
     if attached_funds < max_fee {
         return Err(ContractError::InsufficientFunds {
             required: max_fee.to_string(),
@@ -148,6 +157,7 @@ pub fn lock_funds(
         caller: info.sender.clone(),
         provider: tool.provider,
         max_fee,
+        denom: tool.denom.clone(),
         auth_token,
         expires,
     };
@@ -167,10 +177,14 @@ pub fn lock_funds(
         .add_attribute("tool_id", tool_id)
         .add_attribute("caller", info.sender)
         .add_attribute("max_fee", max_fee.to_string())
+        .add_attribute("denom", tool.denom.clone())
         .add_attribute("expires", expires.to_string());
     
-    // Create response data with escrow_id
-    let response_data = to_json_binary(&crate::msg::LockFundsResponse { escrow_id: id })?;
+    // Create response data with escrow_id and denom
+    let response_data = to_json_binary(&crate::msg::LockFundsResponse { 
+        escrow_id: id,
+        denom: tool.denom
+    })?;
 
     // Return success response with escrow_id
     Ok(Response::new()
@@ -222,7 +236,7 @@ pub fn release(
         messages.push(CosmosMsg::Bank(BankMsg::Send {
             to_address: escrow.provider.to_string(),
             amount: vec![Coin {
-                denom: "untrn".to_string(),
+                denom: escrow.denom.clone(),
                 amount: usage_fee,
             }],
         }));
@@ -233,7 +247,7 @@ pub fn release(
         messages.push(CosmosMsg::Bank(BankMsg::Send {
             to_address: escrow.caller.to_string(),
             amount: vec![Coin {
-                denom: "untrn".to_string(),
+                denom: escrow.denom.clone(),
                 amount: refund_amount,
             }],
         }));
@@ -248,7 +262,8 @@ pub fn release(
         .add_attribute("provider", escrow.provider.to_string())
         .add_attribute("caller", escrow.caller.to_string())
         .add_attribute("usage_fee", usage_fee.to_string())
-        .add_attribute("refund_amount", refund_amount.to_string());
+        .add_attribute("refund_amount", refund_amount.to_string())
+        .add_attribute("denom", escrow.denom);
     
     // Return success response
     Ok(Response::new()
@@ -283,7 +298,7 @@ pub fn refund_expired(
     let refund_msg = CosmosMsg::Bank(BankMsg::Send {
         to_address: escrow.caller.to_string(),
         amount: vec![Coin {
-            denom: "untrn".to_string(),
+            denom: escrow.denom.clone(),
             amount: escrow.max_fee,
         }],
     });
@@ -295,7 +310,8 @@ pub fn refund_expired(
     let event = Event::new("wasm-toolpay.refunded")
         .add_attribute("escrow_id", escrow_id.to_string())
         .add_attribute("caller", escrow.caller.to_string())
-        .add_attribute("refund_amount", escrow.max_fee.to_string());
+        .add_attribute("refund_amount", escrow.max_fee.to_string())
+        .add_attribute("denom", escrow.denom);
     
     // Return success response
     Ok(Response::new()

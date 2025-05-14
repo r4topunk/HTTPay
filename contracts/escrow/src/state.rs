@@ -11,6 +11,8 @@ pub struct Escrow {
     pub provider: Addr,
     /// Maximum fee the caller is willing to pay
     pub max_fee: Uint128,
+    /// Token denomination for the fee
+    pub denom: String,
     /// Authentication token for tool to verify the escrow
     pub auth_token: String,
     /// Block height at which this escrow expires

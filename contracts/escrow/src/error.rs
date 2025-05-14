@@ -18,6 +18,12 @@ pub enum ContractError {
     #[error("Insufficient funds: required {required}, but only {available} was sent")]
     InsufficientFunds { required: String, available: String },
     
+    #[error("Wrong token denomination: expected {expected}, got {received}")]
+    WrongDenom { expected: String, received: String },
+    
+    #[error("No funds provided with the required denomination")]
+    NoDenomFunds { denom: String },
+    
     #[error("Escrow expiration too far in future: max {max_blocks} blocks, got {got_blocks} blocks")]
     ExpirationTooLong { max_blocks: u64, got_blocks: u64 },
     

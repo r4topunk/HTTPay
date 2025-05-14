@@ -88,6 +88,7 @@ export class RegistryClient {
    * @param senderAddress - Address of the sender
    * @param toolId - Unique tool identifier (max 16 characters)
    * @param price - Price to use the tool (in base denom)
+   * @param denom - Token denomination for the tool price (default: "untrn")
    * @param funds - Funds to send with the transaction (if required)
    * @returns Transaction hash
    */
@@ -95,6 +96,7 @@ export class RegistryClient {
     senderAddress: string,
     toolId: string,
     price: Uint128,
+    denom?: string,
     funds: Coin[] = []
   ): Promise<string> {
     const signingClient = this.getSigningClient();
@@ -103,6 +105,7 @@ export class RegistryClient {
       register_tool: {
         tool_id: toolId,
         price,
+        ...(denom && { denom })
       }
     };
 
@@ -139,6 +142,42 @@ export class RegistryClient {
       update_price: {
         tool_id: toolId,
         price,
+      }
+    };
+
+    const result = await signingClient.execute(
+      senderAddress,
+      this.contractAddress,
+      msg,
+      'auto',
+      undefined,
+      funds
+    );
+
+    return result.transactionHash;
+  }
+  
+  /**
+   * Update the denom of an existing tool
+   * 
+   * @param senderAddress - Address of the sender
+   * @param toolId - ID of the tool to update
+   * @param denom - New token denomination for the tool price
+   * @param funds - Funds to send with the transaction (if required)
+   * @returns Transaction hash
+   */
+  async updateDenom(
+    senderAddress: string,
+    toolId: string,
+    denom: string,
+    funds: Coin[] = []
+  ): Promise<string> {
+    const signingClient = this.getSigningClient();
+    
+    const msg: RegistryExecuteMsg = {
+      update_denom: {
+        tool_id: toolId,
+        denom,
       }
     };
 

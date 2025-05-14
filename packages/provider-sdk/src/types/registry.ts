@@ -20,8 +20,9 @@ export interface RegistryInstantiateMsg {}
  * to the Registry contract.
  */
 export type RegistryExecuteMsg =
-  | { register_tool: { tool_id: string; price: Uint128 } }
+  | { register_tool: { tool_id: string; price: Uint128; denom?: string } }
   | { update_price: { tool_id: string; price: Uint128 } }
+  | { update_denom: { tool_id: string; denom: string } }
   | { pause_tool: { tool_id: string } }
   | { resume_tool: { tool_id: string } };
 
@@ -42,5 +43,6 @@ export interface ToolResponse {
   tool_id: string;
   provider: string;
   price: Uint128;
+  denom: string;
   is_active: boolean;
 }

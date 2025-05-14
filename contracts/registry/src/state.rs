@@ -10,6 +10,8 @@ pub struct ToolMeta {
     pub provider: Addr,
     /// Price to use the tool, in base currency units
     pub price: Uint128,
+    /// Token denomination for the tool price (e.g. "untrn" or IBC denom)
+    pub denom: String,
     /// Whether the tool is currently active and available for use
     pub is_active: bool,
 }

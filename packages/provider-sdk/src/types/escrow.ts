@@ -59,6 +59,7 @@ export interface EscrowResponse {
   caller: string; // Address
   provider: string; // Address
   max_fee: Uint128;
+  denom: string;
   expires: number; // uint64
   auth_token: string;
 }
@@ -71,6 +72,7 @@ export interface EscrowResponse {
  */
 export interface LockFundsResponse {
   escrow_id: number; // uint64
+  denom: string;
 }
 
 /**

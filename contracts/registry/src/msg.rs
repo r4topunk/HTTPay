@@ -14,6 +14,9 @@ pub enum ExecuteMsg {
         tool_id: String,
         /// Price to use the tool, in base currency units
         price: Uint128,
+        /// Token denomination for the tool price (e.g. "untrn" or IBC denom)
+        /// If not provided, defaults to "untrn" for backward compatibility
+        denom: Option<String>,
     },
     /// Update the price of an existing tool
     UpdatePrice {
@@ -21,6 +24,13 @@ pub enum ExecuteMsg {
         tool_id: String,
         /// New price for the tool, in base currency units
         price: Uint128,
+    },
+    /// Update the denom of an existing tool
+    UpdateDenom {
+        /// Existing tool identifier
+        tool_id: String,
+        /// New token denomination for the tool price
+        denom: String,
     },
     /// Pause an active tool (make it unavailable for use)
     PauseTool {
@@ -55,6 +65,8 @@ pub struct ToolResponse {
     pub provider: String,
     /// Current price to use the tool
     pub price: Uint128,
+    /// Token denomination for the tool price
+    pub denom: String,
     /// Whether the tool is currently available for use
     pub is_active: bool,
 }

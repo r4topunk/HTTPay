@@ -10,6 +10,9 @@ use crate::state::{ToolMeta, TOOLS};
 const CONTRACT_NAME: &str = "crates.io:registry";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
+// Default denomination for backward compatibility
+const DEFAULT_DENOM: &str = "untrn";
+
 #[entry_point]
 pub fn instantiate(
     deps: DepsMut,
@@ -34,10 +37,16 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::RegisterTool { tool_id, price } => execute_register_tool(deps, info, tool_id, price),
-        ExecuteMsg::UpdatePrice { tool_id, price } => execute_update_price(deps, info, tool_id, price),
-        ExecuteMsg::PauseTool { tool_id } => execute_pause_tool(deps, info, tool_id),
-        ExecuteMsg::ResumeTool { tool_id } => execute_resume_tool(deps, info, tool_id),
+        ExecuteMsg::RegisterTool { tool_id, price, denom } => 
+            execute_register_tool(deps, info, tool_id, price, denom),
+        ExecuteMsg::UpdatePrice { tool_id, price } => 
+            execute_update_price(deps, info, tool_id, price),
+        ExecuteMsg::PauseTool { tool_id } => 
+            execute_pause_tool(deps, info, tool_id),
+        ExecuteMsg::ResumeTool { tool_id } => 
+            execute_resume_tool(deps, info, tool_id),
+        ExecuteMsg::UpdateDenom { tool_id, denom } => 
+            execute_update_denom(deps, info, tool_id, denom),
     }
 }
 
@@ -47,6 +56,7 @@ pub fn execute_register_tool(
     info: MessageInfo,
     tool_id: String,
     price: cosmwasm_std::Uint128,
+    denom: Option<String>,
 ) -> Result<Response, ContractError> {
     // Validate tool_id length ≤ 16 characters
     if tool_id.len() > 16 {
@@ -56,10 +66,14 @@ pub fn execute_register_tool(
     // Store provider address from info.sender
     let provider = info.sender;
     
+    // Use provided denom or default to "untrn"
+    let denom = denom.unwrap_or_else(|| DEFAULT_DENOM.to_string());
+    
     // Store tool metadata in TOOLS map
     let tool = ToolMeta {
         provider: provider.clone(),
         price,
+        denom: denom.clone(),
         is_active: true,
     };
     
@@ -71,6 +85,7 @@ pub fn execute_register_tool(
         .add_attribute("tool_id", tool_id)
         .add_attribute("provider", provider.to_string())
         .add_attribute("price", price.to_string())
+        .add_attribute("denom", denom)
         .add_attribute("is_active", "true"))
 }
 
@@ -148,6 +163,32 @@ pub fn execute_resume_tool(
         .add_attribute("tool_id", tool_id))
 }
 
+// UpdateDenom handler implementation
+pub fn execute_update_denom(
+    deps: DepsMut,
+    info: MessageInfo,
+    tool_id: String,
+    denom: String,
+) -> Result<Response, ContractError> {
+    // Load existing tool
+    let mut tool = TOOLS.may_load(deps.storage, &tool_id)?
+        .ok_or(ContractError::ToolNotFound {})?;
+    
+    // Verify sender is the provider
+    if info.sender != tool.provider {
+        return Err(ContractError::Unauthorized {});
+    }
+    
+    // Update denom and save
+    tool.denom = denom.clone();
+    TOOLS.save(deps.storage, &tool_id, &tool)?;
+    
+    Ok(Response::new()
+        .add_attribute("method", "update_denom")
+        .add_attribute("tool_id", tool_id)
+        .add_attribute("new_denom", denom))
+}
+
 #[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
@@ -165,6 +206,7 @@ pub fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
                 tool_id,
                 provider: tool_meta.provider.to_string(),
                 price: tool_meta.price,
+                denom: tool_meta.denom,
                 is_active: tool_meta.is_active,
             };
             to_json_binary(&response)

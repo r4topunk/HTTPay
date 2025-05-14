@@ -7,6 +7,7 @@ pub struct ToolResponse {
     pub tool_id: String,
     pub provider: Addr,
     pub price: Uint128,
+    pub denom: String,
     pub is_active: bool,
 }
 

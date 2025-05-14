@@ -1,5 +1,5 @@
 /**
- * Utility exports for Pay-Per-Tool SDK
+ * Utility exports for PayPerTool SDK
  */
 
 export * from './config';

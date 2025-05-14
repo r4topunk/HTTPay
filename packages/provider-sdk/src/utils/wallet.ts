@@ -1,5 +1,5 @@
 /**
- * Wallet utilities for Pay-Per-ToolSDK
+ * Wallet utilities for PayPerToolSDK
  */
 
 import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
@@ -21,7 +21,7 @@ export interface CreateWalletOptions {
 
 /**
  * Creates a wallet from a mnemonic
- * 
+ *
  * @param mnemonic - BIP-39 mnemonic words
  * @param options - Optional wallet creation options
  * @returns A CosmJS direct signer
@@ -46,7 +46,9 @@ export async function createWalletFromMnemonic(
   // Since HdPath is an array of numbers, we can use a simple string representation
   // and let CosmJS handle the conversion internally
   if (hdPath) {
-    console.warn('Custom HD path provided, but using string representation which may not work as expected');
+    console.warn(
+      'Custom HD path provided, but using string representation which may not work as expected',
+    );
   }
 
   // We just use the options without the hdPath to avoid type issues
@@ -57,7 +59,7 @@ export async function createWalletFromMnemonic(
 
 /**
  * Creates a wallet from a private key
- * 
+ *
  * @param privateKeyHex - Hex-encoded private key (without 0x prefix)
  * @param options - Optional wallet creation options
  * @returns A CosmJS direct signer
@@ -73,24 +75,24 @@ export async function createWalletFromPrivateKey(
 
   // Convert hex string to Uint8Array
   const privateKey = new Uint8Array(
-    privateKeyHex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []
+    privateKeyHex.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || [],
   );
-  
+
   const { prefix = 'neutron' } = options;
-  
+
   // Create wallet from private key
   const wallet = await DirectSecp256k1Wallet.fromKey(privateKey, prefix);
-  
+
   return wallet;
 }
 
 /**
  * Creates a signing client from a wallet
- * 
+ *
  * @param rpcEndpoint - The RPC endpoint URL
  * @param signer - The wallet or signer
  * @param gasPrice - Gas price to use (optional)
- * @param options - Additional options (optional) 
+ * @param options - Additional options (optional)
  * @returns A signing CosmWasm client
  */
 export async function createSigningClientFromWallet(
@@ -105,30 +107,26 @@ export async function createSigningClientFromWallet(
 
   // Convert gas price if provided
   const gasPriceValue = gasPrice ? GasPrice.fromString(gasPrice) : undefined;
-  
+
   // Use clientOptions with proper typing from SigningCosmWasmClient
   // Define a type that matches what SigningCosmWasmClient.connectWithSigner expects
   type SigningClientOptions = {
     gasPrice?: GasPrice;
   };
-  
+
   const clientOptions: SigningClientOptions = {};
   if (gasPriceValue) {
     clientOptions.gasPrice = gasPriceValue;
   }
 
-  const client = await SigningCosmWasmClient.connectWithSigner(
-    rpcEndpoint,
-    signer,
-    clientOptions
-  );
+  const client = await SigningCosmWasmClient.connectWithSigner(rpcEndpoint, signer, clientOptions);
 
   return client;
 }
 
 /**
  * Get wallet address from a signer
- * 
+ *
  * @param signer - The wallet or signer
  * @returns The wallet's first address
  * @throws Error if no accounts are found
@@ -148,7 +146,7 @@ export async function getWalletAddress(signer: OfflineDirectSigner): Promise<str
 
 /**
  * Validates if an address is a valid bech32 address with the given prefix
- * 
+ *
  * @param address - The address to validate
  * @param prefix - The expected address prefix (default: 'neutron')
  * @returns True if valid, false otherwise
@@ -157,7 +155,7 @@ export function isValidAddress(address: string, prefix: string = 'neutron'): boo
   if (!address || typeof address !== 'string') {
     return false;
   }
-  
+
   // Simple prefix check - for more accurate validation, consider using bech32 library
   return address.startsWith(`${prefix}1`);
 }

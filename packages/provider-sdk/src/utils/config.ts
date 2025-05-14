@@ -1,16 +1,16 @@
 /**
- * Configuration utilities for Pay-Per-ToolSDK
+ * Configuration utilities for PayPerToolSDK
  */
 
-import type { Pay-Per-ToolSDKConfig } from '../toolPaySDK.js';
+import type { PayPerToolSDKConfig } from '../PayPerToolSDK.js';
 
 /**
- * Validates Pay-Per-Tool SDK configuration
- * 
+ * Validates PayPerTool SDK configuration
+ *
  * @param config - The configuration object to validate
  * @throws Error if the configuration is invalid
  */
-export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
+export function validateConfig(config: PayPerToolSDKConfig): void {
   if (!config) {
     throw new Error('Configuration object is required');
   }
@@ -19,11 +19,11 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
   if (!config.rpcEndpoint) {
     throw new Error('RPC endpoint is required in configuration');
   }
-  
+
   if (typeof config.rpcEndpoint !== 'string') {
     throw new Error('RPC endpoint must be a string');
   }
-  
+
   if (!config.rpcEndpoint.startsWith('http://') && !config.rpcEndpoint.startsWith('https://')) {
     throw new Error('RPC endpoint must be a valid URL starting with http:// or https://');
   }
@@ -32,7 +32,7 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
   if (!config.chainId) {
     throw new Error('Chain ID is required in configuration');
   }
-  
+
   if (typeof config.chainId !== 'string') {
     throw new Error('Chain ID must be a string');
   }
@@ -41,11 +41,11 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
   if (!config.registryAddress) {
     throw new Error('Registry contract address is required in configuration');
   }
-  
+
   if (typeof config.registryAddress !== 'string') {
     throw new Error('Registry contract address must be a string');
   }
-  
+
   // Simple validation for Neutron addresses (neutron1...)
   if (!config.registryAddress.startsWith('neutron1')) {
     throw new Error('Registry address must be a valid Neutron address (starting with neutron1)');
@@ -54,11 +54,11 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
   if (!config.escrowAddress) {
     throw new Error('Escrow contract address is required in configuration');
   }
-  
+
   if (typeof config.escrowAddress !== 'string') {
     throw new Error('Escrow contract address must be a string');
   }
-  
+
   // Simple validation for Neutron addresses (neutron1...)
   if (!config.escrowAddress.startsWith('neutron1')) {
     throw new Error('Escrow address must be a valid Neutron address (starting with neutron1)');
@@ -69,7 +69,7 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
     if (typeof config.gasAdjustment !== 'number') {
       throw new Error('Gas adjustment must be a number');
     }
-    
+
     if (config.gasAdjustment <= 0) {
       throw new Error('Gas adjustment must be positive');
     }
@@ -78,11 +78,13 @@ export function validateConfig(config: Pay-Per-ToolSDKConfig): void {
 
 /**
  * Get default configuration values for network
- * 
+ *
  * @param network - 'mainnet', 'testnet', or 'local'
  * @returns Partial configuration with network-specific values
  */
-export function getNetworkDefaults(network: 'mainnet' | 'testnet' | 'local'): Partial<Pay-Per-ToolSDKConfig> {
+export function getNetworkDefaults(
+  network: 'mainnet' | 'testnet' | 'local',
+): Partial<PayPerToolSDKConfig> {
   switch (network) {
     case 'mainnet':
       return {

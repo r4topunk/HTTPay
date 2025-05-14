@@ -1,14 +1,14 @@
 /**
- * Pay-Per-Tool Provider SDK
+ * PayPerTool Provider SDK
  *
- * The main entry point for the Pay-Per-Tool Provider SDK. This SDK enables tool providers
- * to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron.
+ * The main entry point for the PayPerTool Provider SDK. This SDK enables tool providers
+ * to interact with PayPerTool smart contracts (Registry and Escrow) on Neutron.
  *
  * @packageDocumentation
  */
 
 // Export main SDK class
-export { Pay-Per-ToolSDK } from './toolPaySDK';
+export { PayPerToolSDK } from './PayPerToolSDK';
 
 // Export core functionality
 export { EscrowVerifier } from './escrowVerifier';
@@ -21,10 +21,10 @@ export { RegistryClient, EscrowClient } from './clients/index';
 export * from './types/index';
 export * from './escrowVerifier';
 export * from './usageReporter';
-export * from './toolPaySDK';
+export * from './PayPerToolSDK';
 
 // Version export
 export const SDK_VERSION = '0.1.0';
 export function getSDKInfo(): string {
-  return `Pay-Per-Tool Provider SDK v${SDK_VERSION}`;
+  return `PayPerTool Provider SDK v${SDK_VERSION}`;
 }

@@ -1,14 +1,14 @@
 /**
- * Error classes for Pay-Per-Tool SDK
+ * Error classes for PayPerTool SDK
  */
 
 /**
- * Base class for all Pay-Per-Tool SDK errors
+ * Base class for all PayPerTool SDK errors
  */
-export class Pay-Per-ToolError extends Error {
+export class PayPerToolError extends Error {
   /** Error code */
   code: string;
-  
+
   /** Additional error details */
   details: Record<string, unknown>;
 
@@ -17,7 +17,7 @@ export class Pay-Per-ToolError extends Error {
     this.name = this.constructor.name;
     this.code = code;
     this.details = details || {}; // Initialize with empty object if not provided
-    
+
     // Preserve stack trace in modern environments
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);
@@ -28,7 +28,7 @@ export class Pay-Per-ToolError extends Error {
 /**
  * Error thrown for configuration issues
  */
-export class ConfigurationError extends Pay-Per-ToolError {
+export class ConfigurationError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONFIGURATION_ERROR', details);
   }
@@ -37,7 +37,7 @@ export class ConfigurationError extends Pay-Per-ToolError {
 /**
  * Error thrown for network-related issues (RPC connection, timeouts, etc)
  */
-export class NetworkError extends Pay-Per-ToolError {
+export class NetworkError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'NETWORK_ERROR', details);
   }
@@ -46,7 +46,7 @@ export class NetworkError extends Pay-Per-ToolError {
 /**
  * Error thrown for contract execution failures
  */
-export class ContractError extends Pay-Per-ToolError {
+export class ContractError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONTRACT_ERROR', details);
   }
@@ -55,7 +55,7 @@ export class ContractError extends Pay-Per-ToolError {
 /**
  * Error thrown when escrow verification fails
  */
-export class EscrowVerificationError extends Pay-Per-ToolError {
+export class EscrowVerificationError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'ESCROW_VERIFICATION_ERROR', details);
   }
@@ -64,7 +64,7 @@ export class EscrowVerificationError extends Pay-Per-ToolError {
 /**
  * Error thrown for usage reporting failures
  */
-export class UsageReportingError extends Pay-Per-ToolError {
+export class UsageReportingError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'USAGE_REPORTING_ERROR', details);
   }
@@ -73,21 +73,21 @@ export class UsageReportingError extends Pay-Per-ToolError {
 /**
  * Error thrown for wallet-related issues
  */
-export class WalletError extends Pay-Per-ToolError {
+export class WalletError extends PayPerToolError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'WALLET_ERROR', details);
   }
 }
 
 /**
- * Convert any error to a Pay-Per-ToolError
- * 
+ * Convert any error to a PayPerToolError
+ *
  * @param error - The error to convert
  * @param defaultMessage - Default message if error doesn't have one
- * @returns A Pay-Per-ToolError or subclass
+ * @returns A PayPerToolError or subclass
  */
-export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): Pay-Per-ToolError {
-  if (error instanceof Pay-Per-ToolError) {
+export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): PayPerToolError {
+  if (error instanceof PayPerToolError) {
     return error;
   }
 
@@ -102,20 +102,24 @@ export function normalizeError(error: unknown, defaultMessage = 'Unknown error')
   }
 
   const message = hasMessage(error) ? error.message : defaultMessage;
-  
+
   // Try to categorize the error
-  if (message.includes('network') || message.includes('connection') || message.includes('timeout')) {
+  if (
+    message.includes('network') ||
+    message.includes('connection') ||
+    message.includes('timeout')
+  ) {
     return new NetworkError(message, { originalError: error });
   }
-  
+
   if (message.includes('wallet') || message.includes('signer') || message.includes('account')) {
     return new WalletError(message, { originalError: error });
   }
-  
+
   if (message.includes('contract') || message.includes('execute') || message.includes('query')) {
     return new ContractError(message, { originalError: error });
   }
-  
-  // Default to generic Pay-Per-ToolError
-  return new Pay-Per-ToolError(message, 'UNKNOWN_ERROR', { originalError: error });
+
+  // Default to generic PayPerToolError
+  return new PayPerToolError(message, 'UNKNOWN_ERROR', { originalError: error });
 }

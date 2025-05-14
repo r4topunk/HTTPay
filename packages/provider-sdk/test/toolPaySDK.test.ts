@@ -1,4 +1,4 @@
-import { Pay-Per-ToolSDK, Pay-Per-ToolSDKConfig } from '../src/toolPaySDK';
+import { PayPerToolSDK, PayPerToolSDKConfig } from '../src/PayPerToolSDK';
 import { EscrowClient } from '../src/clients/EscrowClient';
 import { RegistryClient } from '../src/clients/RegistryClient';
 import { EscrowVerifier } from '../src/escrowVerifier';
@@ -30,8 +30,8 @@ jest.mock('../src/utils/wallet', () => {
 // Import utility functions after mocking
 import { createWalletFromMnemonic, createSigningClientFromWallet } from '../src/utils/wallet';
 
-describe('Pay-Per-ToolSDK', () => {
-  let mockConfig: Pay-Per-ToolSDKConfig;
+describe('PayPerToolSDK', () => {
+  let mockConfig: PayPerToolSDKConfig;
   let mockCosmWasmClient: jest.Mocked<CosmWasmClient>;
   let mockSigningClient: jest.Mocked<SigningCosmWasmClient>;
 
@@ -64,16 +64,16 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should initialize with valid configuration', () => {
     // Act
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
 
     // Assert
-    expect(sdk).toBeInstanceOf(Pay-Per-ToolSDK);
+    expect(sdk).toBeInstanceOf(PayPerToolSDK);
     expect(sdk.version).toBeDefined();
   });
 
   it('should connect with a read-only client', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
 
     // Act
     await sdk.connect();
@@ -89,7 +89,7 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should connect with a signing client using mnemonic', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
     const testMnemonic = 'test mnemonic words here';
 
     // Act
@@ -106,7 +106,7 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should connect with an existing signing client', () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
 
     // Act
     sdk.connectWithSigningClient(mockSigningClient);
@@ -128,14 +128,14 @@ describe('Pay-Per-ToolSDK', () => {
     };
 
     // Act & Assert
-    expect(() => new Pay-Per-ToolSDK(invalidConfig as Pay-Per-ToolSDKConfig)).toThrow(
-      'Failed to initialize Pay-Per-ToolSDK',
+    expect(() => new PayPerToolSDK(invalidConfig as PayPerToolSDKConfig)).toThrow(
+      'Failed to initialize PayPerToolSDK',
     );
   });
 
   it('should delegate verifyEscrow to EscrowVerifier', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
     await sdk.connect();
 
     const mockVerifier = EscrowVerifier.prototype as jest.Mocked<EscrowVerifier>;
@@ -156,7 +156,7 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should delegate postUsage to UsageReporter', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
     await sdk.connectWithMnemonic('test mnemonic');
 
     const mockReporter = UsageReporter.prototype as jest.Mocked<UsageReporter>;
@@ -176,7 +176,7 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should provide access to clients through getter methods', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
     await sdk.connect();
 
     // Act & Assert - these should not throw errors
@@ -190,7 +190,7 @@ describe('Pay-Per-ToolSDK', () => {
 
   it('should detect signing capability correctly', async () => {
     // Arrange
-    const sdk = new Pay-Per-ToolSDK(mockConfig);
+    const sdk = new PayPerToolSDK(mockConfig);
 
     // Act & Assert - without connection
     expect(sdk.hasSigningCapability()).toBe(false);

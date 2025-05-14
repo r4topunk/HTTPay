@@ -1,14 +1,14 @@
 /**
- * Pay-Per-ToolSDK Main Class
+ * PayPerToolSDK Main Class
  *
- * This is the main entry point for the Pay-Per-Tool Provider SDK.
+ * This is the main entry point for the PayPerTool Provider SDK.
  * It combines all the components into a unified API for interacting
- * with Pay-Per-Tool smart contracts on the Neutron blockchain.
+ * with PayPerTool smart contracts on the Neutron blockchain.
  *
  * @example
  * ```typescript
  * // Initialize the SDK
- * const sdk = new Pay-Per-ToolSDK({
+ * const sdk = new PayPerToolSDK({
  *   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
  *   chainId: 'pion-1',
  *   registryAddress: 'neutron1...',
@@ -56,12 +56,12 @@ import {
 } from './utils/index';
 
 /**
- * Configuration for the Pay-Per-ToolSDK
+ * Configuration for the PayPerToolSDK
  *
  * Contains all the parameters needed to connect to the blockchain and
- * interact with Pay-Per-Tool smart contracts.
+ * interact with PayPerTool smart contracts.
  */
-export interface Pay-Per-ToolSDKConfig {
+export interface PayPerToolSDKConfig {
   /** RPC endpoint URL for connecting to the chain */
   rpcEndpoint: string;
 
@@ -76,7 +76,7 @@ export interface Pay-Per-ToolSDKConfig {
 
   /** Optional: Gas price in denom format (e.g., "0.025untrn") */
   gasPrice?: string;
-  
+
   /** Optional: Gas adjustment factor (default: 1.3) */
   gasAdjustment?: number;
 
@@ -85,18 +85,18 @@ export interface Pay-Per-ToolSDKConfig {
 }
 
 /**
- * Main SDK class for Pay-Per-Tool Provider SDK
+ * Main SDK class for PayPerTool Provider SDK
  *
- * This class provides a unified API for interacting with Pay-Per-Tool smart contracts.
+ * This class provides a unified API for interacting with PayPerTool smart contracts.
  * It combines all the components of the SDK (EscrowVerifier, UsageReporter, etc.)
  * into a single interface with convenient methods for common operations.
  */
-export class Pay-Per-ToolSDK {
+export class PayPerToolSDK {
   /** SDK version for compatibility checks */
   static readonly VERSION = SDK_VERSION;
 
   /** Configuration for this SDK instance */
-  private readonly config: Pay-Per-ToolSDKConfig;
+  private readonly config: PayPerToolSDKConfig;
 
   /** Client for CosmWasm interaction */
   private client?: CosmWasmClient | SigningCosmWasmClient;
@@ -114,12 +114,12 @@ export class Pay-Per-ToolSDK {
   private _usageReporter?: UsageReporter;
 
   /**
-   * Create a new Pay-Per-ToolSDK instance
+   * Create a new PayPerToolSDK instance
    *
    * @param config - SDK configuration with network and contract details
    * @throws ConfigurationError if the configuration is invalid
    */
-  constructor(config: Pay-Per-ToolSDKConfig) {
+  constructor(config: PayPerToolSDKConfig) {
     try {
       // Validate the configuration before proceeding
       validateConfig(config);
@@ -146,7 +146,7 @@ export class Pay-Per-ToolSDK {
       }
 
       const errorMessage = hasMessage(error) ? error.message : 'Unknown error';
-      throw new ConfigurationError(`Failed to initialize Pay-Per-ToolSDK: ${errorMessage}`, {
+      throw new ConfigurationError(`Failed to initialize PayPerToolSDK: ${errorMessage}`, {
         originalError: error,
       });
     }
@@ -158,7 +158,7 @@ export class Pay-Per-ToolSDK {
    * @returns The version of the SDK
    */
   get version(): string {
-    return Pay-Per-ToolSDK.VERSION;
+    return PayPerToolSDK.VERSION;
   }
 
   /**
@@ -170,7 +170,7 @@ export class Pay-Per-ToolSDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connect(): Promise<Pay-Per-ToolSDK> {
+  async connect(): Promise<PayPerToolSDK> {
     try {
       if (!this.client) {
         this.client = await CosmWasmClient.connect(this.config.rpcEndpoint);
@@ -208,7 +208,7 @@ export class Pay-Per-ToolSDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connectWithMnemonic(mnemonic: string, prefix = 'neutron'): Promise<Pay-Per-ToolSDK> {
+  async connectWithMnemonic(mnemonic: string, prefix = 'neutron'): Promise<PayPerToolSDK> {
     try {
       if (!this.client || !('execute' in this.client)) {
         // Use our helper function from utils
@@ -243,7 +243,7 @@ export class Pay-Per-ToolSDK {
    * @returns This SDK instance for chaining
    * @throws NetworkError if connection fails
    */
-  async connectWithPrivateKey(privateKeyHex: string, prefix = 'neutron'): Promise<Pay-Per-ToolSDK> {
+  async connectWithPrivateKey(privateKeyHex: string, prefix = 'neutron'): Promise<PayPerToolSDK> {
     try {
       if (!this.client || !('execute' in this.client)) {
         // Use our helper function from utils
@@ -278,7 +278,7 @@ export class Pay-Per-ToolSDK {
    * @returns This SDK instance for chaining
    * @throws ConfigurationError if the signing client is invalid
    */
-  connectWithSigningClient(signingClient: SigningCosmWasmClient): Pay-Per-ToolSDK {
+  connectWithSigningClient(signingClient: SigningCosmWasmClient): PayPerToolSDK {
     if (!signingClient) {
       throw new ConfigurationError('Signing client cannot be null or undefined');
     }

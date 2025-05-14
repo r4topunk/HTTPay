@@ -1,6 +1,6 @@
 /**
  * Escrow contract client
- * 
+ *
  * Provides a high-level API for interacting with the Escrow contract.
  */
 
@@ -19,7 +19,7 @@ export interface LockFundsResult {
 }
 
 /**
- * Client for interacting with the Pay-Per-Tool Escrow contract
+ * Client for interacting with the PayPerTool Escrow contract
  */
 export class EscrowClient {
   private readonly client: CosmWasmClient | SigningCosmWasmClient;
@@ -27,7 +27,7 @@ export class EscrowClient {
 
   /**
    * Create a new EscrowClient
-   * 
+   *
    * @param client - CosmWasm client (signing or non-signing)
    * @param contractAddress - Address of the Escrow contract
    */
@@ -38,16 +38,16 @@ export class EscrowClient {
 
   /**
    * Get the Escrow contract address
-   * 
+   *
    * @returns The contract address
    */
   getContractAddress(): string {
     return this.contractAddress;
   }
-  
+
   /**
    * Get the underlying CosmWasm client
-   * 
+   *
    * @returns The CosmWasm client
    */
   getClient(): CosmWasmClient | SigningCosmWasmClient {
@@ -56,19 +56,19 @@ export class EscrowClient {
 
   /**
    * Query information about a specific escrow
-   * 
+   *
    * @param escrowId - ID of the escrow to query
    * @returns Escrow information if found
    */
   async getEscrow(escrowId: number): Promise<EscrowResponse> {
     return await this.client.queryContractSmart(this.contractAddress, {
-      get_escrow: { escrow_id: escrowId }
+      get_escrow: { escrow_id: escrowId },
     });
   }
 
   /**
    * Check if the client is a signing client
-   * 
+   *
    * @private
    * @throws Error if the client is not a signing client
    */
@@ -81,7 +81,7 @@ export class EscrowClient {
 
   /**
    * Lock funds for a tool provider with an authentication token
-   * 
+   *
    * @param senderAddress - The address executing the transaction
    * @param toolId - The tool ID in the registry
    * @param maxFee - The maximum fee the caller is willing to pay
@@ -108,7 +108,7 @@ export class EscrowClient {
         max_fee: maxFee,
         auth_token: authToken,
         expires,
-      }
+      },
     };
 
     const result = await signingClient.execute(
@@ -117,13 +117,13 @@ export class EscrowClient {
       msg,
       'auto',
       memo,
-      funds
+      funds,
     );
 
     // Extract escrow_id and denom from the event attributes
     let escrowId: number = 0;
     let denom: string | undefined;
-    
+
     for (const event of result.events) {
       if (event.type === 'wasm') {
         for (const attr of event.attributes) {
@@ -146,7 +146,7 @@ export class EscrowClient {
 
   /**
    * Release locked funds to the provider after tool usage
-   * 
+   *
    * @param senderAddress - The address executing the transaction
    * @param escrowId - The escrow ID to release funds from
    * @param usageFee - The actual usage fee to charge (must be ≤ max_fee)
@@ -167,7 +167,7 @@ export class EscrowClient {
       release: {
         escrow_id: escrowId,
         usage_fee: usageFee,
-      }
+      },
     };
 
     const result = await signingClient.execute(
@@ -176,7 +176,7 @@ export class EscrowClient {
       msg,
       'auto',
       memo,
-      funds
+      funds,
     );
 
     return result.transactionHash;
@@ -184,7 +184,7 @@ export class EscrowClient {
 
   /**
    * Refund locked funds to the caller if the escrow has expired
-   * 
+   *
    * @param senderAddress - The address executing the transaction
    * @param escrowId - The escrow ID to refund
    * @param funds - Optional array of coins to send with the transaction
@@ -202,7 +202,7 @@ export class EscrowClient {
     const msg: EscrowExecuteMsg = {
       refund_expired: {
         escrow_id: escrowId,
-      }
+      },
     };
 
     const result = await signingClient.execute(
@@ -211,7 +211,7 @@ export class EscrowClient {
       msg,
       'auto',
       memo,
-      funds
+      funds,
     );
 
     return result.transactionHash;

@@ -16,4 +16,5 @@ mod unauthorized_release_test;
 mod expired_escrow_refund_test;
 mod non_expired_refund_test;
 mod frozen_contract_test;
+mod multi_denom_test;
 // Import individual test modules below as they're implemented

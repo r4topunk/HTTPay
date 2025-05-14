@@ -6,3 +6,4 @@ mod update_price_success;
 mod pause_resume_tool;
 mod query_tool_functionality;
 mod unauthorized_pause_resume;
+mod update_denom_test;

@@ -2,7 +2,6 @@
  * Tests for multi-denomination token support in the provider SDK
  */
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import { RegistryClient } from '../src/clients/RegistryClient';
 import { EscrowClient } from '../src/clients/EscrowClient';
 
@@ -61,8 +60,8 @@ describe('Multi-Denomination Support', () => {
         senderAddress,
         TOOL_ID,
         PRICE,
-        [{ amount: '0', denom: 'untrn' }],
-        customDenom
+        customDenom,
+        [{ amount: '0', denom: NATIVE_DENOM }]
       );
       
       // Verify the correct message was sent
@@ -78,7 +77,7 @@ describe('Multi-Denomination Support', () => {
         },
         'auto',
         undefined,
-        [{ amount: '0', denom: 'untrn' }]
+        [{ amount: '0', denom: NATIVE_DENOM }]
       );
     });
     

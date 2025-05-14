@@ -43,7 +43,7 @@ fn query_tool_functionality() {
     let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None).unwrap();
 
     // Query the registered tool and verify metadata
     let query_res = query_tool(deps.as_ref(), tool_id).unwrap();

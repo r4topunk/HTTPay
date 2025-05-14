@@ -46,7 +46,7 @@ fn unauthorized_pause_resume() {
     let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None).unwrap();
 
     // Create message info for unauthorized provider (provider2)
     let unauthorized_info = message_info(&Addr::unchecked("provider2"), &[]);

@@ -348,7 +348,7 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Create implementation notes
 
 ### 10.4 Testing and Documentation
-- [ ] Add comprehensive tests for multi-denomination support
+- [x] Add comprehensive tests for multi-denomination support
 - [ ] Update documentation with multi-denom usage examples
 
 ## Chunk 11: Documentation & Hardening

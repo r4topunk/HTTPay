@@ -52,6 +52,7 @@ fn test_registry_basic_functionality() {
             &RegistryExecuteMsg::RegisterTool {
                 tool_id: tool_id.to_string(),
                 price: Uint128::new(initial_price),
+                denom: None,
             },
             &[],
         )

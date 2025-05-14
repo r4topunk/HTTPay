@@ -162,6 +162,7 @@ pub fn register_tool(
         &RegistryExecuteMsg::RegisterTool {
             tool_id: tool_id.to_string(),
             price: Uint128::new(price),
+            denom: None,
         },
         &[],
     )?;

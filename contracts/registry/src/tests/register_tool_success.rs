@@ -46,15 +46,16 @@ fn register_tool_success() {
     let price = Uint128::new(100);
 
     // Execute tool registration
-    let res = execute_register_tool(deps.as_mut(), info, tool_id.clone(), price).unwrap();
+    let res = execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None).unwrap();
 
     // Verify response attributes
-    assert_eq!(5, res.attributes.len());
+    assert_eq!(6, res.attributes.len());
     assert_eq!("register_tool", res.attributes[0].value);
     assert_eq!("tool1", res.attributes[1].value);
     assert_eq!("provider1", res.attributes[2].value);
     assert_eq!("100", res.attributes[3].value);
-    assert_eq!("true", res.attributes[4].value);
+    assert_eq!("untrn", res.attributes[4].value);  // Default denom
+    assert_eq!("true", res.attributes[5].value);
 
     // Query tool metadata and verify it was stored correctly
     let query_res = query_tool(deps.as_ref(), tool_id).unwrap();

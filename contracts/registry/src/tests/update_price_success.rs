@@ -44,7 +44,7 @@ fn update_price_success() {
     let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
-    execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price).unwrap();
+    execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price, None).unwrap();
 
     // Update the tool's price as the authorized provider
     let new_price = Uint128::new(200);

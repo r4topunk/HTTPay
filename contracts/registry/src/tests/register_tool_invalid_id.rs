@@ -43,7 +43,7 @@ fn register_tool_invalid_id() {
     let price = Uint128::new(100);
 
     // Execute tool registration and expect an error
-    let err = execute_register_tool(deps.as_mut(), info, tool_id, price).unwrap_err();
+    let err = execute_register_tool(deps.as_mut(), info, tool_id, price, None).unwrap_err();
 
     // Verify that the error is the expected ToolIdTooLong error
     match err {

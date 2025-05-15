@@ -7,11 +7,11 @@ This document defines a step-by-step plan to build the Pay-Per-Tool MVP. It is o
 ### Phase 1: Smart Contracts & Testing
 Focus on implementing and thoroughly testing the core CosmWasm contracts that power the Pay-Per-Tool system.
 
-### Phase 2: Provider SDK & Tools
-Develop the TypeScript SDK and CLI tools for providers once the contracts are stable and tested.
+### Phase 2: Provider SDK
+Develop the TypeScript SDK for providers once the contracts are stable and tested. (CLI tools are out-of-scope for MVP.)
 
 ### Phase 3: Frontend Development
-Build the user-facing application only after the contract and SDK foundation is solid.
+Build the user-facing application only after the contract and SDK foundation is solid. (Planned for post-MVP.)
 
 ## Project Directory Structure
 
@@ -46,20 +46,22 @@ Note: package.json will be created in Phase 2 when TypeScript is first needed.
 ## Phase 2: Provider SDK
 
 ### Phase 2 Deliverables
-1. **TypeScript Workspace Setup**
-2. **Provider SDK (TypeScript)**
-3. **SDK Documentation & Examples**
-4. **AI‑Wallet Client Demo**
-5. **E2E Testing with SDK**
+1. **TypeScript Workspace Setup** (Complete)
+2. **Provider SDK (TypeScript)** (Complete)
+3. **SDK Documentation & Examples** (Complete)
+4. **AI‑Wallet Client Demo** (Complete)
+5. **E2E Testing with SDK** (Complete)
+
+All SDK deliverables are implemented, tested, and documented. The SDK is production-ready, with comprehensive error handling, wallet integration, and a main SDK class. See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for details.
 
 ## Phase 3: Frontend Development
 
 ### Phase 3 Deliverables
-1. **Frontend Setup with shadcn**
-2. **User Wallet Integration**
-3. **Provider Dashboard & Tool Management UI**
-4. **Analytics & Monitoring**
-5. **Documentation & User Guides**
+1. **Frontend Setup with shadcn** (Planned)
+2. **User Wallet Integration** (Planned)
+3. **Provider Dashboard & Tool Management UI** (Planned)
+4. **Analytics & Monitoring** (Planned)
+5. **Documentation & User Guides** (Planned)
 
 ---
 
@@ -117,15 +119,15 @@ Note: package.json will be created in Phase 2 when TypeScript is first needed.
 - Extract contract schemas using `cargo schema`
 - Generate TypeScript bindings via `telescope`
 - Create `packages/provider-sdk` directory structure
-- Implement `EscrowVerifier` class with verification logic
-- Implement `UsageReporter` class for reporting usage
-- Write SDK unit tests
+- Implement `EscrowVerifier` class with verification logic (Complete)
+- Implement `UsageReporter` class for reporting usage (Complete)
+- Write SDK unit tests (Complete)
 
 #### 2.3 SDK Integration Testing
-- Build AI-Wallet client demo script
-- Implement E2E test scenarios
-- Test complete flows on localnet
-- Document SDK usage examples and best practices
+- Build AI-Wallet client demo script (Complete)
+- Implement E2E test scenarios (Complete)
+- Test complete flows on localnet (Complete)
+- Document SDK usage examples and best practices (Complete)
 
 ### Phase 3: Frontend Development
 
@@ -150,4 +152,13 @@ Note: package.json will be created in Phase 2 when TypeScript is first needed.
 
 ---
 
-> **Development Approach**: Complete each phase sequentially before moving to the next. At the end of each phase, perform a thorough review to ensure all deliverables meet quality standards before progressing.
+
+---
+
+## Current Status Summary
+
+- **Phase 1 (Contracts & Testing):** Complete — Registry and Escrow contracts are fully implemented and tested, with comprehensive unit and integration tests.
+- **Phase 2 (Provider SDK):** Complete — SDK is production-ready, with documentation, error handling, wallet integration, and demo scripts.
+- **Phase 3 (Frontend):** Planned — User-facing app and dashboard to be developed post-MVP.
+
+For full details, see [project.md](./project.md) and [packages/provider-sdk/README.md](./packages/provider-sdk/README.md).

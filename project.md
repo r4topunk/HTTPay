@@ -1,6 +1,9 @@
 # Pay-Per-Tool MVP — Minimal Viable Specification
 
+
 _(Target stack: CosmWasm 1.5 on Neutron + TypeScript SDK/CLI)_
+
+**Status: Registry and Escrow contracts are fully implemented and tested. Provider SDK is production-ready with comprehensive documentation, error handling, wallet integration, and a main SDK class. AI-Wallet demo and E2E flows are implemented.**
 
 ---
 
@@ -83,86 +86,128 @@ _Safety toggles:_ hard‑coded TTL = user-defined (max 50 blocks); contract owne
 
 ---
 
-## **3. Off‑chain provider SDK (TypeScript)**
 
-- verifyEscrow(escrowId, authToken) → gRPC call to Neutron RPC to confirm:
+## **3. Off‑chain Provider SDK (TypeScript)**
 
-    - escrow exists, not expired
+The Provider SDK (`@toolpay/provider-sdk`) is production-ready and enables tool providers to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
 
-    - provider == myAddress
-    - postUsage(escrowId, fee) → broadcast Release tx via **cosmos‑kit** signer.
+### Features
+- **Escrow Verification**: Verify escrow existence, validity, and authorization (escrow existence, provider address, auth token, expiration)
+- **Usage Reporting**: Submit usage reports and claim funds from escrows (with safety checks)
+- **Contract Interaction**: Type-safe wrapper classes for Registry and Escrow contract interaction
+- **Wallet Integration**: Support for various wallet providers and signing methods (mnemonic, private key, CosmJS signer)
+- **Comprehensive Error Handling**: Custom error classes for configuration, network, contract, escrow, usage, and wallet errors
+- **Configuration**: Flexible configuration for network, contract addresses, and gas settings
+- **Documentation & Examples**: JSDoc/TSDoc comments, README, and demo scripts
 
+### Main SDK Class
+`PayPerToolSDK` is the main entry point, aggregating all functionality:
+- `registry`: Registry contract client
+- `escrow`: Escrow contract client
+- `escrowVerifier`: Escrow verification logic
+- `usageReporter`: Usage reporting and fund claiming
 
-Publish as @toolpay/provider-sdk.
+#### Example Usage
+```typescript
+import { PayPerToolSDK } from '@toolpay/provider-sdk';
+
+const sdk = new PayPerToolSDK({
+  rpcEndpoint: 'https://rpc-pion-1.neutron.org',
+  chainId: 'pion-1',
+  registryAddress: 'neutron1...',
+  escrowAddress: 'neutron1...',
+});
+
+const verification = await sdk.escrowVerifier.verifyEscrow({
+  escrowId: '123',
+  authToken: 'base64token',
+  providerAddr: 'neutron1...',
+});
+
+if (verification.isValid) {
+  const result = await sdk.usageReporter.postUsage({
+    escrowId: '123',
+    usageFee: '1000000',
+    wallet: yourWallet,
+  });
+  console.log('Usage reported, tx hash:', result.txHash);
+}
+```
+
+### Documentation & Testing
+- All public classes and methods are documented with JSDoc/TSDoc
+- Comprehensive Jest test suite (unit and integration)
+- AI-Wallet demo script demonstrates full workflow (registration, discovery, escrow, verification, usage, claiming)
+- Example usage patterns included in docs and demo
+
+### Status
+- **Phase 3 Complete**: Core SDK, utilities, error handling, wallet integration, documentation, and tests are all implemented and passing.
+
+See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for full details.
 
 ---
 
-## **4. AI‑wallet client (TypeScript)**
+## **4. AI‑Wallet Client (TypeScript)**
 
-```
-const registry = new RegistryQuerier(rpc);
-const tool = await registry.getTool("sentiment-api");
+The AI-Wallet client demo is implemented in `packages/provider-sdk/scripts/aiWalletDemo.ts` and demonstrates the full Pay-Per-Tool workflow:
+1. Provider registration
+2. Tool discovery by client
+3. Fund locking in escrow
+4. Escrow verification
+5. Service delivery (simulated)
+6. Usage reporting and fund claiming
 
-const escrow = new EscrowTx(rpc, signer);
-const escrowId = await escrow.lockFunds({
-  toolId: tool.id,
-  maxFee: tool.price,
-  authToken: randomBytes(16)
-});
-
-// call off‑chain API
-const res = await fetch(tool.endpoint, {
-  headers: { "x-auth": base64(authToken) },
-  body: payload
-});
-```
+The demo includes configuration handling, wallet setup for both provider and client, error handling, and explanatory logging. It serves as a reference for integrating the SDK into real-world applications.
 
 SDK depends on **telescope‑generated** bindings for contract schemas.
 
 ---
 
-## **5. Development timeline (4 weeks)**
+## **5. Development Timeline & Status**
 
-|**Week**|**Deliverables**|
-|---|---|
-|1|Scaffold contracts (cw-template) • write state & msgs • unit tests (cw-multi-test)|
-|2|TypeScript provider verifier lib • CLI for register & release • localnet docker compose|
-|3|AI‑wallet demo script • E2E test on Neutron testnet (pion-1)|
-|4|Basic docs (README + spec.md) • Hardening: gas limits, edge‑case tests|
+|**Phase**|**Deliverables**|**Status**|
+|---|---|---|
+|1|Contracts: Registry & Escrow, unit/integration tests, CI/localnet|**Complete**|
+|2|Provider SDK: TypeScript SDK, docs, AI-Wallet demo, E2E tests|**Complete**|
+|3|Frontend: User-facing app with shadcn UI|Planned|
+
+All contract and SDK deliverables are implemented, tested, and documented. The project is ready for frontend development and further enhancements (multi-denom, DAO, etc.).
 
 ---
 
-## **6. Acceptance criteria**
+## **6. Acceptance Criteria**
 
 1. **Happy path**: agent locks funds → provider verifies → runs tool → releases correct fee → caller refunded remainder.
-
 2. **Over‑limit**: provider attempts to charge > max_fee → tx fails.
-
 3. **Timeout**: provider never calls Release within TTL → caller can RefundExpired.
-
 4. All flows covered by unit + integration tests; contracts compile under --release and pass cargo wasm-test.
+5. SDK covers all contract flows, with unit/integration tests and demo scripts for all edge cases.
+
 ---
 
-## **7. Tech stack summary**
+## **7. Tech Stack Summary**
 
 |**Layer**|**Choice**|
 |---|---|
 |Chain|**Neutron** testnet → mainnet|
 |Contracts|Rust 1.78, CosmWasm 1.5, cw‑storage‑plus 1.2|
-|Front/CLI|Node 20, TypeScript 5, cosmjs 0.48, telescope code‑gen|
+|Provider SDK|Node 20, TypeScript 5, cosmjs, telescope code‑gen|
+|Frontend|React, shadcn UI, CosmJS (planned)|
 |CI|GitHub Actions: cargo test, wasmd localnet, npm test|
 
 ---
 
-## **8. Future‑proof hooks (post‑MVP)**
+## **8. Future Directions (Post-MVP)**
 
-- Switch price to curve or oracle feed.
+- Multi-asset support (IBC tokens)
+- DAO-based registry governance
+- On-chain metering and dynamic pricing
+- Full-featured provider dashboard and analytics
+- Switch price to curve or oracle feed
+- Add IBCTransfer support for any denom
+- DAO registry governance via Neutron’s DAO module
+- Move metering on‑chain with gas or compute proofs
 
-- Add IBCTransfer support for any denom.
-
-- DAO registry governance via Neutron’s DAO module.
-
-- Move metering on‑chain with gas or compute proofs.
 ---
 
 ## 9. Developer Specification
@@ -277,4 +322,4 @@ pub enum SudoMsg {
 
 ---
 
-This specification should now guide contract implementation and testing directly, with minimal guesswork or backtracking. For full integration, reference the Provider SDK and AI-wallet flows outlined in previous sections.
+This specification now reflects the current, tested, and production-ready state of the contracts and SDK. For full integration, reference the Provider SDK and AI-wallet flows outlined in previous sections and the demo scripts in the SDK package.

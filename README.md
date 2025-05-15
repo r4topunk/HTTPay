@@ -36,7 +36,7 @@ Pay-Per-Tool is a minimal, secure, and extensible pay-per-call escrow system for
 
 - **Registry Contract**: Providers register tools, set prices, pause/resume tools, and update pricing.
 - **Escrow Contract**: Users lock funds for tool usage, providers claim fees, and refunds are automatic on timeout.
-- **Provider SDK (TypeScript)**: Off-chain verification and usage reporting for providers.
+- **Provider SDK (TypeScript)**: Production-ready SDK for off-chain verification, usage reporting, wallet integration, and error handling. Includes demo scripts and comprehensive documentation.
 - **Comprehensive Testing**: All contract flows are covered by unit and integration tests.
 - **Security**: Strict authorization, expiration limits, and contract freezing for emergencies.
 
@@ -50,7 +50,7 @@ toolpay/
 │   ├── registry/   # Registry contract (CosmWasm)
 │   └── escrow/     # Escrow contract (CosmWasm)
 ├── packages/
-│   └── provider-sdk/  # TypeScript SDK (planned)
+│   └── provider-sdk/  # TypeScript SDK (production-ready)
 ├── frontend/       # User interface (planned)
 ├── scripts/        # Helper scripts
 ├── Cargo.toml      # Rust workspace config
@@ -113,54 +113,53 @@ cargo wasm-test
 
 ## Development Phases
 
-1. **Smart Contracts & Testing**: (Current) Registry and Escrow contracts, full test coverage.
-2. **Provider SDK**: TypeScript SDK for off-chain verification and usage reporting.
+1. **Smart Contracts & Testing**: Registry and Escrow contracts, full test coverage. **(Complete)**
+2. **Provider SDK**: TypeScript SDK for off-chain verification, usage reporting, wallet integration, and error handling. **(Complete)**
 3. **Frontend**: User-facing app with shadcn UI (planned).
 
 See [tasks.md](./tasks.md) for detailed progress and next steps.
 
 ---
 
-## Example Usage
 
-### Locking Funds (User)
+## Example SDK Usage
 
-```rust
-// Lock funds for a tool call
-LockFunds {
-  tool_id: "sentiment-api",
-  max_fee: Uint128::from(1000u128),
-  auth_token: Binary::from(b"randomtoken"),
-  expires: 123456 + 30, // current block + TTL
+```typescript
+import { PayPerToolSDK } from '@toolpay/provider-sdk';
+
+const sdk = new PayPerToolSDK({
+  rpcEndpoint: 'https://rpc-pion-1.neutron.org',
+  chainId: 'pion-1',
+  registryAddress: 'neutron1...',
+  escrowAddress: 'neutron1...',
+});
+
+const verification = await sdk.escrowVerifier.verifyEscrow({
+  escrowId: '123',
+  authToken: 'base64token',
+  providerAddr: 'neutron1...',
+});
+
+if (verification.isValid) {
+  const result = await sdk.usageReporter.postUsage({
+    escrowId: '123',
+    usageFee: '1000000',
+    wallet: yourWallet,
+  });
+  console.log('Usage reported, tx hash:', result.txHash);
 }
 ```
 
-### Releasing Funds (Provider)
-
-```rust
-// Provider claims usage fee
-Release {
-  escrow_id: 1,
-  usage_fee: Uint128::from(800u128),
-}
-```
-
-### Refund on Timeout (User)
-
-```rust
-// User refunds if provider does not claim in time
-RefundExpired {
-  escrow_id: 1,
-}
-```
+See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for full details and more examples.
 
 ---
 
+
 ## Testing
 
-- All contract logic is covered by unit and integration tests using `cw-multi-test`.
-- Edge cases: TTL violations, over-limit fees, unauthorized access, contract freezing, and refunds.
-- See `contracts/escrow/src/tests/` and `contracts/registry/src/tests/` for test modules.
+- All contract and SDK logic is covered by unit and integration tests using `cw-multi-test` and Jest.
+- Edge cases: TTL violations, over-limit fees, unauthorized access, contract freezing, refunds, and SDK error handling.
+- See `contracts/escrow/src/tests/`, `contracts/registry/src/tests/`, and `packages/provider-sdk/__tests__/` for test modules.
 
 ---
 
@@ -170,7 +169,7 @@ RefundExpired {
 |------------|----------------------------------------|
 | Chain      | Neutron (Cosmos SDK, CosmWasm 1.5)     |
 | Contracts  | Rust 1.78, cw-storage-plus 1.2         |
-| SDK/CLI    | Node 20, TypeScript 5, cosmjs, telescope (planned) |
+| Provider SDK | Node 20, TypeScript 5, cosmjs, telescope (production-ready) |
 | Frontend   | React, shadcn UI, CosmJS (planned)     |
 | CI         | GitHub Actions, localnet, npm test     |
 

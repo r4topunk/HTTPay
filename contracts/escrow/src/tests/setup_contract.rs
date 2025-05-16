@@ -163,6 +163,7 @@ pub fn register_tool(
             tool_id: tool_id.to_string(),
             price: Uint128::new(price),
             denom: None,
+            description: format!("Test tool: {}", tool_id),
         },
         &[],
     )?;

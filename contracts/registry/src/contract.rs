@@ -37,8 +37,8 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::RegisterTool { tool_id, price, denom } => 
-            execute_register_tool(deps, info, tool_id, price, denom),
+        ExecuteMsg::RegisterTool { tool_id, price, denom, description } => 
+            execute_register_tool(deps, info, tool_id, price, denom, description),
         ExecuteMsg::UpdatePrice { tool_id, price } => 
             execute_update_price(deps, info, tool_id, price),
         ExecuteMsg::PauseTool { tool_id } => 
@@ -57,10 +57,16 @@ pub fn execute_register_tool(
     tool_id: String,
     price: cosmwasm_std::Uint128,
     denom: Option<String>,
+    description: String,
 ) -> Result<Response, ContractError> {
     // Validate tool_id length ≤ 16 characters
     if tool_id.len() > 16 {
         return Err(ContractError::ToolIdTooLong {});
+    }
+    
+    // Validate description length ≤ 256 characters
+    if description.len() > 256 {
+        return Err(ContractError::DescriptionTooLong {});
     }
     
     // Store provider address from info.sender
@@ -75,6 +81,7 @@ pub fn execute_register_tool(
         price,
         denom: denom.clone(),
         is_active: true,
+        description: description.clone(),
     };
     
     TOOLS.save(deps.storage, &tool_id, &tool)?;
@@ -86,7 +93,8 @@ pub fn execute_register_tool(
         .add_attribute("provider", provider.to_string())
         .add_attribute("price", price.to_string())
         .add_attribute("denom", denom)
-        .add_attribute("is_active", "true"))
+        .add_attribute("is_active", "true")
+        .add_attribute("description", description))
 }
 
 // UpdatePrice handler implementation
@@ -208,6 +216,7 @@ pub fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
                 price: tool_meta.price,
                 denom: tool_meta.denom,
                 is_active: tool_meta.is_active,
+                description: tool_meta.description,
             };
             to_json_binary(&response)
         },

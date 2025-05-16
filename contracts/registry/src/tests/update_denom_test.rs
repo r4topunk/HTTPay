@@ -41,8 +41,9 @@ fn update_denom_success() {
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     let initial_denom = Some("uatom".to_string());
+    let description = "A tool with custom denomination".to_string();
     
-    execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price, initial_denom).unwrap();
+    execute_register_tool(deps.as_mut(), info.clone(), tool_id.clone(), price, initial_denom, description.clone()).unwrap();
 
     // Query the tool to verify the denom
     let query_res = query_tool(deps.as_ref(), tool_id.clone()).unwrap();
@@ -50,6 +51,7 @@ fn update_denom_success() {
     
     // Verify the initial denom
     assert_eq!("uatom", tool_response.denom);
+    assert_eq!(description, tool_response.description);
 
     // Update the denom to "uosmo"
     let new_denom = "uosmo".to_string();
@@ -89,8 +91,9 @@ fn update_denom_unauthorized() {
     let info1 = message_info(&provider1, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
+    let description = "Tool from provider1".to_string();
     
-    execute_register_tool(deps.as_mut(), info1, tool_id.clone(), price, None).unwrap();
+    execute_register_tool(deps.as_mut(), info1, tool_id.clone(), price, None, description).unwrap();
 
     // Attempt to update the denom as provider2
     let provider2 = Addr::unchecked("provider2");
@@ -127,8 +130,9 @@ fn register_tool_default_denom() {
     let info = message_info(&provider, &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
+    let description = "Tool with default denom".to_string();
     
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None).unwrap();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description).unwrap();
 
     // Query the tool to verify the denom
     let query_res = query_tool(deps.as_ref(), tool_id).unwrap();

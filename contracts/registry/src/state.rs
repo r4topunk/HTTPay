@@ -14,6 +14,8 @@ pub struct ToolMeta {
     pub denom: String,
     /// Whether the tool is currently active and available for use
     pub is_active: bool,
+    /// Description of the tool (max 256 characters)
+    pub description: String,
 }
 
 /// TOOLS maps tool_id strings to their metadata

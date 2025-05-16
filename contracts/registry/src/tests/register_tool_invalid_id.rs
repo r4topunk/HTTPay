@@ -41,9 +41,10 @@ fn register_tool_invalid_id() {
     let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "this_tool_id_is_way_too_long".to_string();
     let price = Uint128::new(100);
+    let description = "A test tool description".to_string();
 
     // Execute tool registration and expect an error
-    let err = execute_register_tool(deps.as_mut(), info, tool_id, price, None).unwrap_err();
+    let err = execute_register_tool(deps.as_mut(), info, tool_id, price, None, description).unwrap_err();
 
     // Verify that the error is the expected ToolIdTooLong error
     match err {

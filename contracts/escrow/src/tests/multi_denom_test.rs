@@ -196,6 +196,7 @@ fn test_update_tool_denom_and_lock_funds() {
             tool_id: TOOL_ID.to_string(),
             price: Uint128::new(PRICE),
             denom: Some(NATIVE_DENOM.to_string()),
+            description: "Native denom test tool".to_string(),
         },
         &[],
     ).unwrap();
@@ -207,7 +208,7 @@ fn test_update_tool_denom_and_lock_funds() {
     
     // 3. Update tool to use IBC denomination
     contracts.app.execute_contract(
-        provider_addr,
+        provider_addr.clone(),
         Addr::unchecked(&contracts.registry_addr),
         &RegistryExecuteMsg::UpdateDenom {
             tool_id: TOOL_ID.to_string(),
@@ -247,6 +248,7 @@ fn register_tool_with_custom_denom(contracts: &mut TestContracts, denom: &str) {
             tool_id: TOOL_ID.to_string(),
             price: Uint128::new(PRICE),
             denom: Some(denom.to_string()),
+            description: format!("Custom denom tool: {}", denom),
         },
         &[],
     ).unwrap();

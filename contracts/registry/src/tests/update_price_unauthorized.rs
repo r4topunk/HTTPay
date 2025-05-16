@@ -43,7 +43,8 @@ fn update_price_unauthorized() {
     let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None).unwrap();
+    let description = "Tool for unauthorized update test".to_string();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description).unwrap();
 
     // Attempt to update the price using a different provider (provider2)
     let info = message_info(&Addr::unchecked("provider2"), &[]);

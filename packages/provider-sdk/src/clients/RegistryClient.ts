@@ -88,6 +88,7 @@ export class RegistryClient {
    * @param senderAddress - Address of the sender
    * @param toolId - Unique tool identifier (max 16 characters)
    * @param price - Price to use the tool (in base denom)
+   * @param description - Description of the tool (max 256 characters)
    * @param denom - Token denomination for the tool price (default: "untrn")
    * @param funds - Funds to send with the transaction (if required)
    * @returns Transaction hash
@@ -96,6 +97,7 @@ export class RegistryClient {
     senderAddress: string,
     toolId: string,
     price: Uint128,
+    description: string,
     denom?: string,
     funds: Coin[] = [],
   ): Promise<string> {
@@ -105,6 +107,7 @@ export class RegistryClient {
       register_tool: {
         tool_id: toolId,
         price,
+        description,
         ...(denom && { denom }),
       },
     };

@@ -17,6 +17,8 @@ pub enum ExecuteMsg {
         /// Token denomination for the tool price (e.g. "untrn" or IBC denom)
         /// If not provided, defaults to "untrn" for backward compatibility
         denom: Option<String>,
+        /// Description of the tool (max 256 characters)
+        description: String,
     },
     /// Update the price of an existing tool
     UpdatePrice {
@@ -69,4 +71,6 @@ pub struct ToolResponse {
     pub denom: String,
     /// Whether the tool is currently available for use
     pub is_active: bool,
+    /// Description of the tool (max 256 characters)
+    pub description: String,
 }

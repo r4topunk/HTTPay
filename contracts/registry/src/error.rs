@@ -14,4 +14,7 @@ pub enum ContractError {
 
     #[error("Tool not found")]
     ToolNotFound {},
+    
+    #[error("Description must be 256 characters or less")]
+    DescriptionTooLong {},
 }

@@ -53,6 +53,7 @@ fn test_registry_basic_functionality() {
                 tool_id: tool_id.to_string(),
                 price: Uint128::new(initial_price),
                 denom: None,
+                description: "Registry basic test tool".to_string(),
             },
             &[],
         )

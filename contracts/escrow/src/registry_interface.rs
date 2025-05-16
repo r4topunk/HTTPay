@@ -9,6 +9,7 @@ pub struct ToolResponse {
     pub price: Uint128,
     pub denom: String,
     pub is_active: bool,
+    pub description: String,
 }
 
 // Query message for Registry contract

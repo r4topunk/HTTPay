@@ -1,6 +1,7 @@
 pub mod setup_contract;
 mod register_tool_success;
 mod register_tool_invalid_id;
+mod register_tool_invalid_description;
 mod update_price_unauthorized;
 mod update_price_success;
 mod pause_resume_tool;

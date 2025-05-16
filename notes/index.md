@@ -18,6 +18,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **client-auth-update.md**: Client authentication updated to use private key instead of mnemonic
 - **multidenom-support.md**: Implementation of multi-denomination token support (IBC tokens) - Completed
 - **multidenom-prd-tdd.md**: PRD/TDD for multi-denomination token support - Completed
+- **description-field-update.md**: Implementation of mandatory description field with max length of 256 characters for tools
 
 _All files are now located in the `notes/` folder._
 

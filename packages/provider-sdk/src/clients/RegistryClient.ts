@@ -7,7 +7,7 @@
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import type { Coin } from '@cosmjs/stargate';
 import type { Uint128 } from '../types/common.js';
-import type { RegistryExecuteMsg, ToolResponse } from '../types/registry.js';
+import type { RegistryExecuteMsg, ToolResponse, ToolsResponse } from '../types/registry.js';
 
 /**
  * Client for interacting with the PayPerTool Registry contract
@@ -66,6 +66,35 @@ export class RegistryClient {
         throw error;
       }
       throw new Error(`Failed to query tool: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Query all registered tools
+   *
+   * @returns Array of tool information for all registered tools
+   * @throws Error if query fails
+   */
+  async getTools(): Promise<ToolsResponse> {
+    const query = {
+      get_tools: {},
+    };
+
+    try {
+      const response = await this.client.queryContractSmart(this.contractAddress, query);
+
+      // Validate response has expected structure
+      if (!response || typeof response !== 'object' || !Array.isArray(response.tools)) {
+        throw new Error('Invalid response from registry contract');
+      }
+
+      return response;
+    } catch (error) {
+      // Normalize error message for better debugging
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(`Failed to query tools: ${String(error)}`);
     }
   }
 

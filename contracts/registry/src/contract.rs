@@ -201,6 +201,7 @@ pub fn execute_update_denom(
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetTool { tool_id } => query_tool(deps, tool_id),
+        QueryMsg::GetTools {} => query_all_tools(deps),
     }
 }
 
@@ -222,4 +223,25 @@ pub fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
         },
         None => to_json_binary(&Option::<ToolResponse>::None),
     }
+}
+
+// GetTools query implementation
+pub fn query_all_tools(deps: Deps) -> StdResult<Binary> {
+    let tools: StdResult<Vec<_>> = TOOLS
+        .range(deps.storage, None, None, cosmwasm_std::Order::Ascending)
+        .map(|item| {
+            let (tool_id, tool_meta) = item?;
+            Ok(ToolResponse {
+                tool_id: tool_id.to_string(),
+                provider: tool_meta.provider.to_string(),
+                price: tool_meta.price,
+                denom: tool_meta.denom,
+                is_active: tool_meta.is_active,
+                description: tool_meta.description,
+            })
+        })
+        .collect();
+
+    let response = crate::msg::ToolsResponse { tools: tools? };
+    to_json_binary(&response)
 }

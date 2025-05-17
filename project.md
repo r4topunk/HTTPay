@@ -55,6 +55,7 @@ _(Target stack: CosmWasm 1.5 on Neutron + TypeScript SDK/CLI)_
 | Pause Tool   | PauseTool    | tool_id                                                   | ()                  |
 | Resume Tool  | ResumeTool   | tool_id                                                   | ()                  |
 | Query meta   | GetTool      | tool_id                                                   | { provider, price, is_active } |
+| Query all    | GetTools     | None                                                      | { tools: [] }       |
 
 _Storage:_ TOOLS: Map<String, ToolMeta>
 
@@ -243,6 +244,7 @@ pub enum ExecuteMsg {
 // QueryMsg
 pub enum QueryMsg {
   GetTool { tool_id: String },
+  GetTools {},
 }
 
 // SudoMsg — not implemented for Registry

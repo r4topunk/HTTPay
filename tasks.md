@@ -75,6 +75,7 @@ We will implement Pay-Per-Tool in 3 distinct phases:
   - [x] Verify sender is the provider
   - [x] Set `is_active` to true
 - [x] Implement `query` function for `GetTool`
+- [x] Implement `query` function for `GetTools` to fetch all available tools
 
 ### 2.3 Add Registry contract tests
 - [x] Set up test helpers and mocks
@@ -83,7 +84,8 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Test unauthorized price update
 - [x] Test successful price update
 - [x] Test pause and resume functionality
-- [x] Test query functionality
+- [x] Test query functionality for single tools
+- [x] Test query functionality for fetching all tools
 
 ## Chunk 3: Escrow Contract Implementation
 

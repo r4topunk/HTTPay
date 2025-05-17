@@ -56,6 +56,10 @@ pub enum QueryMsg {
         /// Tool identifier to query
         tool_id: String,
     },
+    
+    /// GetTools returns a list of all registered tools
+    #[returns(ToolsResponse)]
+    GetTools {},
 }
 
 /// ToolResponse is the return type for a GetTool query
@@ -73,4 +77,11 @@ pub struct ToolResponse {
     pub is_active: bool,
     /// Description of the tool (max 256 characters)
     pub description: String,
+}
+
+/// ToolsResponse is the return type for a GetTools query
+#[cw_serde]
+pub struct ToolsResponse {
+    /// List of all registered tools
+    pub tools: Vec<ToolResponse>,
 }

@@ -32,7 +32,9 @@ export type RegistryExecuteMsg =
  * A union type representing all possible query messages that can be sent
  * to the Registry contract.
  */
-export type RegistryQueryMsg = { get_tool: { tool_id: string } };
+export type RegistryQueryMsg = 
+  | { get_tool: { tool_id: string } }
+  | { get_tools: {} };
 
 /**
  * ToolResponse from the Registry contract
@@ -46,4 +48,13 @@ export interface ToolResponse {
   denom: string;
   is_active: boolean;
   description: string;
+}
+
+/**
+ * ToolsResponse from the Registry contract
+ * 
+ * This is the return type for a GetTools query
+ */
+export interface ToolsResponse {
+  tools: ToolResponse[];
 }

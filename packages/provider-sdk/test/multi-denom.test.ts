@@ -60,8 +60,9 @@ describe('Multi-Denomination Support', () => {
         senderAddress,
         TOOL_ID,
         PRICE,
-        customDenom,
-        [{ amount: '0', denom: NATIVE_DENOM }]
+        "Tool description",  // Description parameter
+        customDenom,         // Denom parameter
+        [{ amount: '0', denom: NATIVE_DENOM }] // Funds parameter
       );
       
       // Verify the correct message was sent
@@ -72,6 +73,7 @@ describe('Multi-Denomination Support', () => {
           register_tool: {
             tool_id: TOOL_ID,
             price: PRICE,
+            description: "Tool description",
             denom: customDenom
           }
         },

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { RegistryClient } from '../src/clients/RegistryClient.js';
+import { RegistryClient } from '../src/clients/RegistryClient';
 
 // Mock CosmWasmClient
 const mockQueryContractSmart = jest.fn();

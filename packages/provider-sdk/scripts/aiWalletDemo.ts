@@ -84,7 +84,7 @@ const config = {
     process.env.REGISTRY_ADDRESS ||
     'neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2',
   escrowAddress:
-    process.env.ESCROW_ADDRESS || 'neutron1hg4p3r0vlmca5vwyvxdx6kfd4urg038xsfu0lytrupm3h42sag09wr',
+    process.env.ESCROW_ADDRESS || 'neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx',
   gasAdjustment: 1.3,
   gasPrice: networkDefaults.gasPrice,
 };
@@ -203,7 +203,9 @@ async function registerTool(sdk: PayPerToolSDK, providerAddress: string): Promis
   }
 
   try {
-    await sdk.registry.registerTool(providerAddress, TOOL_ID, TOOL_PRICE);
+    // Adding a description for the tool, which is a required parameter
+    const description = `${TOOL_ID} - AI tool for demonstration purposes`;
+    await sdk.registry.registerTool(providerAddress, TOOL_ID, TOOL_PRICE, description);
     console.log(`Tool '${TOOL_ID}' registered successfully`);
   } catch (error) {
     console.log(`Tool registration skipped: ${(error as Error).message}`);

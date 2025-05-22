@@ -38,4 +38,10 @@ pub enum ContractError {
     
     #[error("Usage fee exceeds max fee: max {max_fee}, requested {requested_fee}")]
     FeeTooHigh { max_fee: String, requested_fee: String },
+    
+    #[error("Invalid fee percentage: must be between 0 and 100, got {0}")]
+    InvalidFeePercentage(u64),
+    
+    #[error("No fees to claim for denom {0}")]
+    NoFeesToClaim(String),
 }

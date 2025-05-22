@@ -7,7 +7,7 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse, CollectedFeesResponse};
 use cosmwasm_std::StdError;
 use crate::registry_interface::query_tool;
 use crate::state::{Config, Escrow, CONFIG, ESCROWS, NEXT_ID};
@@ -23,7 +23,7 @@ const MAX_ESCROW_BLOCKS: u64 = 50;
 pub fn instantiate(
     deps: DepsMut,
     _env: Env,
-    _info: MessageInfo,
+    info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     // Set contract version for future migration
@@ -32,10 +32,18 @@ pub fn instantiate(
     // Validate registry address
     let registry_addr = deps.api.addr_validate(&msg.registry_addr)?;
     
+    // Validate fee percentage (0-100)
+    if msg.fee_percentage > 100 {
+        return Err(ContractError::InvalidFeePercentage(msg.fee_percentage));
+    }
+    
     // Initialize contract configuration
     CONFIG.save(deps.storage, &Config { 
         frozen: false,
         registry_addr,
+        owner: info.sender.clone(),
+        fee_percentage: msg.fee_percentage,
+        collected_fees: vec![],
     })?;
     
     // Initialize the escrow ID counter
@@ -43,7 +51,9 @@ pub fn instantiate(
 
     Ok(Response::new()
         .add_attribute("action", "instantiate")
-        .add_attribute("registry_addr", msg.registry_addr))
+        .add_attribute("registry_addr", msg.registry_addr)
+        .add_attribute("owner", info.sender)
+        .add_attribute("fee_percentage", msg.fee_percentage.to_string()))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -71,6 +81,7 @@ pub fn execute(
             usage_fee,
         } => release(deps, env, info, escrow_id, usage_fee),
         ExecuteMsg::RefundExpired { escrow_id } => refund_expired(deps, env, info, escrow_id),
+        ExecuteMsg::ClaimFees { denom } => claim_fees(deps, info, denom),
     }
 }
 
@@ -78,6 +89,7 @@ pub fn execute(
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetEscrow { escrow_id } => to_json_binary(&query_escrow(deps, escrow_id)?),
+        QueryMsg::GetCollectedFees {} => to_json_binary(&query_collected_fees(deps)?),
     }
 }
 
@@ -94,6 +106,16 @@ fn query_escrow(deps: Deps, escrow_id: u64) -> StdResult<EscrowResponse> {
         denom: escrow.denom,
         expires: escrow.expires,
         auth_token: escrow.auth_token,
+    })
+}
+
+fn query_collected_fees(deps: Deps) -> StdResult<CollectedFeesResponse> {
+    let config = CONFIG.load(deps.storage)?;
+    
+    Ok(CollectedFeesResponse {
+        owner: config.owner,
+        fee_percentage: config.fee_percentage,
+        collected_fees: config.collected_fees,
     })
 }
 
@@ -224,20 +246,56 @@ pub fn release(
         });
     }
     
+    // Load config to get fee percentage
+    let mut config = CONFIG.load(deps.storage)?;
+    
+    // Calculate platform fee
+    let platform_fee = if config.fee_percentage > 0 {
+        usage_fee.multiply_ratio(config.fee_percentage, 100u64)
+    } else {
+        Uint128::zero()
+    };
+    
+    // Calculate provider fee (after platform fee)
+    let provider_fee = usage_fee.checked_sub(platform_fee)
+        .expect("Platform fee is a percentage of usage fee, cannot overflow");
+    
     // Calculate refund amount (if any)
     let refund_amount = escrow.max_fee.checked_sub(usage_fee)
         .expect("Usage fee is already verified to be <= max_fee");
     
+    // Update collected fees in config
+    if !platform_fee.is_zero() {
+        let denom = escrow.denom.clone();
+        
+        // Find and update existing entry for this denom, or add a new one
+        let mut found = false;
+        for fee in &mut config.collected_fees {
+            if fee.0 == denom {
+                fee.1 += platform_fee;
+                found = true;
+                break;
+            }
+        }
+        
+        if !found {
+            config.collected_fees.push((denom, platform_fee));
+        }
+        
+        // Save updated config
+        CONFIG.save(deps.storage, &config)?;
+    }
+    
     // Create messages for transferring funds
     let mut messages: Vec<CosmosMsg> = vec![];
     
-    // Transfer usage_fee to provider
-    if !usage_fee.is_zero() {
+    // Transfer provider_fee to provider
+    if !provider_fee.is_zero() {
         messages.push(CosmosMsg::Bank(BankMsg::Send {
             to_address: escrow.provider.to_string(),
             amount: vec![Coin {
                 denom: escrow.denom.clone(),
-                amount: usage_fee,
+                amount: provider_fee,
             }],
         }));
     }
@@ -262,6 +320,8 @@ pub fn release(
         .add_attribute("provider", escrow.provider.to_string())
         .add_attribute("caller", escrow.caller.to_string())
         .add_attribute("usage_fee", usage_fee.to_string())
+        .add_attribute("provider_fee", provider_fee.to_string())
+        .add_attribute("platform_fee", platform_fee.to_string())
         .add_attribute("refund_amount", refund_amount.to_string())
         .add_attribute("denom", escrow.denom);
     
@@ -334,6 +394,100 @@ pub fn sudo(deps: DepsMut, _env: Env, msg: SudoMsg) -> Result<Response, Contract
                 .add_attribute("frozen", "true"))
         }
     }
+}
+
+// Implementation of ClaimFees functionality
+pub fn claim_fees(
+    deps: DepsMut,
+    info: MessageInfo,
+    denom: Option<String>,
+) -> Result<Response, ContractError> {
+    // Load config to check owner
+    let mut config = CONFIG.load(deps.storage)?;
+    
+    // Verify caller is the owner
+    if info.sender != config.owner {
+        return Err(ContractError::Unauthorized {});
+    }
+    
+    // Check if there are any fees to claim
+    if config.collected_fees.is_empty() {
+        return Err(ContractError::NoFeesToClaim(denom.unwrap_or_else(|| "all".to_string())));
+    }
+    
+    let mut messages: Vec<CosmosMsg> = vec![];
+    let mut claimed_fees = vec![];
+    let mut remaining_fees = vec![];
+    
+    match denom {
+        Some(denom) => {
+            // Claim fees for a specific denom
+            let mut found = false;
+            
+            for (fee_denom, amount) in &config.collected_fees {
+                if *fee_denom == denom {
+                    // Add to messages
+                    messages.push(CosmosMsg::Bank(BankMsg::Send {
+                        to_address: config.owner.to_string(),
+                        amount: vec![Coin {
+                            denom: fee_denom.clone(),
+                            amount: *amount,
+                        }],
+                    }));
+                    
+                    // Record claimed fee
+                    claimed_fees.push((fee_denom.clone(), *amount));
+                    found = true;
+                } else {
+                    // Keep this fee in the config
+                    remaining_fees.push((fee_denom.clone(), *amount));
+                }
+            }
+            
+            if !found {
+                return Err(ContractError::NoFeesToClaim(denom));
+            }
+        },
+        None => {
+            // Claim all fees
+            for (fee_denom, amount) in &config.collected_fees {
+                // Add to messages
+                messages.push(CosmosMsg::Bank(BankMsg::Send {
+                    to_address: config.owner.to_string(),
+                    amount: vec![Coin {
+                        denom: fee_denom.clone(),
+                        amount: *amount,
+                    }],
+                }));
+                
+                // Record claimed fee
+                claimed_fees.push((fee_denom.clone(), *amount));
+            }
+        }
+    }
+    
+    // Update config with remaining fees
+    config.collected_fees = remaining_fees;
+    CONFIG.save(deps.storage, &config)?;
+    
+    // Create event attributes for each claimed fee
+    let mut event_attributes = vec![
+        ("action".to_string(), "claim_fees".to_string()),
+        ("owner".to_string(), config.owner.to_string()),
+    ];
+    
+    for (fee_denom, amount) in claimed_fees {
+        let attr_key = format!("claimed_{}", fee_denom);
+        event_attributes.push((
+            attr_key,
+            amount.to_string()
+        ));
+    }
+    
+    // Return success response
+    Ok(Response::new()
+        .add_messages(messages)
+        .add_attributes(event_attributes))
 }
 
 #[cfg(test)]

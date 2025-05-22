@@ -13,7 +13,7 @@
 
 use cosmwasm_std::{Coin, Uint128};
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID, 
+    setup_contracts, register_tool, lock_funds, NEUTRON, DEFAULT_TOOL_ID, 
     DEFAULT_MAX_FEE, USER, PROVIDER, refund_expired
 };
 
@@ -49,7 +49,7 @@ fn test_expired_escrow_refund() {
     // Get initial user balance
     let initial_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), NEUTRON)
         .unwrap()
         .amount;
     
@@ -59,7 +59,7 @@ fn test_expired_escrow_refund() {
     
     // Make sure we're providing enough funds for the escrow
     let funds = vec![Coin {
-        denom: ATOM.to_string(),
+        denom: NEUTRON.to_string(),
         amount: Uint128::new(DEFAULT_MAX_FEE),
     }];
     
@@ -76,7 +76,7 @@ fn test_expired_escrow_refund() {
     // Verify funds were locked (deducted from user balance)
     let post_lock_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), NEUTRON)
         .unwrap()
         .amount;
     
@@ -100,7 +100,7 @@ fn test_expired_escrow_refund() {
     // Verify funds were returned to the user
     let final_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), NEUTRON)
         .unwrap()
         .amount;
     

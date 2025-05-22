@@ -381,3 +381,29 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [ ] Prepare npm packages for publication
 - [ ] Create release notes
 - [ ] Generate documentation website (if applicable)
+
+## Chunk 12: Fee Collection Feature
+
+### 12.1 Update Escrow Contract for Fee Collection
+- [x] Update `Config` struct to include owner address and fee percentage
+- [x] Modify `InstantiateMsg` to accept fee_percentage parameter
+- [x] Add `ClaimFees` execute message
+- [x] Update `release` function to calculate and collect platform fee
+- [x] Implement `claim_fees` handler function for owner to withdraw fees
+- [x] Add new errors for fee percentage validation and claiming
+- [x] Add `GetCollectedFees` query and response type
+
+### 12.2 Fee Collection Testing
+- [x] Add fee_collection_test.rs with comprehensive tests:
+  - [x] Test fee calculation and collection flow
+  - [x] Test unauthorized claim attempts
+  - [x] Test multiple releases with fee accumulation
+  - [x] Test invalid fee percentage validation
+- [x] Fix type conversion issues in tests
+- [x] Update setup_contract.rs to support fee percentage
+
+### 12.3 Documentation & Final Review
+- [x] Update error handling for robust fee management
+- [x] Ensure all tests pass with fee collection feature
+- [ ] Update contract documentation to explain fee collection
+- [ ] Document fee collection feature in provider SDK

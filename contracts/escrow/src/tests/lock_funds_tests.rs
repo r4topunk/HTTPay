@@ -6,7 +6,7 @@ use cosmwasm_std::{Coin, Uint128};
 use crate::msg::EscrowResponse;
 use super::setup_contract::{
     setup_contracts, register_tool, lock_funds,
-    ATOM, DEFAULT_MAX_FEE, DEFAULT_TTL, DEFAULT_TOOL_ID,
+    NEUTRON, DEFAULT_MAX_FEE, DEFAULT_TTL, DEFAULT_TOOL_ID,
     PROVIDER, USER,
 };
 
@@ -30,7 +30,7 @@ fn test_lock_funds_success() {
         auth_token.clone(),
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
         }],
     ).unwrap();
@@ -51,6 +51,6 @@ fn test_lock_funds_success() {
     assert_eq!(escrow.auth_token, auth_token);
     
     // Verify that funds were transferred from the user to the escrow contract
-    let user_balance = contracts.app.wrap().query_balance(user_addr, ATOM).unwrap();
+    let user_balance = contracts.app.wrap().query_balance(user_addr, NEUTRON).unwrap();
     assert_eq!(user_balance.amount.u128(), 5000 - DEFAULT_MAX_FEE);
 }

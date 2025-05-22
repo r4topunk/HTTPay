@@ -15,7 +15,7 @@
 use cosmwasm_std::{Coin, Uint128};
 use crate::msg::{EscrowResponse, QueryMsg};
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID,
+    setup_contracts, register_tool, lock_funds, NEUTRON, DEFAULT_TOOL_ID,
     PROVIDER, USER, DEFAULT_MAX_FEE, DEFAULT_TTL,
 };
 
@@ -58,7 +58,7 @@ fn test_query_endpoints() {
         auth_token,
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
         }],
     ).unwrap();

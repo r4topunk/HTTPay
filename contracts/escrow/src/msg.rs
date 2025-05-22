@@ -6,6 +6,8 @@ use cosmwasm_std::{Addr, Uint128};
 pub struct InstantiateMsg {
     /// Address of the Registry contract
     pub registry_addr: String,
+    /// Percentage of fees to collect (0-100)
+    pub fee_percentage: u64,
 }
 
 #[cw_serde]
@@ -33,6 +35,11 @@ pub enum ExecuteMsg {
         /// The escrow ID to refund
         escrow_id: u64,
     },
+    /// Owner only: Claims the accumulated fee from the contract
+    ClaimFees {
+        /// Optional denom to claim, if None claims all denoms
+        denom: Option<String>,
+    },
 }
 
 #[cw_serde]
@@ -41,6 +48,10 @@ pub enum QueryMsg {
     /// Gets details about a specific escrow
     #[returns(EscrowResponse)]
     GetEscrow { escrow_id: u64 },
+    
+    /// Gets information about collected fees
+    #[returns(CollectedFeesResponse)]
+    GetCollectedFees {},
 }
 
 /// Response type for GetEscrow query
@@ -61,6 +72,14 @@ pub struct EscrowResponse {
 pub struct LockFundsResponse {
     pub escrow_id: u64,
     pub denom: String,
+}
+
+/// Response type for GetCollectedFees query
+#[cw_serde]
+pub struct CollectedFeesResponse {
+    pub owner: Addr,
+    pub fee_percentage: u64,
+    pub collected_fees: Vec<(String, Uint128)>,
 }
 
 /// Message type for sudo calls

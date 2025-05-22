@@ -17,7 +17,7 @@ use cosmwasm_std::{Coin, Uint128};
 
 use crate::tests::setup_contract::release_funds;
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, lock_funds, ATOM,
+    setup_contracts, register_tool, lock_funds, NEUTRON,
     PROVIDER, USER, DEFAULT_TTL,
 };
 
@@ -50,7 +50,7 @@ fn test_partial_fee_usage() {
     // Get initial balances using the proper addresses
     let initial_provider_balance = contracts.app
         .wrap()
-        .query_balance(provider_addr.to_string(), ATOM)
+        .query_balance(provider_addr.to_string(), NEUTRON)
         .unwrap_or_else(|e| {
             panic!("Failed to query provider balance: {:?}", e);
         })
@@ -58,7 +58,7 @@ fn test_partial_fee_usage() {
     
     let initial_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), NEUTRON)
         .unwrap_or_else(|e| {
             panic!("Failed to query user balance: {:?}", e);
         })
@@ -82,7 +82,7 @@ fn test_partial_fee_usage() {
         auth_token,
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(max_fee),
         }],
     ).expect("Failed to lock funds");
@@ -100,7 +100,7 @@ fn test_partial_fee_usage() {
     // Get final balances using the proper addresses
     let final_provider_balance = contracts.app
         .wrap()
-        .query_balance(provider_addr.to_string(), ATOM)
+        .query_balance(provider_addr.to_string(), NEUTRON)
         .unwrap_or_else(|e| {
             panic!("Failed to query final provider balance: {:?}", e);
         })
@@ -108,7 +108,7 @@ fn test_partial_fee_usage() {
     
     let final_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.to_string(), ATOM)
+        .query_balance(user_addr.to_string(), NEUTRON)
         .unwrap_or_else(|e| {
             panic!("Failed to query final user balance: {:?}", e);
         })

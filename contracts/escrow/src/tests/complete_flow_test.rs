@@ -18,7 +18,7 @@ use cw_multi_test::Executor;
 
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID,
+    setup_contracts, register_tool, lock_funds, NEUTRON, DEFAULT_TOOL_ID,
     PROVIDER, USER, DEFAULT_MAX_FEE, DEFAULT_TTL, DEFAULT_USAGE_FEE,
 };
 
@@ -45,13 +45,13 @@ fn test_complete_flow() {
     
     let initial_provider_balance = contracts.app
         .wrap()
-        .query_balance(provider_addr.clone(), ATOM)
+        .query_balance(provider_addr.clone(), NEUTRON)
         .unwrap()
         .amount;
     
     let initial_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.clone(), ATOM)
+        .query_balance(user_addr.clone(), NEUTRON)
         .unwrap()
         .amount;
     
@@ -73,7 +73,7 @@ fn test_complete_flow() {
         auth_token,
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
         }],
     ).unwrap();
@@ -96,13 +96,13 @@ fn test_complete_flow() {
     // Step 4: Verify final balances (using the same properly formatted addresses)
     let final_provider_balance = contracts.app
         .wrap()
-        .query_balance(provider_addr.clone(), ATOM)
+        .query_balance(provider_addr.clone(), NEUTRON)
         .unwrap()
         .amount;
     
     let final_user_balance = contracts.app
         .wrap()
-        .query_balance(user_addr.clone(), ATOM)
+        .query_balance(user_addr.clone(), NEUTRON)
         .unwrap()
         .amount;
     

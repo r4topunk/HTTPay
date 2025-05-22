@@ -66,7 +66,7 @@ neutrond tx wasm instantiate 11846 '{}' \
 # Instantiate escrow contract
 # Replace 11831 with the actual code ID of the escrow contract
 # Replace "neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8" with the actual registry contract address
-neutrond tx wasm instantiate 11831 '{"registry_addr": "neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8"}' \
+neutrond tx wasm instantiate 11831 '{"registry_addr": "neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8","fee_percentage":10}' \
   --from devwallet \
   --label "toolpay-escrow" \
   --no-admin \

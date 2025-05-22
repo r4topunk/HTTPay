@@ -20,6 +20,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **multidenom-prd-tdd.md**: PRD/TDD for multi-denomination token support - Completed
 - **description-field-update.md**: Implementation of mandatory description field with max length of 256 characters for tools
 - **get-tools-query-update.md**: Implementation of a query to fetch all available tools in the Registry contract
+- **fee-collection-feature.md**: Implementation of contract fee collection feature with owner-claimable percentage of each tool usage
 
 _All files are now located in the `notes/` folder._
 

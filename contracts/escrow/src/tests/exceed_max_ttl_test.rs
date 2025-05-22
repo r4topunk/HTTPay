@@ -14,7 +14,7 @@ use cosmwasm_std::{Coin, Uint128};
 use crate::tests::setup_contract::lock_funds;
 
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, ATOM, DEFAULT_TOOL_ID, DEFAULT_MAX_FEE, USER, PROVIDER,
+    setup_contracts, register_tool, NEUTRON, DEFAULT_TOOL_ID, DEFAULT_MAX_FEE, USER, PROVIDER,
 };
 
 /// # Test: Attempting to Exceed Max TTL
@@ -54,7 +54,7 @@ fn test_exceed_max_ttl() {
         auth_token,
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
         }],
     );

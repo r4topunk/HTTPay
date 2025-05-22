@@ -26,6 +26,12 @@ pub struct Config {
     pub frozen: bool,
     /// Address of the registry contract
     pub registry_addr: Addr,
+    /// Contract owner who can claim fees
+    pub owner: Addr,
+    /// Percentage of fees to collect (0-100)
+    pub fee_percentage: u64,
+    /// Accumulated fees by denom
+    pub collected_fees: Vec<(String, Uint128)>,
 }
 
 /// Map of escrow ID to escrow data

@@ -14,7 +14,7 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use registry::msg::{ExecuteMsg as RegistryExecuteMsg, InstantiateMsg as RegistryInstantiateMsg};
 
 // Define constants for testing
-pub const ATOM: &str = "untrn";
+pub const NEUTRON: &str = "untrn";
 pub const DEFAULT_MAX_FEE: u128 = 100;
 pub const DEFAULT_USAGE_FEE: u128 = 50;
 pub const DEFAULT_TOOL_ID: &str = "testtool";
@@ -27,14 +27,14 @@ pub const USER: &str = "user";
 pub const UNAUTHORIZED: &str = "unauthorized";
 
 /// Sets up the Escrow contract for cw-multi-test
-fn escrow_contract() -> Box<dyn Contract<Empty>> {
+pub fn escrow_contract() -> Box<dyn Contract<Empty>> {
     let contract = ContractWrapper::new(execute, instantiate, query)
         .with_sudo(sudo);
     Box::new(contract)
 }
 
 /// Sets up the Registry contract for cw-multi-test
-fn registry_contract() -> Box<dyn Contract<Empty>> {
+pub fn registry_contract() -> Box<dyn Contract<Empty>> {
     let contract = ContractWrapper::new(
         registry::contract::execute,
         registry::contract::instantiate,
@@ -59,7 +59,7 @@ pub fn mock_app() -> App {
             storage,
             &owner_addr,
             vec![Coin {
-                denom: ATOM.to_string(),
+                denom: NEUTRON.to_string(),
                 amount: Uint128::new(10000),
             }],
         ).unwrap();
@@ -68,7 +68,7 @@ pub fn mock_app() -> App {
             storage,
             &provider_addr,
             vec![Coin {
-                denom: ATOM.to_string(),
+                denom: NEUTRON.to_string(),
                 amount: Uint128::new(1000),
             }],
         ).unwrap();
@@ -77,7 +77,7 @@ pub fn mock_app() -> App {
             storage,
             &user_addr,
             vec![Coin {
-                denom: ATOM.to_string(),
+                denom: NEUTRON.to_string(),
                 amount: Uint128::new(5000),
             }],
         ).unwrap();
@@ -86,7 +86,7 @@ pub fn mock_app() -> App {
             storage,
             &unauth_addr,
             vec![Coin {
-                denom: ATOM.to_string(),
+                denom: NEUTRON.to_string(),
                 amount: Uint128::new(1000),
             }],
         ).unwrap();
@@ -104,6 +104,11 @@ pub struct TestContracts {
 
 /// Instantiates both Registry and Escrow contracts for testing
 pub fn setup_contracts() -> TestContracts {
+    setup_contracts_with_fee(0) // Default fee percentage is 0
+}
+
+/// Instantiates both Registry and Escrow contracts for testing with a specific fee percentage
+pub fn setup_contracts_with_fee(fee_percentage: u64) -> TestContracts {
     let mut app = mock_app();
     
     // Store contract codes
@@ -132,6 +137,7 @@ pub fn setup_contracts() -> TestContracts {
             owner_addr,
             &InstantiateMsg {
                 registry_addr: registry_addr.to_string(),
+                fee_percentage,
             },
             &[],
             "escrow",

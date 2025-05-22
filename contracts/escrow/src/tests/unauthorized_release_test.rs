@@ -15,7 +15,7 @@ use cw_multi_test::Executor;
 use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::tests::setup_contract::{
-    setup_contracts, register_tool, lock_funds, ATOM, DEFAULT_TOOL_ID, 
+    setup_contracts, register_tool, lock_funds, NEUTRON, DEFAULT_TOOL_ID, 
     DEFAULT_MAX_FEE, USER, PROVIDER, UNAUTHORIZED, DEFAULT_TTL,
 };
 
@@ -54,7 +54,7 @@ fn test_unauthorized_release() {
         auth_token,
         USER,
         &[Coin {
-            denom: ATOM.to_string(),
+            denom: NEUTRON.to_string(),
             amount: Uint128::new(DEFAULT_MAX_FEE),
         }],
     ).unwrap();

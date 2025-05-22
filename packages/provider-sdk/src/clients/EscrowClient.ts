@@ -7,7 +7,7 @@
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import type { Coin } from '@cosmjs/stargate';
 import type { Uint128 } from '../types/common.js';
-import type { EscrowExecuteMsg, EscrowResponse } from '../types/escrow.js';
+import type { EscrowExecuteMsg, EscrowResponse, CollectedFeesResponse } from '../types/escrow.js';
 
 /**
  * Result type for lockFunds transaction
@@ -203,6 +203,50 @@ export class EscrowClient {
       refund_expired: {
         escrow_id: escrowId,
       },
+    };
+
+    const result = await signingClient.execute(
+      senderAddress,
+      this.contractAddress,
+      msg,
+      'auto',
+      memo,
+      funds,
+    );
+
+    return result.transactionHash;
+  }
+
+  /**
+   * Query current collected fees
+   *
+   * @returns Information about collected fees including owner, fee percentage, and amounts by denomination
+   */
+  async getCollectedFees(): Promise<CollectedFeesResponse> {
+    return await this.client.queryContractSmart(this.contractAddress, {
+      get_collected_fees: {},
+    });
+  }
+
+  /**
+   * Claim accumulated fee(s) - owner only
+   *
+   * @param senderAddress - The address claiming the fees (must be contract owner)
+   * @param denom - Optional specific denomination to claim, if not provided claims all denoms
+   * @param funds - Optional array of coins to send with the transaction
+   * @param memo - Optional memo for the transaction
+   * @returns Transaction result
+   */
+  async claimFees(
+    senderAddress: string,
+    denom?: string,
+    funds: readonly Coin[] = [],
+    memo?: string,
+  ): Promise<string> {
+    const signingClient = this.getSigningClient();
+
+    const msg: EscrowExecuteMsg = {
+      claim_fees: denom ? { denom } : {},
     };
 
     const result = await signingClient.execute(

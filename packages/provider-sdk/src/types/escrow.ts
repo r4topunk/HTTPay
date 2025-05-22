@@ -12,6 +12,8 @@ import type { Uint128 } from "./common.js";
 export interface EscrowInstantiateMsg {
   /** Address of the Registry contract */
   registry_addr: string;
+  /** Percentage of each payment to collect (0-100) */
+  fee_percentage: number;
 }
 
 /**
@@ -39,6 +41,11 @@ export type EscrowExecuteMsg =
       refund_expired: { 
         escrow_id: number; // uint64
       } 
+    }
+  | {
+      claim_fees: {
+        denom?: string; // Optional - if not provided, claims all denoms
+      }
     };
 
 /**
@@ -47,7 +54,9 @@ export type EscrowExecuteMsg =
  * A union type representing all possible query messages that can be sent
  * to the Escrow contract.
  */
-export type EscrowQueryMsg = { get_escrow: { escrow_id: number } }; // uint64
+export type EscrowQueryMsg = 
+  | { get_escrow: { escrow_id: number } } // uint64
+  | { get_collected_fees: {} };
 
 /**
  * EscrowResponse from the Escrow contract
@@ -62,6 +71,23 @@ export interface EscrowResponse {
   denom: string;
   expires: number; // uint64
   auth_token: string;
+}
+
+/**
+ * CollectedFeesResponse from the Escrow contract
+ * 
+ * This is the return type for a GetCollectedFees query
+ */
+export interface CollectedFeesResponse {
+  /** The contract owner's address */
+  owner: string;
+  /** The percentage of each payment collected as fees (0-100) */
+  fee_percentage: number;
+  /** Vector of collected fees by denomination */
+  collected_fees: Array<{
+    denom: string;
+    amount: Uint128;
+  }>;
 }
 
 /**

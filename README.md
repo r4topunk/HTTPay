@@ -214,17 +214,17 @@ Pay-Per-Tool contracts are deployed on Neutron testnet (pion-1) with the followi
 
 | Contract  | Address                                                             |
 |-----------|---------------------------------------------------------------------|
-| Registry  | neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8 |
-| Escrow    | neutron1q9cedxhuf9vggfxjpx692l025eqtalk44f0t5unnxlkqvym2arnsakaxmx |
+| Registry  | neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2 |
+| Escrow    | neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx |
 
 ### Interacting with Deployed Contracts
 
 ```fish
 # Query a registered tool
-neutrond query wasm contract-state smart neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8 '{"get_tool":{"tool_id":"example-tool"}}'
+neutrond query wasm contract-state smart neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2 '{"get_tool":{"tool_id":"example-tool"}}'
 
 # Query an escrow by ID
-neutrond query wasm contract-state smart neutron1q9cedxhuf9vggfxjpx692l025eqtalk44f0t5unnxlkqvym2arnsakaxmx '{"get_escrow":{"escrow_id":1}}'
+neutrond query wasm contract-state smart neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx '{"get_escrow":{"escrow_id":1}}'
 ```
 
 ---

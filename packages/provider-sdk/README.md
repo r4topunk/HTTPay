@@ -30,8 +30,8 @@ import { Pay-Per-ToolSDK, EscrowVerifier, UsageReporter } from '@toolpay/provide
 const sdk = new Pay-Per-ToolSDK({
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
-  registryAddress: 'neutron1ev3rm2ch8ul2qs62x9vyr4vhw06euwgtvjlv5kc9mp4yj0ftygqqckz3n8',
-  escrowAddress: 'neutron1q9cedxhuf9vggfxjpx692l025eqtalk44f0t5unnxlkqvym2arnsakaxmx',
+  registryAddress: 'neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2',
+  escrowAddress: 'neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx',
 });
 
 // Verify an escrow using the escrow verifier

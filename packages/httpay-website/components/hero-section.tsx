@@ -3,10 +3,12 @@
 import { ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { APP_NAME } from "@/lib/constants"
-import { useWallet } from "@/lib/wallet-provider"
+import { useChain } from "@interchain-kit/react"
+import { defaultChainName } from "@/config/chain-config"
+import { ConnectButton } from "./wallet/connect-button"
 
 export default function HeroSection() {
-  const { address, connect, isConnecting } = useWallet()
+  const { address, status } = useChain(defaultChainName)
 
   return (
     <section id="hero" className="section-container relative">
@@ -22,12 +24,8 @@ export default function HeroSection() {
           Enabling AI agents to autonomously pay for services without human intervention
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
-          {/* Only show Connect button if not connected */}
-          {!address ? (
-            <Button size="lg" onClick={connect} disabled={isConnecting}>
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
-            </Button>
-          ) : null}
+          {/* Use the ConnectButton component instead of the inline button */}
+          {!address && <ConnectButton />}
 
           {/* Make Try Demo the primary action when connected */}
           <Button size="lg" variant={address ? "default" : "outline"} asChild>

@@ -19,8 +19,12 @@ export function formatAmount(amount: string | number): string {
   return (amountNum / Math.pow(10, DENOM_DECIMALS)).toFixed(6)
 }
 
-// Format an address to a shorter version for display
-export function formatAddress(address: string): string {
-  if (!address) return ""
-  return `${address.substring(0, 8)}...${address.substring(address.length - 4)}`
+// Format wallet address to a more readable form
+export function formatAddress(address: string | null): string {
+  if (!address) return "";
+  if (address.length <= 12) return address;
+  
+  const start = address.substring(0, 8);
+  const end = address.substring(address.length - 4);
+  return `${start}...${end}`;
 }

@@ -9,7 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chain-registry/v2": "^1.71.219",
     "@hookform/resolvers": "latest",
+    "@interchain-kit/core": "^0.3.31",
+    "@interchain-kit/cosmostation-extension": "^0.3.31",
+    "@interchain-kit/keplr-extension": "^0.3.31",
+    "@interchain-kit/leap-extension": "^0.3.31",
+    "@interchain-kit/react": "^0.3.31",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",
@@ -44,6 +50,8 @@
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
+    "interchain-kit": "^0.3.24",
+    "interchainjs": "^1.11.11",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "latest",

@@ -16,12 +16,14 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
-import { useWallet } from "@/lib/wallet-provider"
-import { formatAmount, formatAddress } from "@/lib/constants"
+import { useChain } from "@interchain-kit/react"
+import { formatAmount } from "@/lib/constants"
+import { truncateAddress } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Loader2, AlertCircle, CheckCircle2, Info, ExternalLink } from "lucide-react"
+import { defaultChainName } from "@/config/chain-config"
 
 // Mock data for tools (in a real app, this would come from the contract)
 const mockTools = [
@@ -79,7 +81,9 @@ const testToolSchema = z.object({
 })
 
 export default function DemoSection() {
-  const { address, client } = useWallet()
+  const { address } = useChain(defaultChainName)
+  // Client implementation needs to be updated for Interchain Kit
+  const [client, setClient] = useState(null)
   const { toast } = useToast()
   const [tools, setTools] = useState(mockTools)
   const [isLoading, setIsLoading] = useState(false)
@@ -562,7 +566,7 @@ const txHash = executeResult.transactionHash;`}
                             <CardHeader className="pb-2">
                               <CardTitle className="text-lg">{tool.id}</CardTitle>
                               <CardDescription className="flex items-center gap-1">
-                                Provider: {formatAddress(tool.provider)}
+                                Provider: {truncateAddress(tool.provider)}
                               </CardDescription>
                             </CardHeader>
                             <CardContent className="pb-2">

@@ -5,10 +5,10 @@ import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { useWallet } from "@/lib/wallet-provider"
-import { APP_NAME, formatAddress } from "@/lib/constants"
+import { APP_NAME } from "@/lib/constants"
 import { ModeToggle } from "@/components/mode-toggle"
 import { cn } from "@/lib/utils"
+import { ConnectButton } from "@/components/wallet/connect-button"
 
 // Removed "Home" from navItems
 const navItems = [
@@ -16,10 +16,10 @@ const navItems = [
   { name: "Solution", href: "#solution" },
   { name: "Demo", href: "#demo" },
   { name: "Vision", href: "#vision" },
+  { name: "Account", href: "/account" },
 ]
 
 export default function Navbar() {
-  const { address, connect, disconnect, isConnecting } = useWallet()
   const [activeSection, setActiveSection] = useState("hero")
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -88,15 +88,9 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <ModeToggle />
 
-          {address ? (
-            <Button variant="outline" onClick={disconnect} className="hidden md:flex">
-              {formatAddress(address)}
-            </Button>
-          ) : (
-            <Button onClick={connect} disabled={isConnecting} className="hidden md:flex">
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
-            </Button>
-          )}
+          <div className="hidden md:flex">
+            <ConnectButton />
+          </div>
 
           {/* Mobile menu */}
           <Sheet>
@@ -137,15 +131,7 @@ export default function Navbar() {
                   ))}
                 </nav>
                 <div className="mt-auto pb-8">
-                  {address ? (
-                    <Button variant="outline" onClick={disconnect} className="w-full">
-                      {formatAddress(address)}
-                    </Button>
-                  ) : (
-                    <Button onClick={connect} disabled={isConnecting} className="w-full">
-                      {isConnecting ? "Connecting..." : "Connect Wallet"}
-                    </Button>
-                  )}
+                  <ConnectButton />
                 </div>
               </div>
             </SheetContent>

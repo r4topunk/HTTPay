@@ -1,11 +1,12 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import "@interchain-ui/react/styles";
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from "@/components/navbar"
 import { Toaster } from "@/components/ui/toaster"
-import { WalletProvider } from "@/lib/wallet-provider"
+import { WalletProvider } from "@/components/wallet/interchain-kit-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 

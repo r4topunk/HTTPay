@@ -104,6 +104,8 @@ The Provider SDK enables tool providers to interact with Pay-Per-Tool smart cont
   - [ ] Add integration tests that connect to a localnet or testnet (optional).
   - [x] Test all edge cases: invalid escrow, expired, wrong provider, etc.  
     _Done: Test cases cover various validation scenarios and error handling._
+  - [x] Add tests for fee collection functionality.  
+    _Done: Added unit tests for claiming fees, fee querying, and the release flow with fee collection._
 - [x] **5.3 AI-Wallet Client Demo & E2E Testing**
   - [x] Implement AI-Wallet client demo script using the SDK (see blueprint.md and project.md for flow).  
     _Done: Created aiWalletDemo.ts demonstrating the full workflow._

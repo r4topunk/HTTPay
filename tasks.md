@@ -405,5 +405,9 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 ### 12.3 Documentation & Final Review
 - [x] Update error handling for robust fee management
 - [x] Ensure all tests pass with fee collection feature
+- [x] Add TypeScript SDK tests for fee collection functionality:
+  - [x] Test fee querying with getCollectedFees
+  - [x] Test fee claiming with claimFees
+  - [x] Test release flow with fee calculation
 - [ ] Update contract documentation to explain fee collection
 - [ ] Document fee collection feature in provider SDK

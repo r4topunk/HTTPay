@@ -1,3 +1,21 @@
+
+//! # Fee Collection and Multi-Denomination Test
+//!
+//! This module tests the fee collection logic and multi-denomination support in the Escrow contract.
+//!
+//! ## Test Coverage
+//!
+//! This test verifies that:
+//! 1. The contract correctly collects and distributes protocol fees to the owner
+//! 2. Fees are calculated as a percentage of the usage fee
+//! 3. Fees can be claimed by the contract owner
+//! 4. Multi-denomination (e.g., ATOM, NEUTRON) fee collection is supported
+//! 5. Unauthorized users cannot claim fees
+//! 6. Collected fees are cleared after a successful claim
+//!
+//! ## Relation to Requirements
+//!
+//! This test validates the contract's fee collection and multi-denomination support, as required for protocol revenue and compatibility with multiple Cosmos tokens.
 use cosmwasm_std::{Addr, Coin, Uint128};
 use cw_multi_test::Executor;
 

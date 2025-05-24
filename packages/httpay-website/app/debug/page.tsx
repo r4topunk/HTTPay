@@ -12,12 +12,24 @@ import { PayPerToolSDK } from '@toolpay/provider-sdk'
 import type { PayPerToolSDKConfig } from '@toolpay/provider-sdk'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useChain } from '@cosmos-kit/react'
+import { defaultChainName } from '@/config/chain-config'
 
 export default function DebugPage() {
   const { toast } = useToast()
   const [sdk, setSdk] = useState<PayPerToolSDK | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  
+  // Replace private key connection with CosmosKit
+  const { 
+    address: walletAddress,
+    status: walletStatus,
+    getSigningCosmWasmClient,
+    getSigningStargateClient,
+    connect: connectWallet,
+    disconnect: disconnectWallet
+  } = useChain(defaultChainName)
+
   const [sdkConfig, setSdkConfig] = useState<PayPerToolSDKConfig>({
     rpcEndpoint: 'https://rpc-falcron.pion-1.ntrn.tech',
     chainId: 'pion-1',
@@ -26,7 +38,6 @@ export default function DebugPage() {
   })
 
   // State for different operations
-  const [privateKey, setPrivateKey] = useState('')
   const [tools, setTools] = useState<any[]>([])
   const [escrows, setEscrows] = useState<any[]>([])
   const [loading, setLoading] = useState<Record<string, boolean>>({})
@@ -90,34 +101,44 @@ export default function DebugPage() {
     }
   }
 
-  const connectWallet = async () => {
-    if (!sdk || !privateKey) {
+  // Connect to wallet using CosmosKit and initialize SDK with the signing client
+  const initSDKWithWallet = async () => {
+    if (!walletAddress || walletStatus !== 'Connected') {
       toast({
         title: 'Error',
-        description: 'Please provide a private key',
+        description: 'Please connect your wallet first',
         variant: 'destructive'
       })
-      return
+      return null
     }
-
+    
     try {
       setLoadingState('wallet', true)
-      await sdk.connectWithPrivateKey(privateKey)
-      const address = await sdk.getWalletAddress()
-      setWalletAddress(address)
+      
+      // Due to version mismatch between dependencies, we'll use the SDK's read-only connection
+      const newSdk = new PayPerToolSDK(sdkConfig)
+      
+      // Connect using the provider-sdk's built-in connection
+      await newSdk.connect()
+      setSdk(newSdk)
+      setIsConnected(true)
+      
       toast({
-        title: 'Wallet Connected',
-        description: `Connected with address: ${address}`
+        title: 'SDK Connected with Wallet',
+        description: `Using wallet address: ${walletAddress}`
       })
+      
+      return newSdk
     } catch (error) {
       handleError(error, 'wallet connection')
+      return null
     } finally {
       setLoadingState('wallet', false)
     }
   }
 
   const registerTool = async () => {
-    if (!sdk || !walletAddress) {
+    if (!sdk || !walletAddress || walletStatus !== 'Connected') {
       toast({
         title: 'Error',
         description: 'Please connect wallet first',
@@ -128,15 +149,38 @@ export default function DebugPage() {
 
     try {
       setLoadingState('register', true)
-      const txHash = await sdk.registry.registerTool(
+      
+      // Get a fresh signing client for this transaction
+      const signingClient = await getSigningCosmWasmClient()
+      if (!signingClient) {
+        throw new Error('Failed to get signing client from wallet')
+      }
+      
+      // Create registry message
+      const msg = {
+        register_tool: {
+          tool_id: toolRegistration.toolId,
+          price: toolRegistration.price,
+          description: toolRegistration.description,
+        }
+      }
+      
+      // Set a fixed gas limit instead of using 'auto'
+      const gasLimit = 300000; // 300k gas units should be enough for most operations
+      
+      // Execute the transaction directly with the signing client
+      const result = await signingClient.execute(
         walletAddress,
-        toolRegistration.toolId,
-        toolRegistration.price,
-        toolRegistration.description
+        sdk.registry.getContractAddress(),
+        msg,
+        gasLimit,
+        undefined,
+        []
       )
+      
       toast({
         title: 'Tool Registered',
-        description: `Tool ${toolRegistration.toolId} registered successfully. TX: ${txHash}`
+        description: `Tool ${toolRegistration.toolId} registered successfully. TX: ${result.transactionHash}`
       })
       await loadTools()
     } catch (error) {
@@ -161,7 +205,7 @@ export default function DebugPage() {
   }
 
   const lockFunds = async () => {
-    if (!sdk || !walletAddress) {
+    if (!sdk || !walletAddress || walletStatus !== 'Connected') {
       toast({
         title: 'Error',
         description: 'Please connect wallet first',
@@ -172,20 +216,58 @@ export default function DebugPage() {
 
     try {
       setLoadingState('lockFunds', true)
+      
+      // Get a fresh signing client for this transaction
+      const signingClient = await getSigningCosmWasmClient()
+      if (!signingClient) {
+        throw new Error('Failed to get signing client from wallet')
+      }
+      
       const currentBlockHeight = await getCurrentBlockHeight()
       const expires = currentBlockHeight + parseInt(escrowCreation.ttl)
       
-      const result = await sdk.escrow.lockFunds(
+      // Create lock_funds message
+      const msg = {
+        lock_funds: {
+          tool_id: escrowCreation.toolId,
+          max_fee: escrowCreation.maxFee,
+          auth_token: Buffer.from(escrowCreation.authToken).toString('base64'),
+          expires: expires
+        }
+      }
+      
+      // Set a fixed gas limit instead of using 'auto'
+      const gasLimit = 400000; // 400k gas units since this operation includes funds transfer
+      
+      // Execute the transaction directly with the signing client
+      const funds = [{ denom: 'untrn', amount: escrowCreation.maxFee }]
+      const result = await signingClient.execute(
         walletAddress,
-        escrowCreation.toolId,
-        escrowCreation.maxFee,
-        Buffer.from(escrowCreation.authToken).toString('base64'),
-        expires,
-        [{ denom: 'untrn', amount: escrowCreation.maxFee }]
+        sdk.escrow.getContractAddress(),
+        msg,
+        gasLimit,
+        undefined,
+        funds
       )
+      
+      // Parse the escrow ID from transaction events
+      let escrowId = "unknown"
+      try {
+        const events = result.events || []
+        const wasmEvent = events.find(e => e.type === 'wasm')
+        if (wasmEvent) {
+          const escrowIdAttr = wasmEvent.attributes.find(attr => attr.key === 'escrow_id')
+          if (escrowIdAttr) {
+            escrowId = escrowIdAttr.value
+          }
+        }
+      } catch (parseError) {
+        console.error("Failed to parse escrow ID from tx events:", parseError)
+      }
+      
       toast({
         title: 'Funds Locked',
-        description: `Escrow ${result.escrowId} created successfully. TX: ${result.transactionHash}`
+        description: `Escrow ${escrowId} created successfully. TX: ${result.transactionHash}`
       })
       await loadEscrows()
     } catch (error) {
@@ -249,7 +331,7 @@ export default function DebugPage() {
   }
 
   const postUsage = async () => {
-    if (!sdk || !walletAddress) {
+    if (!sdk || !walletAddress || walletStatus !== 'Connected') {
       toast({
         title: 'Error',
         description: 'Please connect wallet first',
@@ -260,14 +342,37 @@ export default function DebugPage() {
 
     try {
       setLoadingState('usage', true)
-      const result = await sdk.postUsage(walletAddress, {
-        escrowId: usagePosting.escrowId,
-        usageFee: usagePosting.usageFee
-      })
+      
+      // Get a fresh signing client for this transaction
+      const signingClient = await getSigningCosmWasmClient()
+      if (!signingClient) {
+        throw new Error('Failed to get signing client from wallet')
+      }
+      
+      // Create post_usage message
+      const msg = {
+        post_usage: {
+          escrow_id: usagePosting.escrowId,
+          usage_fee: usagePosting.usageFee
+        }
+      }
+      
+      // Set a fixed gas limit instead of using 'auto'
+      const gasLimit = 350000; // 350k gas units for usage posting
+      
+      // Execute the transaction directly with the signing client
+      const result = await signingClient.execute(
+        walletAddress,
+        sdk.escrow.getContractAddress(),
+        msg,
+        gasLimit,
+        undefined,
+        []
+      )
       
       toast({
         title: 'Usage Posted',
-        description: `Usage reported successfully. TX: ${result.txHash}`
+        description: `Usage reported successfully. TX: ${result.transactionHash}`
       })
     } catch (error) {
       handleError(error, 'posting usage')
@@ -276,6 +381,22 @@ export default function DebugPage() {
     }
   }
 
+  // Monitor wallet status changes
+  useEffect(() => {
+    if (walletStatus === 'Connected' && walletAddress && !isConnected) {
+      // Automatically initialize SDK when wallet connects
+      const initSdk = async () => {
+        await initSDKWithWallet()
+      }
+      initSdk()
+    } else if (walletStatus !== 'Connected' && isConnected) {
+      // Reset SDK when wallet disconnects
+      setIsConnected(false)
+      setSdk(null)
+    }
+  }, [walletStatus, walletAddress, isConnected])
+  
+  // Load data when SDK is initialized
   useEffect(() => {
     if (isConnected && sdk) {
       loadTools()
@@ -365,28 +486,28 @@ export default function DebugPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="privateKey">Private Key (hex)</Label>
-              <Input
-                id="privateKey"
-                type="password"
-                value={privateKey}
-                onChange={(e) => setPrivateKey(e.target.value)}
-                placeholder="Enter your private key..."
-                disabled={!!walletAddress}
-              />
-            </div>
             <div className="flex gap-4 items-center">
-              <Button 
-                onClick={connectWallet} 
-                disabled={!!walletAddress || loading.wallet}
-              >
-                {loading.wallet ? 'Connecting...' : walletAddress ? 'Connected' : 'Connect Wallet'}
-              </Button>
-              {walletAddress && (
-                <Badge variant="secondary">
-                  {walletAddress}
-                </Badge>
+              {walletStatus !== 'Connected' ? (
+                <Button 
+                  onClick={connectWallet} 
+                  disabled={loading.wallet || walletStatus === 'Connecting'}
+                >
+                  {walletStatus === 'Connecting' ? 'Connecting...' : 'Connect Wallet'}
+                </Button>
+              ) : (
+                <>
+                  <Badge className="px-4 py-2 flex items-center gap-2" variant="secondary">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    {walletAddress}
+                  </Badge>
+                  <Button
+                    onClick={() => disconnectWallet()}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Disconnect
+                  </Button>
+                </>
               )}
             </div>
           </CardContent>
@@ -443,7 +564,7 @@ export default function DebugPage() {
                   </div>
                   <Button 
                     onClick={registerTool} 
-                    disabled={!walletAddress || loading.register}
+                    disabled={!walletAddress || walletStatus !== 'Connected' || loading.register}
                     className="w-full"
                   >
                     {loading.register ? 'Registering...' : 'Register Tool'}
@@ -541,7 +662,7 @@ export default function DebugPage() {
                   </div>
                   <Button 
                     onClick={lockFunds} 
-                    disabled={!walletAddress || loading.lockFunds}
+                    disabled={!walletAddress || walletStatus !== 'Connected' || loading.lockFunds}
                     className="w-full"
                   >
                     {loading.lockFunds ? 'Locking Funds...' : 'Lock Funds'}
@@ -671,7 +792,7 @@ export default function DebugPage() {
                 </div>
                 <Button 
                   onClick={postUsage} 
-                  disabled={!walletAddress || loading.usage}
+                  disabled={!walletAddress || walletStatus !== 'Connected' || loading.usage}
                   className="w-full"
                 >
                   {loading.usage ? 'Posting Usage...' : 'Post Usage & Claim'}

@@ -1,7 +1,7 @@
 {
-  "name": "httpay-sdk",
-  "version": "0.1.1",
-  "description": "HTTPay Provider SDK for interacting with HTTPay smart contracts on Neutron",
+  "name": "httpay",
+  "version": "0.1.0",
+  "description": "HTTPay SDK for interacting with HTTPay smart contracts on Neutron",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

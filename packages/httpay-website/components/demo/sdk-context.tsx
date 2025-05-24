@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { PayPerToolSDK } from "@toolpay/provider-sdk";
-import type { PayPerToolSDKConfig } from "@toolpay/provider-sdk";
+import { HTTPaySDK } from "@toolpay/provider-sdk";
+import type { HTTPaySDKConfig } from "@toolpay/provider-sdk";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName } from "@/config/chain-config";
 import {
@@ -32,7 +32,7 @@ interface SDKProviderProps {
 
 export const SDKProvider = ({ children }: SDKProviderProps) => {
   const { toast } = useToast();
-  const [sdk, setSdk] = useState<PayPerToolSDK | null>(null);
+  const [sdk, setSdk] = useState<HTTPaySDK | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [tools, setTools] = useState<Tool[]>([]);
   const [escrows, setEscrows] = useState<Escrow[]>([]);
@@ -47,7 +47,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     disconnect: disconnectWallet,
   } = useChain(defaultChainName);
 
-  const [sdkConfig, setSdkConfig] = useState<PayPerToolSDKConfig>({
+  const [sdkConfig, setSdkConfig] = useState<HTTPaySDKConfig>({
     rpcEndpoint: "https://rpc-falcron.pion-1.ntrn.tech",
     chainId: "pion-1",
     registryAddress:

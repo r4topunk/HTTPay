@@ -1,7 +1,7 @@
 /**
  * CosmosKit integration utilities
  * 
- * This file provides utilities to bridge between CosmosKit and the PayPerTool SDK,
+ * This file provides utilities to bridge between CosmosKit and the HTTPay SDK,
  * especially handling version compatibility issues between different SigningCosmWasmClient
  * implementations.
  */

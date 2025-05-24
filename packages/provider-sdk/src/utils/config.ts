@@ -1,16 +1,16 @@
 /**
- * Configuration utilities for PayPerToolSDK
+ * Configuration utilities for HTTPaySDK
  */
 
-import type { PayPerToolSDKConfig } from '../PayPerToolSDK.js';
+import type { HTTPaySDKConfig } from '../HTTPaySDK.js';
 
 /**
- * Validates PayPerTool SDK configuration
+ * Validates HTTPay SDK configuration
  *
  * @param config - The configuration object to validate
  * @throws Error if the configuration is invalid
  */
-export function validateConfig(config: PayPerToolSDKConfig): void {
+export function validateConfig(config: HTTPaySDKConfig): void {
   if (!config) {
     throw new Error('Configuration object is required');
   }
@@ -84,7 +84,7 @@ export function validateConfig(config: PayPerToolSDKConfig): void {
  */
 export function getNetworkDefaults(
   network: 'mainnet' | 'testnet' | 'local',
-): Partial<PayPerToolSDKConfig> {
+): Partial<HTTPaySDKConfig> {
   switch (network) {
     case 'mainnet':
       return {

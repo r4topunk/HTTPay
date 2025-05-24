@@ -1,6 +1,6 @@
-# Pay-Per-Tool Provider SDK
+# HTTPay Provider SDK
 
-The Pay-Per-Tool Provider SDK enables tool providers to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
+The HTTPay Provider SDK enables tool providers to interact with HTTPay smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
 
 **Current Status: Phase 3 Complete (Core SDK Implementation)**
 
@@ -14,20 +14,20 @@ The Pay-Per-Tool Provider SDK enables tool providers to interact with Pay-Per-To
 ## Installation
 
 ```bash
-npm install @toolpay/provider-sdk
+npm install httpay-sdk
 # or
-yarn add @toolpay/provider-sdk
+yarn add httpay-sdk
 # or
-pnpm add @toolpay/provider-sdk
+pnpm add httpay-sdk
 ```
 
 ## Basic Usage
 
 ```typescript
-import { Pay-Per-ToolSDK, EscrowVerifier, UsageReporter } from '@toolpay/provider-sdk';
+import { HTTPaySDK, EscrowVerifier, UsageReporter } from 'httpay-sdk';
 
 // Initialize the SDK with your configuration
-const sdk = new Pay-Per-ToolSDK({
+const sdk = new HTTPaySDK({
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
   registryAddress: 'neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2',
@@ -66,14 +66,14 @@ For full API documentation and examples, see the [API Documentation](./docs/API.
 The SDK can be configured with different networks and contract addresses:
 
 ```typescript
-const mainnetSdk = new Pay-Per-ToolSDK({
+const mainnetSdk = new HTTPaySDK({
   rpcEndpoint: 'https://rpc.neutron.org',
   chainId: 'neutron-1',
   registryAddress: 'neutron1...',
   escrowAddress: 'neutron1...',
 });
 
-const testnetSdk = new Pay-Per-ToolSDK({
+const testnetSdk = new HTTPaySDK({
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
   registryAddress: 'neutron1...',
@@ -83,7 +83,7 @@ const testnetSdk = new Pay-Per-ToolSDK({
 
 ## Demo Script
 
-The SDK includes a demo script that simulates a full Pay-Per-Tool workflow:
+The SDK includes a demo script that simulates a full HTTPay workflow:
 
 1. Tool registration by a provider
 2. Tool discovery by a client

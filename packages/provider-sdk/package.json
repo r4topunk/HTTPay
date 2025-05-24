@@ -1,7 +1,7 @@
 {
-  "name": "@toolpay/provider-sdk",
+  "name": "httpay-sdk",
   "version": "0.1.0",
-  "description": "Pay-Per-Tool Provider SDK for interacting with Pay-Per-Tool smart contracts on Neutron",
+  "description": "HTTPay Provider SDK for interacting with HTTPay smart contracts on Neutron",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,11 +29,11 @@
     "cosmwasm",
     "blockchain",
     "escrow",
-    "toolpay",
+    "httpay",
     "sdk",
     "api"
   ],
-  "author": "Pay-Per-Tool Team",
+  "author": "HTTPay Team",
   "license": "MIT",
   "packageManager": "pnpm@10.6.5",
   "dependencies": {

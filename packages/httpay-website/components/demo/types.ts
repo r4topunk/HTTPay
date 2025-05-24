@@ -1,4 +1,4 @@
-import { PayPerToolSDK, PayPerToolSDKConfig } from "@toolpay/provider-sdk";
+import { HTTPaySDK, HTTPaySDKConfig } from "@toolpay/provider-sdk";
 
 export interface ToolRegistrationForm {
   toolId: string;
@@ -39,19 +39,19 @@ export interface Escrow {
 }
 
 export interface SDKContextType {
-  sdk: PayPerToolSDK | null;
+  sdk: HTTPaySDK | null;
   isConnected: boolean;
   loading: Record<string, boolean>;
   tools: Tool[];
   escrows: Escrow[];
-  sdkConfig: PayPerToolSDKConfig;
+  sdkConfig: HTTPaySDKConfig;
   walletAddress: string | undefined;
   walletStatus: string;
   
   // Actions
-  setSdkConfig: (config: PayPerToolSDKConfig) => void;
+  setSdkConfig: (config: HTTPaySDKConfig) => void;
   initializeSDK: () => Promise<void>;
-  initSDKWithWallet: () => Promise<PayPerToolSDK | null>;
+  initSDKWithWallet: () => Promise<HTTPaySDK | null>;
   registerTool: (toolData: ToolRegistrationForm) => Promise<void>;
   loadTools: () => Promise<void>;
   lockFunds: (escrowData: EscrowCreationForm) => Promise<void>;

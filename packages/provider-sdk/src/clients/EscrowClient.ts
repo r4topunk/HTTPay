@@ -19,7 +19,7 @@ export interface LockFundsResult {
 }
 
 /**
- * Client for interacting with the PayPerTool Escrow contract
+ * Client for interacting with the HTTPay Escrow contract
  */
 export class EscrowClient {
   private readonly client: CosmWasmClient | SigningCosmWasmClient;

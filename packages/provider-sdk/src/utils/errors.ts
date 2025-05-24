@@ -1,18 +1,18 @@
 /**
- * Error classes for PayPerTool SDK
+ * Error classes for HTTPay SDK
  */
 
 /**
- * Base class for all PayPerTool SDK errors
+ * Base class for all HTTPay SDK errors
  */
-export class PayPerToolError extends Error {
+export class HTTPayError extends Error {
   /** Error code */
   code: string;
 
   /** Additional error details */
   details: Record<string, unknown>;
 
-  constructor(message: string, code: string = 'TOOLPAY_ERROR', details?: Record<string, unknown>) {
+  constructor(message: string, code: string = 'HTTPAYPAY_ERROR', details?: Record<string, unknown>) {
     super(message);
     this.name = this.constructor.name;
     this.code = code;
@@ -28,7 +28,7 @@ export class PayPerToolError extends Error {
 /**
  * Error thrown for configuration issues
  */
-export class ConfigurationError extends PayPerToolError {
+export class ConfigurationError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONFIGURATION_ERROR', details);
   }
@@ -37,7 +37,7 @@ export class ConfigurationError extends PayPerToolError {
 /**
  * Error thrown for network-related issues (RPC connection, timeouts, etc)
  */
-export class NetworkError extends PayPerToolError {
+export class NetworkError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'NETWORK_ERROR', details);
   }
@@ -46,7 +46,7 @@ export class NetworkError extends PayPerToolError {
 /**
  * Error thrown for contract execution failures
  */
-export class ContractError extends PayPerToolError {
+export class ContractError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'CONTRACT_ERROR', details);
   }
@@ -55,7 +55,7 @@ export class ContractError extends PayPerToolError {
 /**
  * Error thrown when escrow verification fails
  */
-export class EscrowVerificationError extends PayPerToolError {
+export class EscrowVerificationError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'ESCROW_VERIFICATION_ERROR', details);
   }
@@ -64,7 +64,7 @@ export class EscrowVerificationError extends PayPerToolError {
 /**
  * Error thrown for usage reporting failures
  */
-export class UsageReportingError extends PayPerToolError {
+export class UsageReportingError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'USAGE_REPORTING_ERROR', details);
   }
@@ -73,21 +73,21 @@ export class UsageReportingError extends PayPerToolError {
 /**
  * Error thrown for wallet-related issues
  */
-export class WalletError extends PayPerToolError {
+export class WalletError extends HTTPayError {
   constructor(message: string, details?: Record<string, unknown>) {
     super(message, 'WALLET_ERROR', details);
   }
 }
 
 /**
- * Convert any error to a PayPerToolError
+ * Convert any error to a HTTPayError
  *
  * @param error - The error to convert
  * @param defaultMessage - Default message if error doesn't have one
- * @returns A PayPerToolError or subclass
+ * @returns A HTTPayError or subclass
  */
-export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): PayPerToolError {
-  if (error instanceof PayPerToolError) {
+export function normalizeError(error: unknown, defaultMessage = 'Unknown error'): HTTPayError {
+  if (error instanceof HTTPayError) {
     return error;
   }
 
@@ -120,6 +120,6 @@ export function normalizeError(error: unknown, defaultMessage = 'Unknown error')
     return new ContractError(message, { originalError: error });
   }
 
-  // Default to generic PayPerToolError
-  return new PayPerToolError(message, 'UNKNOWN_ERROR', { originalError: error });
+  // Default to generic HTTPayError
+  return new HTTPayError(message, 'UNKNOWN_ERROR', { originalError: error });
 }

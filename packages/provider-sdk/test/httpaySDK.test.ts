@@ -1,4 +1,4 @@
-import { PayPerToolSDK, PayPerToolSDKConfig } from '../src/PayPerToolSDK';
+import { HTTPaySDK, HTTPaySDKConfig } from '../src/HTTPaySDK';
 import { EscrowClient } from '../src/clients/EscrowClient';
 import { RegistryClient } from '../src/clients/RegistryClient';
 import { EscrowVerifier } from '../src/escrowVerifier';
@@ -30,8 +30,8 @@ jest.mock('../src/utils/wallet', () => {
 // Import utility functions after mocking
 import { createWalletFromMnemonic, createSigningClientFromWallet } from '../src/utils/wallet';
 
-describe('PayPerToolSDK', () => {
-  let mockConfig: PayPerToolSDKConfig;
+describe('HTTPaySDK', () => {
+  let mockConfig: HTTPaySDKConfig;
   let mockCosmWasmClient: jest.Mocked<CosmWasmClient>;
   let mockSigningClient: jest.Mocked<SigningCosmWasmClient>;
 
@@ -64,16 +64,16 @@ describe('PayPerToolSDK', () => {
 
   it('should initialize with valid configuration', () => {
     // Act
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
 
     // Assert
-    expect(sdk).toBeInstanceOf(PayPerToolSDK);
+    expect(sdk).toBeInstanceOf(HTTPaySDK);
     expect(sdk.version).toBeDefined();
   });
 
   it('should connect with a read-only client', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
 
     // Act
     await sdk.connect();
@@ -89,7 +89,7 @@ describe('PayPerToolSDK', () => {
 
   it('should connect with a signing client using mnemonic', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
     const testMnemonic = 'test mnemonic words here';
 
     // Act
@@ -106,7 +106,7 @@ describe('PayPerToolSDK', () => {
 
   it('should connect with an existing signing client', () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
 
     // Act
     sdk.connectWithSigningClient(mockSigningClient);
@@ -128,14 +128,14 @@ describe('PayPerToolSDK', () => {
     };
 
     // Act & Assert
-    expect(() => new PayPerToolSDK(invalidConfig as PayPerToolSDKConfig)).toThrow(
-      'Failed to initialize PayPerToolSDK',
+    expect(() => new HTTPaySDK(invalidConfig as HTTPaySDKConfig)).toThrow(
+      'Failed to initialize HTTPaySDK',
     );
   });
 
   it('should delegate verifyEscrow to EscrowVerifier', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
     await sdk.connect();
 
     const mockVerifier = EscrowVerifier.prototype as jest.Mocked<EscrowVerifier>;
@@ -156,7 +156,7 @@ describe('PayPerToolSDK', () => {
 
   it('should delegate postUsage to UsageReporter', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
     await sdk.connectWithMnemonic('test mnemonic');
 
     const mockReporter = UsageReporter.prototype as jest.Mocked<UsageReporter>;
@@ -176,7 +176,7 @@ describe('PayPerToolSDK', () => {
 
   it('should provide access to clients through getter methods', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
     await sdk.connect();
 
     // Act & Assert - these should not throw errors
@@ -190,7 +190,7 @@ describe('PayPerToolSDK', () => {
 
   it('should detect signing capability correctly', async () => {
     // Arrange
-    const sdk = new PayPerToolSDK(mockConfig);
+    const sdk = new HTTPaySDK(mockConfig);
 
     // Act & Assert - without connection
     expect(sdk.hasSigningCapability()).toBe(false);

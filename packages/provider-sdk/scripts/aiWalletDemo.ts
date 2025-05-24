@@ -1,7 +1,7 @@
 /**
  * AI-Wallet Client Demo Script
  *
- * This script demonstrates a full PayPerTool workflow from both the client and provider perspectives.
+ * This script demonstrates a full HTTPay workflow from both the client and provider perspectives.
  * It simulates:
  * 1. Tool registration by a provider
  * 2. Tool discovery by a client
@@ -10,7 +10,7 @@
  * 5. Service provision and usage reporting
  * 6. Fund claiming by the provider
  *
- * This is meant to be run in a local/test environment with the PayPerTool contracts deployed.
+ * This is meant to be run in a local/test environment with the HTTPay contracts deployed.
  *
  * Environment Variables:
  * - NETWORK: The network to connect to ('mainnet', 'testnet', or 'local', default: 'local')
@@ -30,7 +30,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { randomBytes } from 'crypto';
-import { PayPerToolSDK } from '../src/PayPerToolSDK.js';
+import { HTTPaySDK } from '../src/HTTPaySDK.js';
 import { getNetworkDefaults } from '../src/utils/config.js';
 import { ConfigurationError, NetworkError } from '../src/utils/errors.js';
 import { createWalletFromPrivateKey, getWalletAddress } from '../src/utils/wallet.js';
@@ -43,8 +43,8 @@ interface WalletInfo {
 }
 
 interface SDKs {
-  provider: PayPerToolSDK;
-  client: PayPerToolSDK;
+  provider: HTTPaySDK;
+  client: HTTPaySDK;
 }
 
 interface ToolInfo {
@@ -134,7 +134,7 @@ async function setupWallets(): Promise<{ provider: WalletInfo; client: WalletInf
  */
 async function checkBalances(providerAddress: string, clientAddress: string): Promise<void> {
   console.log('\n💰 Querying wallet balances...');
-  const tempSDK = new PayPerToolSDK(config);
+  const tempSDK = new HTTPaySDK(config);
 
   try {
     await tempSDK.connectWithPrivateKey(providerPrivateKey);
@@ -168,12 +168,12 @@ async function initializeSDKs(): Promise<SDKs> {
   console.log('\n🔧 Initializing SDKs...');
 
   // Provider SDK
-  const providerSDK = new PayPerToolSDK(config);
+  const providerSDK = new HTTPaySDK(config);
   await providerSDK.connectWithPrivateKey(providerPrivateKey).catch(handleConnectionError);
   console.log('Provider SDK connected');
 
   // Client SDK
-  const clientSDK = new PayPerToolSDK(config);
+  const clientSDK = new HTTPaySDK(config);
   await clientSDK.connectWithPrivateKey(clientPrivateKey).catch(handleConnectionError);
   console.log('Client SDK connected');
 
@@ -183,7 +183,7 @@ async function initializeSDKs(): Promise<SDKs> {
 /**
  * Register a tool if it's not already registered
  */
-async function registerTool(sdk: PayPerToolSDK, providerAddress: string): Promise<ToolInfo> {
+async function registerTool(sdk: HTTPaySDK, providerAddress: string): Promise<ToolInfo> {
   console.log('\n📝 Step 1: Registering tool...');
 
   try {
@@ -222,7 +222,7 @@ async function registerTool(sdk: PayPerToolSDK, providerAddress: string): Promis
 /**
  * Client discovers a tool by ID
  */
-async function discoverTool(sdk: PayPerToolSDK, providerAddress: string): Promise<ToolInfo> {
+async function discoverTool(sdk: HTTPaySDK, providerAddress: string): Promise<ToolInfo> {
   console.log('\n🔍 Step 2: Discovering tool...');
 
   try {
@@ -260,7 +260,7 @@ async function discoverTool(sdk: PayPerToolSDK, providerAddress: string): Promis
  * Client locks funds in escrow for using the tool
  */
 async function lockFundsInEscrow(
-  sdk: PayPerToolSDK,
+  sdk: HTTPaySDK,
   clientAddress: string,
 ): Promise<EscrowDetails> {
   console.log('\n💰 Step 3: Locking funds in escrow...');
@@ -308,7 +308,7 @@ async function lockFundsInEscrow(
  * Provider verifies the escrow
  */
 async function verifyEscrow(
-  sdk: PayPerToolSDK,
+  sdk: HTTPaySDK,
   escrow: EscrowDetails,
   providerAddress: string,
 ): Promise<boolean> {
@@ -342,7 +342,7 @@ async function verifyEscrow(
  * Provider completes service and claims payment
  */
 async function deliverServiceAndClaim(
-  sdk: PayPerToolSDK,
+  sdk: HTTPaySDK,
   escrow: EscrowDetails,
   providerAddress: string,
 ): Promise<boolean> {
@@ -394,7 +394,7 @@ function handleConnectionError(error: any): never {
  * Main demo function using all the helper functions
  */
 async function runDemo() {
-  console.log('Starting PayPerTool AI-Wallet Client Demo');
+  console.log('Starting HTTPay AI-Wallet Client Demo');
   console.log('======================================');
   console.log('Network:', networkType);
 

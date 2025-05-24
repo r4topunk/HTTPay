@@ -1,14 +1,14 @@
 /**
- * PayPerTool Provider SDK
+ * HTTPay Provider SDK
  *
- * The main entry point for the PayPerTool Provider SDK. This SDK enables tool providers
- * to interact with PayPerTool smart contracts (Registry and Escrow) on Neutron.
+ * The main entry point for the HTTPay Provider SDK. This SDK enables tool providers
+ * to interact with HTTPay smart contracts (Registry and Escrow) on Neutron.
  *
  * @packageDocumentation
  */
 
 // Export main SDK class
-export { PayPerToolSDK } from './PayPerToolSDK';
+export { HTTPaySDK } from './HTTPaySDK';
 
 // Export core functionality
 export { EscrowVerifier } from './escrowVerifier';
@@ -21,7 +21,7 @@ export { RegistryClient, EscrowClient } from './clients/index';
 export * from './types/index';
 export * from './escrowVerifier';
 export * from './usageReporter';
-export * from './PayPerToolSDK';
+export * from './HTTPaySDK';
 
 // Version export
 export { SDK_VERSION, getSDKInfo } from './version';

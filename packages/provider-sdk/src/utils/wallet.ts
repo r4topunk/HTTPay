@@ -1,5 +1,5 @@
 /**
- * Wallet utilities for PayPerToolSDK
+ * Wallet utilities for HTTPaySDK
  */
 
 import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from '@cosmjs/proto-signing';

@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { HTTPaySDK } from "@toolpay/provider-sdk";
-import type { HTTPaySDKConfig } from "@toolpay/provider-sdk";
+import { HTTPaySDK } from "httpay/provider-sdk";
+import type { HTTPaySDKConfig } from "httpay/provider-sdk";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName } from "@/config/chain-config";
 import {
@@ -74,7 +74,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const initializeSDK = useCallback(async () => {
     try {
       setLoadingState("init", true);
-      const newSdk = new PayPerToolSDK(sdkConfig);
+      const newSdk = new HTTPaySDK(sdkConfig);
       await newSdk.connect();
       setSdk(newSdk);
       setIsConnected(true);
@@ -103,7 +103,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       setLoadingState("wallet", true);
 
       // Create a new SDK instance with the current configuration
-      const newSdk = new PayPerToolSDK(sdkConfig);
+      const newSdk = new HTTPaySDK(sdkConfig);
       
       // First connect to establish base client
       await newSdk.connect();

@@ -35,6 +35,9 @@ importers:
       '@hookform/resolvers':
         specifier: latest
         version: 5.0.1(react-hook-form@7.56.4(react@19.1.0))
+      'httpay/provider-sdk':
+        specifier: link:../provider-sdk
+        version: link:../provider-sdk
       '@interchain-ui/react':
         specifier: ^1.26.3
         version: 1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -119,9 +122,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@toolpay/provider-sdk':
-        specifier: link:../provider-sdk
-        version: link:../provider-sdk
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.21(postcss@8.5.3)

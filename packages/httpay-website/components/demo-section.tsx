@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { useChain } from "@interchain-kit/react";
+import { useChain } from "@cosmos-kit/react";
 import { formatAmount } from "@/lib/constants";
 import { truncateAddress } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";

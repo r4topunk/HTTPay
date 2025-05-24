@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { APP_NAME } from "@/lib/constants"
-import { useChain } from "@interchain-kit/react"
+import { useChain } from "@cosmos-kit/react"
 import { defaultChainName } from "@/config/chain-config"
 import { ConnectButton } from "./wallet/connect-button"
 

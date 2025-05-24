@@ -2,7 +2,7 @@
 
 import { defaultChainName } from '@/config/chain-config';
 import { truncateAddress } from '@/lib/utils';
-import { useChainWallet } from '@interchain-kit/react';
+import { useChain } from '@cosmos-kit/react';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
@@ -20,7 +20,8 @@ export function ConnectButton() {
     disconnect, 
     address, 
     status,
-  } = useChainWallet(defaultChainName, 'keplr-extension');
+    openView, // Added this to access the built-in wallet selection modal
+  } = useChain(defaultChainName);
   const [showKeplrModal, setShowKeplrModal] = useState(false);
 
   useEffect(() => {
@@ -34,9 +35,13 @@ export function ConnectButton() {
 
   const handleConnect = async () => {
     try {
+      // This will either connect with the last used wallet or 
+      // if no wallet was used before, it will open the selection modal
       await connect();
     } catch (error) {
       console.error('Failed to connect wallet:', error);
+      // Use the built-in modal instead of custom modal when direct connect fails
+      openView();
     }
   };
 
@@ -82,25 +87,24 @@ export function ConnectButton() {
         disabled={status === 'Connecting'} 
         className="px-4 py-2 rounded-lg"
       >
-        {status === 'Connecting' ? 'Connecting...' : 'Connect Keplr'}
+        {status === 'Connecting' ? 'Connecting...' : 'Connect Wallet'}
       </Button>
 
       <Dialog open={showKeplrModal} onOpenChange={setShowKeplrModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Keplr Wallet Required</DialogTitle>
+            <DialogTitle>Wallet Required</DialogTitle>
             <DialogDescription>
-              You need to install the Keplr wallet extension to connect to this application.
+              You need to install a compatible wallet extension to connect to this application.
             </DialogDescription>
           </DialogHeader>
           <div className="my-4">
             <p className="text-sm text-muted-foreground mb-4">
-              Keplr is a browser extension wallet for the Cosmos ecosystem. 
-              You'll need it to interact with this application.
+              You can use Keplr, Leap, or Cosmostation wallet to interact with this application.
             </p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>1.</span>
-              <p>Install the Keplr browser extension</p>
+              <p>Install a compatible wallet browser extension</p>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>2.</span>

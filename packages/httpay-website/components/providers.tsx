@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 // Dynamically import WalletProvider with SSR disabled
 const WalletProvider = dynamic(
-  () => import("@/components/wallet/interchain-kit-provider").then(mod => mod.WalletProvider),
+  () => import("@/components/wallet/cosmos-kit-provider").then(mod => mod.WalletProvider),
   { ssr: false }
 );
 

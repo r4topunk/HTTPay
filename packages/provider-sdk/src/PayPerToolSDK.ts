@@ -43,7 +43,7 @@ import { EscrowVerifier } from './escrowVerifier';
 import type { VerifyEscrowParams } from './escrowVerifier';
 import { UsageReporter } from './usageReporter';
 import type { PostUsageParams } from './usageReporter';
-import { SDK_VERSION } from './index';
+import { SDK_VERSION } from './version';
 import {
   validateConfig,
   createWalletFromMnemonic,

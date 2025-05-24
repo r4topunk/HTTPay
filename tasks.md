@@ -411,3 +411,19 @@ We will implement Pay-Per-Tool in 3 distinct phases:
   - [x] Test release flow with fee calculation
 - [ ] Update contract documentation to explain fee collection
 - [ ] Document fee collection feature in provider SDK
+
+## Chunk 13: Frontend Debug Page
+
+### 13.1 Frontend Debug Page Implementation - ✅ COMPLETED
+- [x] Created comprehensive debug page at `packages/httpay-website/app/debug/page.tsx`
+- [x] Integrated PayPerTool SDK with full functionality coverage
+- [x] Implemented wallet connection and management
+- [x] Added Registry contract interaction (register, update, pause/resume tools)
+- [x] Added Escrow contract interaction (lock funds, release, refund)
+- [x] Implemented query functionality for tools and escrows
+- [x] Added error handling and user feedback (toasts)
+- [x] Created responsive UI with shadcn/ui components
+- [x] Validated build process and runtime functionality
+- [x] Confirmed no import/export issues with SDK integration
+- [x] Tested all features in development environment
+- [x] Documented implementation in `notes/frontend-debug-page.md`

@@ -102,12 +102,20 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     try {
       setLoadingState("wallet", true);
 
+      // Create a new SDK instance with the current configuration
       const newSdk = new PayPerToolSDK(sdkConfig);
+      
+      // First connect to establish base client
       await newSdk.connect();
 
-      if (typeof newSdk.connectWithCosmosKit === "function") {
-        newSdk.connectWithCosmosKit(getSigningCosmWasmClient, walletAddress);
-      }
+      // Get the signing client from CosmosKit
+      const signingClient = await getSigningCosmWasmClient();
+      
+      // Connect the SDK with the signing client
+      // This ensures the gasPrice from sdkConfig is properly used
+      newSdk.connectWithSigningClient(signingClient);
+
+      console.log("Sdk client", newSdk.getClient());
 
       setSdk(newSdk);
       setIsConnected(true);
@@ -126,59 +134,6 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     }
   }, [walletAddress, walletStatus, sdkConfig, getSigningCosmWasmClient, setLoadingState, handleError, toast]);
 
-  const executeWithWallet = useCallback(async (
-    contractAddress: string,
-    msg: Record<string, unknown>,
-    gasLimit: number,
-    funds: { denom: string; amount: string }[] = []
-  ) => {
-    if (!sdk || !walletAddress || walletStatus !== "Connected") {
-      throw new Error("Wallet not connected or SDK not initialized");
-    }
-
-    return sdk.executeWithCosmosKit(contractAddress, msg, gasLimit, funds);
-  }, [sdk, walletAddress, walletStatus]);
-
-  const registerTool = useCallback(async (toolData: ToolRegistrationForm) => {
-    if (!sdk || !walletAddress || walletStatus !== "Connected") {
-      toast({
-        title: "Error",
-        description: "Please connect wallet first",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setLoadingState("register", true);
-
-      const msg = {
-        register_tool: {
-          tool_id: toolData.toolId,
-          price: toolData.price,
-          description: toolData.description,
-        },
-      };
-
-      const gasLimit = 300000;
-      const result = await executeWithWallet(
-        sdk.registry.getContractAddress(),
-        msg,
-        gasLimit
-      );
-
-      toast({
-        title: "Tool Registered",
-        description: `Tool ${toolData.toolId} registered successfully. TX: ${result.transactionHash}`,
-      });
-      await loadTools();
-    } catch (error) {
-      handleError(error, "tool registration");
-    } finally {
-      setLoadingState("register", false);
-    }
-  }, [sdk, walletAddress, walletStatus, executeWithWallet, setLoadingState, handleError, toast]);
-
   const loadTools = useCallback(async () => {
     if (!sdk) return;
 
@@ -193,6 +148,39 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     }
   }, [sdk, setLoadingState, handleError]);
 
+  const registerTool = useCallback(async (toolData: ToolRegistrationForm) => {
+    if (!sdk || !walletAddress || walletStatus !== "Connected") {
+      toast({
+        title: "Error",
+        description: "Please connect wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setLoadingState("register", true);
+
+      // Use the SDK's high-level registerTool method instead of manually constructing messages
+      const transactionHash = await sdk.registry.registerTool(
+        walletAddress,
+        toolData.toolId,
+        toolData.price,
+        toolData.description
+      );
+
+      toast({
+        title: "Tool Registered",
+        description: `Tool ${toolData.toolId} registered successfully. TX: ${transactionHash}`,
+      });
+      await loadTools();
+    } catch (error) {
+      handleError(error, "tool registration");
+    } finally {
+      setLoadingState("register", false);
+    }
+  }, [sdk, walletAddress, walletStatus, setLoadingState, handleError, toast, loadTools]);
+
   const getCurrentBlockHeight = useCallback(async (): Promise<number> => {
     if (!sdk) throw new Error("SDK not initialized");
     const client = sdk.getClient();
@@ -200,6 +188,19 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     const height = await client.getHeight();
     return height;
   }, [sdk]);
+
+  const loadEscrows = useCallback(async () => {
+    if (!sdk) return;
+
+    try {
+      setLoadingState("loadEscrows", true);
+      setEscrows([]);
+    } catch (error) {
+      handleError(error, "loading escrows");
+    } finally {
+      setLoadingState("loadEscrows", false);
+    }
+  }, [sdk, setLoadingState, handleError]);
 
   const lockFunds = useCallback(async (escrowData: EscrowCreationForm) => {
     if (!sdk || !walletAddress || walletStatus !== "Connected") {
@@ -216,45 +217,24 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
 
       const currentBlockHeight = await getCurrentBlockHeight();
       const expires = currentBlockHeight + parseInt(escrowData.ttl);
-
-      const msg = {
-        lock_funds: {
-          tool_id: escrowData.toolId,
-          max_fee: escrowData.maxFee,
-          auth_token: Buffer.from(escrowData.authToken).toString("base64"),
-          expires: expires,
-        },
-      };
-
-      const gasLimit = 400000;
+      
+      // Convert authToken to base64 if needed
+      const authToken = Buffer.from(escrowData.authToken).toString("base64");
+      
+      // Use the SDK's high-level lockFunds method
       const funds = [{ denom: "untrn", amount: escrowData.maxFee }];
-
-      const result = await executeWithWallet(
-        sdk.escrow.getContractAddress(),
-        msg,
-        gasLimit,
+      const result = await sdk.escrow.lockFunds(
+        walletAddress,
+        escrowData.toolId,
+        escrowData.maxFee,
+        authToken,
+        expires,
         funds
       );
 
-      let escrowId = "unknown";
-      try {
-        const events = result.events || [];
-        const wasmEvent = events.find((event: any) => event.type === "wasm");
-        if (wasmEvent) {
-          const escrowIdAttr = wasmEvent.attributes.find(
-            (attr: any) => attr.key === "escrow_id"
-          );
-          if (escrowIdAttr) {
-            escrowId = escrowIdAttr.value;
-          }
-        }
-      } catch (parseError) {
-        console.error("Failed to parse escrow ID from tx events:", parseError);
-      }
-
       toast({
         title: "Funds Locked",
-        description: `Escrow ${escrowId} created successfully. TX: ${result.transactionHash}`,
+        description: `Escrow ${result.escrowId} created successfully. TX: ${result.transactionHash}`,
       });
       await loadEscrows();
     } catch (error) {
@@ -262,20 +242,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     } finally {
       setLoadingState("lockFunds", false);
     }
-  }, [sdk, walletAddress, walletStatus, getCurrentBlockHeight, executeWithWallet, setLoadingState, handleError, toast]);
-
-  const loadEscrows = useCallback(async () => {
-    if (!sdk) return;
-
-    try {
-      setLoadingState("loadEscrows", true);
-      setEscrows([]);
-    } catch (error) {
-      handleError(error, "loading escrows");
-    } finally {
-      setLoadingState("loadEscrows", false);
-    }
-  }, [sdk, setLoadingState, handleError]);
+  }, [sdk, walletAddress, walletStatus, getCurrentBlockHeight, setLoadingState, handleError, toast, loadEscrows]);
 
   const verifyEscrow = useCallback(async (verificationData: EscrowVerificationForm) => {
     if (!sdk) {
@@ -322,30 +289,25 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     try {
       setLoadingState("usage", true);
 
-      const msg = {
-        post_usage: {
-          escrow_id: usageData.escrowId,
-          usage_fee: usageData.usageFee,
-        },
-      };
-
-      const gasLimit = 350000;
-      const result = await executeWithWallet(
-        sdk.escrow.getContractAddress(),
-        msg,
-        gasLimit
-      );
+      // Use the SDK's high-level postUsage method
+      const result = await sdk.postUsage(walletAddress, {
+        escrowId: usageData.escrowId,
+        usageFee: usageData.usageFee,
+        options: {
+          memo: "Payment for tool usage",
+        }
+      });
 
       toast({
         title: "Usage Posted",
-        description: `Usage reported successfully. TX: ${result.transactionHash}`,
+        description: `Usage reported successfully. TX: ${result.txHash}`,
       });
     } catch (error) {
       handleError(error, "posting usage");
     } finally {
       setLoadingState("usage", false);
     }
-  }, [sdk, walletAddress, walletStatus, executeWithWallet, setLoadingState, handleError, toast]);
+  }, [sdk, walletAddress, walletStatus, setLoadingState, handleError, toast]);
 
   // Monitor wallet status changes
   useEffect(() => {

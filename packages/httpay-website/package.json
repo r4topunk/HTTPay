@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chain-registry/types": "^0.50.138",
     "@chain-registry/v2": "^1.71.219",
+    "@cosmjs/stargate": "^0.33.1",
+    "@cosmos-kit/core": "^2.16.0",
     "@cosmos-kit/cosmostation": "^2.9.0",
     "@cosmos-kit/keplr-extension": "^2.15.0",
     "@cosmos-kit/leap": "^2.9.0",

@@ -45,6 +45,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { defaultChainName } from "@/config/chain-config";
+import { ConnectButton } from "./wallet/connect-button";
 
 // Mock data for tools (in a real app, this would come from the contract)
 const mockTools = [
@@ -325,17 +326,8 @@ export default function DemoSection() {
                   Connect your wallet to interact with the HTTPay protocol
                 </CardDescription>
               </CardHeader>
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  onClick={() => {
-                    if (typeof window !== "undefined" && window.scrollTo) {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }
-                  }}
-                >
-                  Connect Wallet
-                </Button>
+              <CardFooter className="flex justify-center">
+                <ConnectButton />
               </CardFooter>
             </Card>
           ) : (

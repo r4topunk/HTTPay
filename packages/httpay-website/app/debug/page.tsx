@@ -19,7 +19,7 @@ export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false)
   const [walletAddress, setWalletAddress] = useState<string | null>(null)
   const [sdkConfig, setSdkConfig] = useState<PayPerToolSDKConfig>({
-    rpcEndpoint: 'https://rpc-pion-1.neutron.org',
+    rpcEndpoint: 'https://rpc-falcron.pion-1.ntrn.tech',
     chainId: 'pion-1',
     registryAddress: 'neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2',
     escrowAddress: 'neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx',

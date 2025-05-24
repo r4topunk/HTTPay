@@ -1,0 +1,65 @@
+import { PayPerToolSDK, PayPerToolSDKConfig } from "@toolpay/provider-sdk";
+
+export interface ToolRegistrationForm {
+  toolId: string;
+  price: string;
+  description: string;
+}
+
+export interface EscrowCreationForm {
+  toolId: string;
+  maxFee: string;
+  authToken: string;
+  ttl: string;
+}
+
+export interface EscrowVerificationForm {
+  escrowId: string;
+  authToken: string;
+  providerAddr: string;
+}
+
+export interface UsagePostingForm {
+  escrowId: string;
+  usageFee: string;
+}
+
+export interface Tool {
+  tool_id: string;
+  price: string;
+  provider: string;
+  is_active: boolean;
+  description?: string;
+}
+
+export interface Escrow {
+  id: string;
+  tool_id: string;
+  max_fee: string;
+}
+
+export interface SDKContextType {
+  sdk: PayPerToolSDK | null;
+  isConnected: boolean;
+  loading: Record<string, boolean>;
+  tools: Tool[];
+  escrows: Escrow[];
+  sdkConfig: PayPerToolSDKConfig;
+  walletAddress: string | undefined;
+  walletStatus: string;
+  
+  // Actions
+  setSdkConfig: (config: PayPerToolSDKConfig) => void;
+  initializeSDK: () => Promise<void>;
+  initSDKWithWallet: () => Promise<PayPerToolSDK | null>;
+  registerTool: (toolData: ToolRegistrationForm) => Promise<void>;
+  loadTools: () => Promise<void>;
+  lockFunds: (escrowData: EscrowCreationForm) => Promise<void>;
+  loadEscrows: () => Promise<void>;
+  verifyEscrow: (verificationData: EscrowVerificationForm) => Promise<void>;
+  postUsage: (usageData: UsagePostingForm) => Promise<void>;
+  connectWallet: () => void;
+  disconnectWallet: () => void;
+  setLoadingState: (key: string, value: boolean) => void;
+  handleError: (error: any, operation: string) => void;
+}

@@ -50,6 +50,10 @@ import {
   createWalletFromPrivateKey,
   createSigningClientFromWallet,
   normalizeError,
+  createCosmosKitContext,
+  executeViaCosmosKit,
+  // Import types
+  CosmosKitContext,
   // Import error classes (not as types)
   ConfigurationError,
   NetworkError,
@@ -112,6 +116,12 @@ export class PayPerToolSDK {
 
   /** Usage reporter for posting usage and claiming funds */
   private _usageReporter?: UsageReporter;
+
+  /**
+   * CosmosKit context for handling wallet integrations
+   * @private
+   */
+  private _cosmosKitContext?: CosmosKitContext;
 
   /**
    * Create a new PayPerToolSDK instance
@@ -289,6 +299,26 @@ export class PayPerToolSDK {
   }
 
   /**
+   * Connect to the chain with CosmosKit integration
+   * 
+   * This method handles compatibility between CosmosKit and the SDK by creating
+   * a context that can be used for transactions without directly using CosmosKit's
+   * SigningCosmWasmClient (which may have version incompatibilities).
+   * 
+   * @param getSigningClient - Function to get CosmosKit's signing client when needed
+   * @param walletAddress - The wallet address from CosmosKit
+   * @returns This SDK instance for chaining
+   * @throws ConfigurationError if parameters are invalid
+   */
+  connectWithCosmosKit(
+    getSigningClient: () => Promise<any>,
+    walletAddress: string
+  ): PayPerToolSDK {
+    this._cosmosKitContext = createCosmosKitContext(getSigningClient, walletAddress);
+    return this;
+  }
+
+  /**
    * Get wallet address from the current signing client
    *
    * Attempts to retrieve the wallet address associated with the
@@ -459,5 +489,48 @@ export class PayPerToolSDK {
    */
   hasSigningCapability(): boolean {
     return !!this.client && 'execute' in this.client;
+  }
+
+  /**
+   * Check if the SDK has CosmosKit integration
+   * 
+   * @returns True if CosmosKit integration is available
+   */
+  hasCosmosKitIntegration(): boolean {
+    return !!this._cosmosKitContext;
+  }
+
+  /**
+   * Execute a contract message using CosmosKit
+   * 
+   * This method uses CosmosKit's signing client to execute a contract message,
+   * avoiding version incompatibilities between CosmosKit and the SDK.
+   * 
+   * @param contractAddress - Contract address
+   * @param msg - Message to send
+   * @param gasLimit - Gas limit for the transaction
+   * @param funds - Funds to send with the transaction
+   * @returns Result of the execution
+   * @throws Error if CosmosKit integration is not available or execution fails
+   */
+  async executeWithCosmosKit(
+    contractAddress: string,
+    msg: Record<string, unknown>,
+    gasLimit: number,
+    funds: { denom: string; amount: string }[] = []
+  ): Promise<any> {
+    if (!this._cosmosKitContext) {
+      throw new ConfigurationError(
+        'CosmosKit integration not available. Call connectWithCosmosKit() first.'
+      );
+    }
+    
+    return executeViaCosmosKit(
+      this._cosmosKitContext,
+      contractAddress,
+      msg,
+      gasLimit,
+      funds
+    );
   }
 }

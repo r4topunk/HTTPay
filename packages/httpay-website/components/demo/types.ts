@@ -1,4 +1,4 @@
-import { HTTPaySDK, HTTPaySDKConfig } from "httpay/provider-sdk";
+import { HTTPaySDK, HTTPaySDKConfig } from "httpay";
 
 export interface ToolRegistrationForm {
   toolId: string;

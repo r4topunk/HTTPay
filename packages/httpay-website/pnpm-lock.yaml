@@ -35,9 +35,6 @@ importers:
       '@hookform/resolvers':
         specifier: latest
         version: 5.0.1(react-hook-form@7.56.4(react@19.1.0))
-      'httpay/provider-sdk':
-        specifier: link:../provider-sdk
-        version: link:../provider-sdk
       '@interchain-ui/react':
         specifier: ^1.26.3
         version: 1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -143,6 +140,9 @@ importers:
       embla-carousel-react:
         specifier: 8.5.1
         version: 8.5.1(react@19.1.0)
+      httpay:
+        specifier: ^0.1.0
+        version: 0.1.0
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2893,6 +2893,9 @@ packages:
 
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
+
+  httpay@0.1.0:
+    resolution: {integrity: sha512-l2t2rHkpmRzbUnMdzmvqrw29ySvQPiCORRRoRx+PAbAHaytFG0WVysQ2cIqShM4iL4ZKDvo9/HrdcJ4kvzYXEQ==}
 
   idb-keyval@6.2.2:
     resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
@@ -7810,6 +7813,16 @@ snapshots:
       hash.js: 1.1.7
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+
+  httpay@0.1.0:
+    dependencies:
+      '@cosmjs/cosmwasm-stargate': 0.32.4
+      '@cosmjs/proto-signing': 0.33.1
+      '@cosmjs/stargate': 0.33.1
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
 
   idb-keyval@6.2.2: {}
 

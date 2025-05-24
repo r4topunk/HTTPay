@@ -1,12 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "@interchain-ui/react/styles";
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import "@interchain-ui/react/styles";
+import { Providers } from "@/components/providers"
 import Navbar from "@/components/navbar"
-import { Toaster } from "@/components/ui/toaster"
-import { WalletProvider } from "@/components/wallet/interchain-kit-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,21 +22,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          storageKey="httpay-theme"
-        >
-          <WalletProvider>
-            <div className="relative min-h-screen flex flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Toaster />
-            </div>
-          </WalletProvider>
-        </ThemeProvider>
+        <Providers>
+          <div className="relative min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </div>
+        </Providers>
       </body>
     </html>
   )

@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install",
+  "outputDirectory": "packages/httpay-website/.next"
+}

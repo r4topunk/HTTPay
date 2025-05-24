@@ -14,6 +14,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **phase4-chunk1.md**: Utilities and Configuration implementation (Phase 4, Chunk 1) – Phase 4 completed, see this file for details.
 - **phase5-chunk1.md**: Documentation, Testing, and AI-Wallet Demo (Phase 5, Chunk 1) – Phase 5 completed, see this file for details.
 - **frontend-debug-page.md**: Frontend debug page implementation and validation with PayPerTool SDK integration - **✅ COMPLETED**
+- **vercel-deployment.md**: Configuration for deploying the website with monorepo and local dependencies to Vercel - **✅ COMPLETED**
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
 - **client-auth-update.md**: Client authentication updated to use private key instead of mnemonic

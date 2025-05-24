@@ -22,6 +22,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **description-field-update.md**: Implementation of mandatory description field with max length of 256 characters for tools
 - **get-tools-query-update.md**: Implementation of a query to fetch all available tools in the Registry contract
 - **fee-collection-feature.md**: Implementation of contract fee collection feature with owner-claimable percentage of each tool usage
+- **cosmjs-downgrade-fixes.md**: Fixes for compatibility issues after downgrading @cosmjs/cosmwasm-stargate from v0.33.1 to v0.32.4
 
 _All files are now located in the `notes/` folder._
 

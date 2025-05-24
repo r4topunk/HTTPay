@@ -37,7 +37,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.6.5",
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "^0.33.1",
+    "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/proto-signing": "^0.33.1",
     "@cosmjs/stargate": "^0.33.1"
   },

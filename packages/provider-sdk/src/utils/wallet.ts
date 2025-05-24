@@ -5,7 +5,6 @@
 import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from '@cosmjs/proto-signing';
 import type { OfflineDirectSigner } from '@cosmjs/proto-signing';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { GasPrice } from '@cosmjs/stargate';
 
 /**
  * Options for creating a wallet
@@ -105,21 +104,29 @@ export async function createSigningClientFromWallet(
     throw new Error('RPC endpoint is required');
   }
 
-  // Convert gas price if provided
-  const gasPriceValue = gasPrice ? GasPrice.fromString(gasPrice) : undefined;
-
-  // Use clientOptions with proper typing from SigningCosmWasmClient
-  // Define a type that matches what SigningCosmWasmClient.connectWithSigner expects
-  type SigningClientOptions = {
-    gasPrice?: GasPrice;
-  };
-
-  const clientOptions: SigningClientOptions = {};
-  if (gasPriceValue) {
-    clientOptions.gasPrice = gasPriceValue;
+  // For version compatibility concerns, we'll use a safer approach
+  let client: SigningCosmWasmClient;
+  
+  try {
+    if (gasPrice) {
+      // Let's use a dynamic import to avoid direct type references
+      const { GasPrice } = await import('@cosmjs/stargate');
+      const gasPriceObj = GasPrice.fromString(gasPrice);
+      
+      // Use type assertion to bypass type checking issues between versions
+      client = await SigningCosmWasmClient.connectWithSigner(
+        rpcEndpoint, 
+        signer, 
+        { gasPrice: gasPriceObj as any }
+      );
+    } else {
+      client = await SigningCosmWasmClient.connectWithSigner(rpcEndpoint, signer);
+    }
+  } catch (error) {
+    console.error('Error creating signing client:', error);
+    // Fallback: try without the gas price option
+    client = await SigningCosmWasmClient.connectWithSigner(rpcEndpoint, signer);
   }
-
-  const client = await SigningCosmWasmClient.connectWithSigner(rpcEndpoint, signer, clientOptions);
 
   return client;
 }

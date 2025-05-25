@@ -429,3 +429,58 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Confirmed no import/export issues with SDK integration
 - [x] Tested all features in development environment
 - [x] Documented implementation in `notes/frontend-debug-page.md`
+
+## Chunk 14: Add Endpoint Field to Registry Contract ✅
+
+**Objective**: Add a new `endpoint` field to the Registry contract for storing tool API endpoints that users will fetch to interact with tools.
+
+**Status**: PLANNING COMPLETED ✅
+
+**Implementation Plan**: Detailed 68-task implementation plan documented in `notes/endpoint-field-plan.md`
+
+### Main Implementation Checkpoints
+
+#### 14.1 Registry Contract Core Updates
+- [ ] Update ToolMeta struct with endpoint field
+- [ ] Add RegisterTool endpoint parameter and validation
+- [ ] Implement UpdateEndpoint message and handler
+- [ ] Update all query responses to include endpoint
+- [ ] Add endpoint validation and error handling
+
+#### 14.2 Registry Contract Testing
+- [ ] Update existing tests for endpoint field compatibility
+- [ ] Create comprehensive endpoint-specific tests
+- [ ] Test endpoint validation and error scenarios
+- [ ] Verify endpoint data integrity across all operations
+
+#### 14.3 TypeScript SDK Updates
+- [ ] Update Registry types and interfaces for endpoint support
+- [ ] Add endpoint parameter to registerTool method
+- [ ] Implement new updateEndpoint method
+- [ ] Update SDK tests and documentation
+
+#### 14.4 SDK Release Management
+- [ ] Version bump and changelog updates
+- [ ] NPM publishing with endpoint feature
+- [ ] Verify package integrity and functionality
+
+#### 14.5 Frontend Debug Page Enhancement
+- [ ] Add endpoint input to tool registration form
+- [ ] Display and manage endpoints in tools list
+- [ ] Implement endpoint update functionality
+- [ ] Enhance UX with validation and copy features
+
+#### 14.6 Documentation and Integration
+- [ ] Update project specifications with endpoint field
+- [ ] Create migration guide for existing users
+- [ ] Update SDK and contract documentation
+
+#### 14.7 Testing and Quality Assurance
+- [ ] Full system integration testing
+- [ ] Performance and validation testing
+- [ ] User acceptance testing
+
+#### 14.8 Deployment and Release
+- [ ] Deploy updated contracts to testnet
+- [ ] Coordinate release across all components
+- [ ] Monitor post-deployment functionality

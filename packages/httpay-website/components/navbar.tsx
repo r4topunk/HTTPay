@@ -12,11 +12,10 @@ import { ConnectButton } from "@/components/wallet/connect-button"
 
 // Removed "Home" from navItems
 const navItems = [
-  { name: "Problem", href: "#problem" },
-  { name: "Solution", href: "#solution" },
-  { name: "Demo", href: "#demo" },
-  { name: "Vision", href: "#vision" },
-  { name: "Account", href: "/account" },
+  { name: "Problem", href: "/#problem" },
+  { name: "Solution", href: "/#solution" },
+  { name: "Demo", href: "/#demo" },
+  { name: "Vision", href: "/#vision" },
 ]
 
 export default function Navbar() {
@@ -59,7 +58,7 @@ export default function Navbar() {
         <div className="flex items-center gap-6">
           {/* Styled title to show in purple when on hero section */}
           <Link
-            href="#hero"
+            href="/#hero"
             className={cn(
               "flex items-center space-x-2 font-bold text-xl transition-colors",
               activeSection === "hero" ? "text-primary" : ""

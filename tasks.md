@@ -484,3 +484,35 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [ ] Deploy updated contracts to testnet
 - [ ] Coordinate release across all components
 - [ ] Monitor post-deployment functionality
+
+### Task 15: Implement GetEscrows Feature
+
+#### 15.1 Escrow Contract GetEscrows Query Implementation
+- [ ] Add GetEscrows query to msg.rs with filter and pagination parameters
+- [ ] Create EscrowsResponse struct for returning multiple escrow details
+- [ ] Implement query_escrows function with filtering and pagination support
+- [ ] Update query entry point to handle the new query
+
+#### 15.2 Escrow Contract Testing
+- [ ] Create comprehensive test coverage for GetEscrows functionality
+- [ ] Test filtering by caller and provider addresses
+- [ ] Test pagination with start_after and limit parameters
+- [ ] Test edge cases and empty results scenarios
+
+#### 15.3 TypeScript SDK Updates
+- [ ] Update Escrow types for GetEscrows query
+- [ ] Implement getEscrows method in EscrowClient
+- [ ] Add helper method in HTTPaySDK
+- [ ] Create comprehensive SDK tests for the new functionality
+
+#### 15.4 Frontend Component Enhancement
+- [ ] Update EscrowsList component with filtering capabilities
+- [ ] Add pagination controls with "Load More" functionality
+- [ ] Implement "My Escrows" filter for connected wallet
+- [ ] Update escrow display to show more details
+
+#### 15.5 Documentation and Quality Assurance
+- [ ] Update SDK and contract documentation
+- [ ] Perform comprehensive testing across all layers
+- [ ] Version management and release coordination
+- [ ] Monitor post-deployment functionality

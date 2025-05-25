@@ -26,6 +26,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **endpoint-field-plan.md**: Comprehensive 68-task implementation plan for adding endpoint field to Registry contract with detailed code examples and validation logic
 - **endpoint-field-implementation.md**: Implementation notes for Registry contract endpoint field support (**✅ STEP 14.2 COMPLETED** - core contract updates and comprehensive testing with 44 tests passing)
 - **endpoint-field-sdk-support.md**: TypeScript SDK Endpoint Support implementation notes - **✅ COMPLETED**
+- **fetch-escrows-plan.md**: Comprehensive implementation plan for adding GetEscrows query to fetch multiple escrows with filtering and pagination options
 
 _All files are now located in the `notes/` folder._
 

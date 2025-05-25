@@ -9,6 +9,7 @@ import { Chain } from "@chain-registry/types";
 import { GasPrice } from "@cosmjs/stargate";
 
 const signerOptions: SignerOptions = {
+  // @ts-ignore
   signingCosmwasm: (chain: string | Chain) => {
     return {
       gasPrice: GasPrice.fromString("0.0025untrn"),

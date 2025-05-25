@@ -38,8 +38,8 @@ neutrond tx wasm store artifacts/registry.wasm \
   --broadcast-mode sync
 
 # Instantiate registry contract
-# Replace 11924 with the actual code ID of the registry contract
-neutrond tx wasm instantiate 11924 '{}' \
+# Replace 11934 with the actual code ID of the registry contract
+neutrond tx wasm instantiate 11934 '{}' \
   --from devwallet \
   --label "toolpay-registry" \
   --no-admin \
@@ -64,9 +64,9 @@ neutrond tx wasm store artifacts/escrow.wasm \
   --broadcast-mode sync
 
 # Instantiate escrow contract
-# Replace 11925 with the actual code ID of the escrow contract
-# Replace "neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2" with the actual registry contract address
-neutrond tx wasm instantiate 11925 '{"registry_addr": "neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2","fee_percentage":10}' \
+# Replace 11935 with the actual code ID of the escrow contract
+# Replace "neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44" with the actual registry contract address
+neutrond tx wasm instantiate 11935 '{"registry_addr": "neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44","fee_percentage":10}' \
   --from devwallet \
   --label "toolpay-escrow" \
   --no-admin \
@@ -75,8 +75,8 @@ neutrond tx wasm instantiate 11925 '{"registry_addr": "neutron1zyfl347avgyncyfuq
   --broadcast-mode sync
 ```
 ### Deployed Contract Addresses
-- Registry: neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2
-- Escrow: neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx
+- Registry: neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44
+- Escrow: neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4
 
 ### Notes
 - Always deploy and instantiate the Registry contract before the Escrow contract

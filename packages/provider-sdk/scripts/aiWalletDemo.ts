@@ -82,9 +82,9 @@ const config = {
   chainId: process.env.CHAIN_ID || networkDefaults.chainId || 'local-testnet',
   registryAddress:
     process.env.REGISTRY_ADDRESS ||
-    'neutron1zyfl347avgyncyfuqy5px2fapsy4slug83lnrg8vjxxp5jr42hgscv3xv2',
+    'neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44',
   escrowAddress:
-    process.env.ESCROW_ADDRESS || 'neutron1nhg2sqnfs9q5hzh7g0z6vwxqfghtqe65qdjmwdkajkfy2kqws7xsmfn9hx',
+    process.env.ESCROW_ADDRESS || 'neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4',
   gasAdjustment: 1.3,
   gasPrice: networkDefaults.gasPrice,
 };

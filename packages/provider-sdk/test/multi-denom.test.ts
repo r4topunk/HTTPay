@@ -61,6 +61,7 @@ describe('Multi-Denomination Support', () => {
         TOOL_ID,
         PRICE,
         "Tool description",  // Description parameter
+        "https://api.example.com/test-tool", // Endpoint parameter
         customDenom,         // Denom parameter
         [{ amount: '0', denom: NATIVE_DENOM }] // Funds parameter
       );
@@ -74,6 +75,7 @@ describe('Multi-Denomination Support', () => {
             tool_id: TOOL_ID,
             price: PRICE,
             description: "Tool description",
+            endpoint: "https://api.example.com/test-tool",
             denom: customDenom
           }
         },

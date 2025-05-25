@@ -118,6 +118,7 @@ export class RegistryClient {
    * @param toolId - Unique tool identifier (max 16 characters)
    * @param price - Price to use the tool (in base denom)
    * @param description - Description of the tool (max 256 characters)
+   * @param endpoint - API endpoint URL for the tool (max 512 characters, must start with https://)
    * @param denom - Token denomination for the tool price (default: "untrn")
    * @param funds - Funds to send with the transaction (if required)
    * @returns Transaction hash
@@ -127,6 +128,7 @@ export class RegistryClient {
     toolId: string,
     price: Uint128,
     description: string,
+    endpoint: string,
     denom?: string,
     funds: Coin[] = [],
   ): Promise<string> {
@@ -137,6 +139,7 @@ export class RegistryClient {
         tool_id: toolId,
         price,
         description,
+        endpoint,
         ...(denom && { denom }),
       },
     };
@@ -210,6 +213,42 @@ export class RegistryClient {
       update_denom: {
         tool_id: toolId,
         denom,
+      },
+    };
+
+    const result = await signingClient.execute(
+      senderAddress,
+      this.contractAddress,
+      msg,
+      'auto',
+      undefined,
+      funds,
+    );
+
+    return result.transactionHash;
+  }
+
+  /**
+   * Update the endpoint of an existing tool
+   *
+   * @param senderAddress - Address of the sender (must be the tool provider)
+   * @param toolId - ID of the tool to update
+   * @param endpoint - New API endpoint URL for the tool (max 512 characters, must start with https://)
+   * @param funds - Funds to send with the transaction (if required)
+   * @returns Transaction hash
+   */
+  async updateEndpoint(
+    senderAddress: string,
+    toolId: string,
+    endpoint: string,
+    funds: Coin[] = [],
+  ): Promise<string> {
+    const signingClient = this.getSigningClient();
+
+    const msg: RegistryExecuteMsg = {
+      update_endpoint: {
+        tool_id: toolId,
+        endpoint,
       },
     };
 

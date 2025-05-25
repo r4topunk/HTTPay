@@ -454,10 +454,10 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Verify endpoint data integrity across all operations
 
 #### 14.3 TypeScript SDK Updates
-- [ ] Update Registry types and interfaces for endpoint support
-- [ ] Add endpoint parameter to registerTool method
-- [ ] Implement new updateEndpoint method
-- [ ] Update SDK tests and documentation
+- [x] Update Registry types and interfaces for endpoint support
+- [x] Add endpoint parameter to registerTool method
+- [x] Implement new updateEndpoint method
+- [x] Update SDK tests and documentation
 
 #### 14.4 SDK Release Management
 - [ ] Version bump and changelog updates

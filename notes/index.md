@@ -25,6 +25,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **cosmjs-downgrade-fixes.md**: Fixes for compatibility issues after downgrading @cosmjs/cosmwasm-stargate from v0.33.1 to v0.32.4
 - **endpoint-field-plan.md**: Comprehensive 68-task implementation plan for adding endpoint field to Registry contract with detailed code examples and validation logic
 - **endpoint-field-implementation.md**: Implementation notes for Registry contract endpoint field support (**✅ STEP 14.2 COMPLETED** - core contract updates and comprehensive testing with 44 tests passing)
+- **endpoint-field-sdk-support.md**: TypeScript SDK Endpoint Support implementation notes - **✅ COMPLETED**
 
 _All files are now located in the `notes/` folder._
 
@@ -48,3 +49,70 @@ _Example:_
 ---
 
 For detailed implementation history, see the individual notes files listed above.
+
+## Endpoint Field Implementation Progress
+
+### Task 14.4: TypeScript SDK Endpoint Support - ✅ COMPLETED
+
+**Date**: May 24, 2025
+
+Successfully implemented endpoint field support in the TypeScript Provider SDK:
+
+#### Key Changes Made:
+
+1. **Registry Types Updates** (`src/types/registry.ts`):
+   - Added `endpoint: string` field to `ToolResponse` interface with JSDoc documentation
+   - Added `endpoint` parameter to `register_tool` message type (required)
+   - Created new `update_endpoint` message type in `RegistryExecuteMsg` union
+   - Enhanced type documentation for endpoint field usage
+
+2. **RegistryClient Enhancements** (`src/clients/RegistryClient.ts`):
+   - Updated `registerTool` method signature to include `endpoint` parameter (now required before optional `denom`)
+   - Implemented new `updateEndpoint` method with proper validation and error handling
+   - Added comprehensive JSDoc documentation for both methods
+   - Maintained backward compatibility for optional parameters
+
+3. **Comprehensive Test Coverage** (`test/` directory):
+   - Updated `registryClient.test.ts` with endpoint field in mock responses
+   - Added dedicated test suites for `registerTool` with endpoint parameter
+   - Created comprehensive tests for new `updateEndpoint` method functionality
+   - Updated `multi-denom.test.ts` to include endpoint parameter in registerTool calls
+   - Added endpoint field validation tests for all query responses
+
+#### Technical Implementation Details:
+
+**Method Signature Changes**:
+```typescript
+// Before
+registerTool(senderAddress, toolId, price, description, denom?, funds?)
+
+// After  
+registerTool(senderAddress, toolId, price, description, endpoint, denom?, funds?)
+```
+
+**New Method**:
+```typescript
+updateEndpoint(senderAddress, toolId, endpoint, funds?)
+```
+
+#### Validation and Error Handling:
+- Endpoint validation handled at contract level (max 512 characters, https:// prefix)
+- Proper error propagation from contract to SDK
+- Authorization checks for endpoint updates (only provider can update)
+
+#### Test Results:
+- **All 44 tests passing** across 6 test suites
+- **TypeScript compilation successful** - no type errors
+- **Complete test coverage** for endpoint functionality including edge cases
+
+#### Breaking Changes:
+- `registerTool` method now requires `endpoint` parameter as 5th argument
+- This is a breaking change requiring client code updates
+- Recommended to bump minor version when releasing
+
+#### Next Steps:
+- Proceed to section 14.5: SDK Tests Review and Updates
+- Prepare for version bump and NPM publishing (14.6)
+- Update frontend debug page to support endpoint functionality (14.7)
+
+---

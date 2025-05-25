@@ -2,7 +2,7 @@
 
 ## Current Status: 🔄 IN PROGRESS
 
-**Progress**: 3/10 sections completed (✅ 14.1, 14.2, 14.3 completed)
+**Progress**: 4/10 sections completed (✅ 14.1, 14.2, 14.3, 14.4 completed)
 
 **Last Updated**: May 24, 2025
 
@@ -10,12 +10,12 @@
 - **14.1**: Registry Contract Endpoint Field Implementation (Core contract updates)
 - **14.2**: Registry Contract Tests Review and Updates
 - **14.3**: New Registry Contract Tests for Endpoint Functionality
-
-### 🔄 Current Section:
 - **14.4**: TypeScript SDK Endpoint Support
 
+### 🔄 Current Section:
+- **14.5**: SDK Tests Review and Updates
+
 ### ⏳ Remaining Sections:
-- 14.4: TypeScript SDK Endpoint Support
 - 14.5: SDK Tests Review and Updates
 - 14.6: SDK Version Management and NPM Publishing
 - 14.7: Frontend Debug Page Updates
@@ -141,13 +141,39 @@ This document contains the comprehensive implementation plan for adding endpoint
 **Status**: All endpoint-specific test files created and passing. Comprehensive test coverage for endpoint validation, updates, and queries.
 **Test Files Created**: `update_endpoint_test.rs`, `register_tool_invalid_endpoint.rs`, `query_endpoint_functionality.rs`
 
-### 14.4 TypeScript SDK Endpoint Support
+### 14.4 TypeScript SDK Endpoint Support ✅ COMPLETED
 
 #### Update Registry contract types
-- [ ] Add `endpoint: string` field to `ToolResponse` interface in `registry.ts`
-- [ ] Add `endpoint: string` parameter to `register_tool` message type
-- [ ] Create `update_endpoint` message type in `RegistryExecuteMsg` union
-- [ ] Add comprehensive JSDoc documentation for endpoint field
+- [x] Add `endpoint: string` field to `ToolResponse` interface in `registry.ts`
+- [x] Add `endpoint: string` parameter to `register_tool` message type
+- [x] Create `update_endpoint` message type in `RegistryExecuteMsg` union
+- [x] Add comprehensive JSDoc documentation for endpoint field
+
+#### Update RegistryClient class
+- [x] Add `endpoint` parameter to `registerTool` method in `RegistryClient.ts`
+- [x] Create new `updateEndpoint` method in `RegistryClient.ts`
+- [x] Update method signatures and parameter validation
+- [x] Add endpoint-specific error handling and validation
+- [x] Update existing method documentation
+
+#### Update test files
+- [x] Update registry client tests to include endpoint parameters
+- [x] Create comprehensive tests for `registerTool` with endpoint parameter
+- [x] Create comprehensive tests for new `updateEndpoint` method
+- [x] Update mock data in multi-denomination tests
+- [x] Verify endpoint field presence in query responses
+
+**Completion Date**: May 24, 2025
+**Status**: All TypeScript SDK updates completed successfully. All 44 tests passing (6 test suites).
+**Changes Made**:
+- Updated `ToolResponse` interface with `endpoint: string` field
+- Added `endpoint` parameter to `register_tool` message type
+- Added `update_endpoint` message type to `RegistryExecuteMsg` union
+- Updated `registerTool` method signature to require endpoint parameter
+- Implemented new `updateEndpoint` method with proper validation
+- Updated all test files to include endpoint parameter in registerTool calls
+- Added comprehensive test coverage for endpoint functionality
+**Next Step**: Proceed to 14.5 SDK Tests Review and Updates
 
 #### Update RegistryClient class
 - [ ] Add `endpoint` parameter to `registerTool` method in `RegistryClient.ts`

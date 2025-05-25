@@ -87,7 +87,7 @@ export const ToolsList = () => {
             tools.map((tool, index) => (
               <div key={index} className="p-4 border rounded-lg space-y-1">
                 <div className="flex items-center justify-between">
-                  <div className="font-medium text-lg">{tool.tool_id}</div>
+                  <div className="font-medium text-xl">{tool.tool_id}</div>
                   <Badge variant={tool.is_active ? "default" : "secondary"}>
                     {tool.is_active ? "Active" : "Inactive"}
                   </Badge>
@@ -110,7 +110,7 @@ export const ToolsList = () => {
                   <div className="text-muted-foreground">
                     <strong>API Endpoint:</strong>
                   </div>
-                  <div className="flex items-center gap-1 p-2 bg-muted rounded text-sm font-mono">
+                  <div className="flex items-center gap-1 p-2 pl-4 bg-muted rounded-xl text-sm font-mono">
                     <span className="flex-1 truncate">{tool.endpoint}</span>
                     <Button
                       size="sm"

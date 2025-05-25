@@ -27,7 +27,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **endpoint-field-implementation.md**: Implementation notes for Registry contract endpoint field support (**✅ STEP 14.2 COMPLETED** - core contract updates and comprehensive testing with 44 tests passing)
 - **endpoint-field-sdk-support.md**: TypeScript SDK Endpoint Support implementation notes - **✅ COMPLETED**
 - **fetch-escrows-plan.md**: Comprehensive implementation plan for adding GetEscrows query to fetch multiple escrows with filtering and pagination options
-- **fetch-escrows-implementation.md**: GetEscrows query implementation notes - **🔄 STEP 15.1 COMPLETED** - core contract updates and basic testing implemented
+- **fetch-escrows-implementation.md**: GetEscrows query implementation notes - **🔄 STEP 15.2 COMPLETED** - core contract updates, comprehensive testing (6 test functions), and data integrity validation implemented
 
 _All files are now located in the `notes/` folder._
 

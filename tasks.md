@@ -494,10 +494,10 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Update query entry point to handle the new query
 
 #### 15.2 Escrow Contract Testing
-- [ ] Create comprehensive test coverage for GetEscrows functionality
-- [ ] Test filtering by caller and provider addresses
-- [ ] Test pagination with start_after and limit parameters
-- [ ] Test edge cases and empty results scenarios
+- [x] Create comprehensive test coverage for GetEscrows functionality
+- [x] Test filtering by caller and provider addresses
+- [x] Test pagination with start_after and limit parameters
+- [x] Test edge cases and empty results scenarios
 
 #### 15.3 TypeScript SDK Updates
 - [ ] Update Escrow types for GetEscrows query

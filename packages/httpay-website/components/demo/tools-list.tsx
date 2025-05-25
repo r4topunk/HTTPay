@@ -20,9 +20,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Copy, Edit, ExternalLink } from "lucide-react";
+import { Copy, Edit, ExternalLink, RefreshCw } from "lucide-react";
 import { useSDK } from "./sdk-context";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export const ToolsList = () => {
   const { tools, loadTools, updateEndpoint, loading, walletAddress } = useSDK();
@@ -61,18 +62,24 @@ export const ToolsList = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Available Tools</CardTitle>
-        <CardDescription>Browse registered tools</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div>
+          <CardTitle>Available Tools</CardTitle>
+          <CardDescription>Browse registered tools</CardDescription>
+        </div>
         <Button
           onClick={loadTools}
           disabled={loading.loadTools}
-          className="mb-4"
+          size="icon"
+          variant="outline"
         >
-          {loading.loadTools ? "Loading..." : "Refresh Tools"}
+          <RefreshCw className={cn(
+            "h-4 w-4",
+            loading.loadTools && "animate-spin"
+          )} />
         </Button>
+      </CardHeader>
+      <CardContent>
         <div className="space-y-2">
           {tools.length === 0 ? (
             <p className="text-muted-foreground">No tools found</p>

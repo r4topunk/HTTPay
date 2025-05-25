@@ -16,6 +16,8 @@ pub struct ToolMeta {
     pub is_active: bool,
     /// Description of the tool (max 256 characters)
     pub description: String,
+    /// API endpoint URL for the tool (max 512 characters, must start with https://)
+    pub endpoint: String,
 }
 
 /// TOOLS maps tool_id strings to their metadata

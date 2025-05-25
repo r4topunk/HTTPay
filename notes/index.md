@@ -24,6 +24,7 @@ This file serves as an index and guide to the implementation notes for the Pay-P
 - **fee-collection-feature.md**: Implementation of contract fee collection feature with owner-claimable percentage of each tool usage
 - **cosmjs-downgrade-fixes.md**: Fixes for compatibility issues after downgrading @cosmjs/cosmwasm-stargate from v0.33.1 to v0.32.4
 - **endpoint-field-plan.md**: Comprehensive 68-task implementation plan for adding endpoint field to Registry contract with detailed code examples and validation logic
+- **endpoint-field-implementation.md**: Implementation notes for Registry contract endpoint field support (step 14.1 completed - core contract updates)
 
 _All files are now located in the `notes/` folder._
 

@@ -17,4 +17,10 @@ pub enum ContractError {
     
     #[error("Description must be 256 characters or less")]
     DescriptionTooLong {},
+
+    #[error("Endpoint must be 512 characters or less")]
+    EndpointTooLong {},
+
+    #[error("Endpoint must start with https://")]
+    InvalidEndpointFormat {},
 }

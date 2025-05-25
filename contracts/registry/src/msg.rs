@@ -19,6 +19,8 @@ pub enum ExecuteMsg {
         denom: Option<String>,
         /// Description of the tool (max 256 characters)
         description: String,
+        /// API endpoint URL for the tool (max 512 characters, must start with https://)
+        endpoint: String,
     },
     /// Update the price of an existing tool
     UpdatePrice {
@@ -33,6 +35,13 @@ pub enum ExecuteMsg {
         tool_id: String,
         /// New token denomination for the tool price
         denom: String,
+    },
+    /// Update the endpoint of an existing tool
+    UpdateEndpoint {
+        /// Existing tool identifier
+        tool_id: String,
+        /// New API endpoint URL for the tool (max 512 characters, must start with https://)
+        endpoint: String,
     },
     /// Pause an active tool (make it unavailable for use)
     PauseTool {
@@ -77,6 +86,8 @@ pub struct ToolResponse {
     pub is_active: bool,
     /// Description of the tool (max 256 characters)
     pub description: String,
+    /// API endpoint URL for the tool (max 512 characters)
+    pub endpoint: String,
 }
 
 /// ToolsResponse is the return type for a GetTools query

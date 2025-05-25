@@ -13,6 +13,21 @@ const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 // Default denomination for backward compatibility
 const DEFAULT_DENOM: &str = "untrn";
 
+/// Validates endpoint URL format and length
+fn validate_endpoint(endpoint: &str) -> Result<(), ContractError> {
+    // Check length constraint (≤ 512 characters)
+    if endpoint.len() > 512 {
+        return Err(ContractError::EndpointTooLong {});
+    }
+    
+    // Check format constraint (must start with https://)
+    if !endpoint.starts_with("https://") {
+        return Err(ContractError::InvalidEndpointFormat {});
+    }
+    
+    Ok(())
+}
+
 #[entry_point]
 pub fn instantiate(
     deps: DepsMut,
@@ -37,8 +52,8 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::RegisterTool { tool_id, price, denom, description } => 
-            execute_register_tool(deps, info, tool_id, price, denom, description),
+        ExecuteMsg::RegisterTool { tool_id, price, denom, description, endpoint } => 
+            execute_register_tool(deps, info, tool_id, price, denom, description, endpoint),
         ExecuteMsg::UpdatePrice { tool_id, price } => 
             execute_update_price(deps, info, tool_id, price),
         ExecuteMsg::PauseTool { tool_id } => 
@@ -47,6 +62,8 @@ pub fn execute(
             execute_resume_tool(deps, info, tool_id),
         ExecuteMsg::UpdateDenom { tool_id, denom } => 
             execute_update_denom(deps, info, tool_id, denom),
+        ExecuteMsg::UpdateEndpoint { tool_id, endpoint } => 
+            execute_update_endpoint(deps, info, tool_id, endpoint),
     }
 }
 
@@ -58,6 +75,7 @@ pub fn execute_register_tool(
     price: cosmwasm_std::Uint128,
     denom: Option<String>,
     description: String,
+    endpoint: String,
 ) -> Result<Response, ContractError> {
     // Validate tool_id length ≤ 16 characters
     if tool_id.len() > 16 {
@@ -68,6 +86,9 @@ pub fn execute_register_tool(
     if description.len() > 256 {
         return Err(ContractError::DescriptionTooLong {});
     }
+    
+    // Validate endpoint
+    validate_endpoint(&endpoint)?;
     
     // Store provider address from info.sender
     let provider = info.sender;
@@ -82,6 +103,7 @@ pub fn execute_register_tool(
         denom: denom.clone(),
         is_active: true,
         description: description.clone(),
+        endpoint: endpoint.clone(),
     };
     
     TOOLS.save(deps.storage, &tool_id, &tool)?;
@@ -94,7 +116,8 @@ pub fn execute_register_tool(
         .add_attribute("price", price.to_string())
         .add_attribute("denom", denom)
         .add_attribute("is_active", "true")
-        .add_attribute("description", description))
+        .add_attribute("description", description)
+        .add_attribute("endpoint", endpoint))
 }
 
 // UpdatePrice handler implementation
@@ -197,6 +220,35 @@ pub fn execute_update_denom(
         .add_attribute("new_denom", denom))
 }
 
+// UpdateEndpoint handler implementation
+pub fn execute_update_endpoint(
+    deps: DepsMut,
+    info: MessageInfo,
+    tool_id: String,
+    endpoint: String,
+) -> Result<Response, ContractError> {
+    // Validate endpoint
+    validate_endpoint(&endpoint)?;
+    
+    // Load existing tool
+    let mut tool = TOOLS.may_load(deps.storage, &tool_id)?
+        .ok_or(ContractError::ToolNotFound {})?;
+    
+    // Verify sender is the provider
+    if info.sender != tool.provider {
+        return Err(ContractError::Unauthorized {});
+    }
+    
+    // Update endpoint and save
+    tool.endpoint = endpoint.clone();
+    TOOLS.save(deps.storage, &tool_id, &tool)?;
+    
+    Ok(Response::new()
+        .add_attribute("method", "update_endpoint")
+        .add_attribute("tool_id", tool_id)
+        .add_attribute("new_endpoint", endpoint))
+}
+
 #[entry_point]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
@@ -218,6 +270,7 @@ pub fn query_tool(deps: Deps, tool_id: String) -> StdResult<Binary> {
                 denom: tool_meta.denom,
                 is_active: tool_meta.is_active,
                 description: tool_meta.description,
+                endpoint: tool_meta.endpoint,
             };
             to_json_binary(&response)
         },
@@ -238,6 +291,7 @@ pub fn query_all_tools(deps: Deps) -> StdResult<Binary> {
                 denom: tool_meta.denom,
                 is_active: tool_meta.is_active,
                 description: tool_meta.description,
+                endpoint: tool_meta.endpoint,
             })
         })
         .collect();

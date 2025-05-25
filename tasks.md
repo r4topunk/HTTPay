@@ -441,11 +441,11 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 ### Main Implementation Checkpoints
 
 #### 14.1 Registry Contract Core Updates
-- [ ] Update ToolMeta struct with endpoint field
-- [ ] Add RegisterTool endpoint parameter and validation
-- [ ] Implement UpdateEndpoint message and handler
-- [ ] Update all query responses to include endpoint
-- [ ] Add endpoint validation and error handling
+- [x] Update ToolMeta struct with endpoint field
+- [x] Add RegisterTool endpoint parameter and validation
+- [x] Implement UpdateEndpoint message and handler
+- [x] Update all query responses to include endpoint
+- [x] Add endpoint validation and error handling
 
 #### 14.2 Registry Contract Testing
 - [ ] Update existing tests for endpoint field compatibility

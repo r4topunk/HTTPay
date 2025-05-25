@@ -85,3 +85,139 @@ fn test_query_endpoints() {
     assert_eq!(expires, query_res.expires);
     assert_eq!(auth_token_str, query_res.auth_token);
 }
+
+/// # Test: GetEscrows Query Returns Multiple Escrows
+/// 
+/// This test ensures that the new GetEscrows query functionality works correctly
+/// with basic filtering and pagination.
+/// 
+/// ## Test Steps:
+/// 
+/// 1. Set up Registry and Escrow contracts
+/// 2. Register a tool and create multiple escrows
+/// 3. Query all escrows without filters
+/// 4. Query escrows with caller filter
+/// 5. Verify the results match expectations
+#[test]
+fn test_get_escrows_query() {
+    use crate::msg::EscrowsResponse;
+    
+    // Set up the contracts
+    let mut contracts = setup_contracts();
+    
+    // Step 1: Register a tool as the provider
+    register_tool(
+        &mut contracts,
+        DEFAULT_TOOL_ID,
+        DEFAULT_MAX_FEE, // price
+        PROVIDER,
+    ).unwrap();
+    
+    // Step 2: Create multiple escrows with different callers
+    let auth_token1 = "auth_token_1".to_string();
+    let auth_token2 = "auth_token_2".to_string();
+    
+    // Create first escrow with USER
+    let escrow_id1 = lock_funds(
+        &mut contracts,
+        DEFAULT_TOOL_ID,
+        DEFAULT_MAX_FEE,
+        DEFAULT_TTL,
+        auth_token1.clone(),
+        USER,
+        &[Coin {
+            denom: NEUTRON.to_string(),
+            amount: Uint128::new(DEFAULT_MAX_FEE),
+        }],
+    ).unwrap();
+    
+    // Create second escrow with a different user (using PROVIDER as different caller)
+    let escrow_id2 = lock_funds(
+        &mut contracts,
+        DEFAULT_TOOL_ID,
+        DEFAULT_MAX_FEE,
+        DEFAULT_TTL,
+        auth_token2.clone(),
+        PROVIDER, // Using provider as a different caller
+        &[Coin {
+            denom: NEUTRON.to_string(),
+            amount: Uint128::new(DEFAULT_MAX_FEE),
+        }],
+    ).unwrap();
+    
+    // Step 3: Query all escrows without filters
+    let all_escrows: EscrowsResponse = contracts.app
+        .wrap()
+        .query_wasm_smart(
+            &contracts.escrow_addr,
+            &QueryMsg::GetEscrows {
+                caller: None,
+                provider: None,
+                start_after: None,
+                limit: None,
+            },
+        )
+        .unwrap();
+    
+    // Should return both escrows
+    assert_eq!(2, all_escrows.escrows.len());
+    assert_eq!(escrow_id1, all_escrows.escrows[0].escrow_id);
+    assert_eq!(escrow_id2, all_escrows.escrows[1].escrow_id);
+    
+    // Step 4: Query escrows filtered by first caller (USER)
+    let user_address = contracts.app.api().addr_make(USER);
+    let user_escrows: EscrowsResponse = contracts.app
+        .wrap()
+        .query_wasm_smart(
+            &contracts.escrow_addr,
+            &QueryMsg::GetEscrows {
+                caller: Some(user_address.to_string()),
+                provider: None,
+                start_after: None,
+                limit: None,
+            },
+        )
+        .unwrap();
+    
+    // Should return only the first escrow
+    assert_eq!(1, user_escrows.escrows.len());
+    assert_eq!(escrow_id1, user_escrows.escrows[0].escrow_id);
+    assert_eq!(user_address, user_escrows.escrows[0].caller);
+    assert_eq!(auth_token1, user_escrows.escrows[0].auth_token);
+    
+    // Step 5: Query escrows filtered by provider
+    let provider_address = contracts.app.api().addr_make(PROVIDER);
+    let provider_escrows: EscrowsResponse = contracts.app
+        .wrap()
+        .query_wasm_smart(
+            &contracts.escrow_addr,
+            &QueryMsg::GetEscrows {
+                caller: None,
+                provider: Some(provider_address.to_string()),
+                start_after: None,
+                limit: None,
+            },
+        )
+        .unwrap();
+    
+    // Should return both escrows since both have the same provider
+    assert_eq!(2, provider_escrows.escrows.len());
+    
+    // Step 6: Test pagination with limit
+    let limited_escrows: EscrowsResponse = contracts.app
+        .wrap()
+        .query_wasm_smart(
+            &contracts.escrow_addr,
+            &QueryMsg::GetEscrows {
+                caller: None,
+                provider: None,
+                start_after: None,
+                limit: Some(1),
+            },
+        )
+        .unwrap();
+    
+    // Should return only 1 escrow
+    assert_eq!(1, limited_escrows.escrows.len());
+    assert_eq!(escrow_id1, limited_escrows.escrows[0].escrow_id);
+}

@@ -488,10 +488,10 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 ### Task 15: Implement GetEscrows Feature
 
 #### 15.1 Escrow Contract GetEscrows Query Implementation
-- [ ] Add GetEscrows query to msg.rs with filter and pagination parameters
-- [ ] Create EscrowsResponse struct for returning multiple escrow details
-- [ ] Implement query_escrows function with filtering and pagination support
-- [ ] Update query entry point to handle the new query
+- [x] Add GetEscrows query to msg.rs with filter and pagination parameters
+- [x] Create EscrowsResponse struct for returning multiple escrow details
+- [x] Implement query_escrows function with filtering and pagination support
+- [x] Update query entry point to handle the new query
 
 #### 15.2 Escrow Contract Testing
 - [ ] Create comprehensive test coverage for GetEscrows functionality

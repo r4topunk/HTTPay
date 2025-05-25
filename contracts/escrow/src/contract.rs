@@ -7,7 +7,7 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse, CollectedFeesResponse};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, SudoMsg, EscrowResponse, CollectedFeesResponse, EscrowsResponse};
 use cosmwasm_std::StdError;
 use crate::registry_interface::query_tool;
 use crate::state::{Config, Escrow, CONFIG, ESCROWS, NEXT_ID};
@@ -90,6 +90,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetEscrow { escrow_id } => to_json_binary(&query_escrow(deps, escrow_id)?),
         QueryMsg::GetCollectedFees {} => to_json_binary(&query_collected_fees(deps)?),
+        QueryMsg::GetEscrows { caller, provider, start_after, limit } => {
+            to_json_binary(&query_escrows(deps, caller, provider, start_after, limit)?)
+        }
     }
 }
 
@@ -116,6 +119,79 @@ fn query_collected_fees(deps: Deps) -> StdResult<CollectedFeesResponse> {
         owner: config.owner,
         fee_percentage: config.fee_percentage,
         collected_fees: config.collected_fees,
+    })
+}
+
+fn query_escrows(
+    deps: Deps,
+    caller: Option<String>,
+    provider: Option<String>,
+    start_after: Option<u64>,
+    limit: Option<u32>,
+) -> StdResult<EscrowsResponse> {
+    // Set default and maximum limit
+    let limit = limit.unwrap_or(30).min(30) as usize;
+    
+    // Validate caller address if provided
+    let caller_addr = if let Some(caller_str) = caller {
+        Some(deps.api.addr_validate(&caller_str)?)
+    } else {
+        None
+    };
+    
+    // Validate provider address if provided
+    let provider_addr = if let Some(provider_str) = provider {
+        Some(deps.api.addr_validate(&provider_str)?)
+    } else {
+        None
+    };
+    
+    // Get all escrows starting from start_after
+    let start_bound = start_after.map(|id| cw_storage_plus::Bound::Exclusive((id, std::marker::PhantomData)));
+    let escrows: Result<Vec<_>, _> = ESCROWS
+        .range(deps.storage, start_bound, None, cosmwasm_std::Order::Ascending)
+        .take(limit)
+        .collect();
+    
+    let escrows = escrows?;
+    
+    // Filter and convert to response format
+    let mut filtered_escrows = Vec::new();
+    
+    for (escrow_id, escrow) in escrows {
+        // Apply caller filter if specified
+        if let Some(ref caller_filter) = caller_addr {
+            if escrow.caller != *caller_filter {
+                continue;
+            }
+        }
+        
+        // Apply provider filter if specified
+        if let Some(ref provider_filter) = provider_addr {
+            if escrow.provider != *provider_filter {
+                continue;
+            }
+        }
+        
+        // Convert to response format
+        filtered_escrows.push(EscrowResponse {
+            escrow_id,
+            caller: escrow.caller,
+            provider: escrow.provider,
+            max_fee: escrow.max_fee,
+            denom: escrow.denom,
+            expires: escrow.expires,
+            auth_token: escrow.auth_token,
+        });
+        
+        // Stop if we've reached the limit after filtering
+        if filtered_escrows.len() >= limit {
+            break;
+        }
+    }
+    
+    Ok(EscrowsResponse {
+        escrows: filtered_escrows,
     })
 }
 

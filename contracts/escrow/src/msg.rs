@@ -52,6 +52,19 @@ pub enum QueryMsg {
     /// Gets information about collected fees
     #[returns(CollectedFeesResponse)]
     GetCollectedFees {},
+    
+    /// Gets multiple escrows with optional filtering and pagination
+    #[returns(EscrowsResponse)]
+    GetEscrows {
+        /// Filter by caller address (optional)
+        caller: Option<String>,
+        /// Filter by provider address (optional)
+        provider: Option<String>,
+        /// Pagination cursor - start after this escrow ID (optional)
+        start_after: Option<u64>,
+        /// Maximum number of escrows to return (default: 30, max: 30)
+        limit: Option<u32>,
+    },
 }
 
 /// Response type for GetEscrow query
@@ -64,6 +77,12 @@ pub struct EscrowResponse {
     pub denom: String,
     pub expires: u64,
     pub auth_token: String,
+}
+
+/// Response type for GetEscrows query
+#[cw_serde]
+pub struct EscrowsResponse {
+    pub escrows: Vec<EscrowResponse>,
 }
 
 /// Response type for LockFunds execute method

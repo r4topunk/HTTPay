@@ -141,8 +141,8 @@ importers:
         specifier: 8.5.1
         version: 8.5.1(react@19.1.0)
       httpay:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.2
+        version: 0.1.2
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2894,8 +2894,8 @@ packages:
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
 
-  httpay@0.1.0:
-    resolution: {integrity: sha512-l2t2rHkpmRzbUnMdzmvqrw29ySvQPiCORRRoRx+PAbAHaytFG0WVysQ2cIqShM4iL4ZKDvo9/HrdcJ4kvzYXEQ==}
+  httpay@0.1.2:
+    resolution: {integrity: sha512-dNsrxmJmSHRY8/QLEBuMvyEWvbqtAo+n8KqMnppUYSVTgj7Y9oFbDtxT8JCstkTuLjL2APiWONi6jfneFjVulA==}
 
   idb-keyval@6.2.2:
     resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
@@ -7814,7 +7814,7 @@ snapshots:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
-  httpay@0.1.0:
+  httpay@0.1.2:
     dependencies:
       '@cosmjs/cosmwasm-stargate': 0.32.4
       '@cosmjs/proto-signing': 0.33.1

@@ -16,6 +16,7 @@ export const ToolRegistration = () => {
     toolId: "",
     price: "",
     description: "",
+    endpoint: "",
   });
 
   const handleSubmit = async () => {
@@ -25,6 +26,7 @@ export const ToolRegistration = () => {
       toolId: "",
       price: "",
       description: "",
+      endpoint: "",
     });
   };
 
@@ -77,6 +79,20 @@ export const ToolRegistration = () => {
               }))
             }
             placeholder="AI-powered sentiment analysis tool"
+          />
+        </div>
+        <div>
+          <Label htmlFor="endpoint">API Endpoint</Label>
+          <Input
+            id="endpoint"
+            value={toolRegistration.endpoint}
+            onChange={(e) =>
+              setToolRegistration((prev) => ({
+                ...prev,
+                endpoint: e.target.value,
+              }))
+            }
+            placeholder="https://api.example.com/sentiment"
           />
         </div>
         <Button

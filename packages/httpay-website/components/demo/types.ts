@@ -4,6 +4,7 @@ export interface ToolRegistrationForm {
   toolId: string;
   price: string;
   description: string;
+  endpoint: string;
 }
 
 export interface EscrowCreationForm {
@@ -30,6 +31,7 @@ export interface Tool {
   provider: string;
   is_active: boolean;
   description?: string;
+  endpoint: string;
 }
 
 export interface Escrow {
@@ -58,6 +60,7 @@ export interface SDKContextType {
   initSDKWithWallet: () => Promise<HTTPaySDK | null>;
   forceReconnectWallet: () => Promise<void>;
   registerTool: (toolData: ToolRegistrationForm) => Promise<void>;
+  updateEndpoint: (toolId: string, endpoint: string) => Promise<void>;
   loadTools: () => Promise<void>;
   lockFunds: (escrowData: EscrowCreationForm) => Promise<void>;
   loadEscrows: () => Promise<void>;

@@ -216,7 +216,8 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
         walletAddress,
         toolData.toolId,
         toolData.price,
-        toolData.description
+        toolData.description,
+        toolData.endpoint
       );
 
       toast({
@@ -229,6 +230,47 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       handleError(error, "tool registration");
     } finally {
       setLoadingState("register", false);
+    }
+  }, [sdk, walletAddress, isWalletConnected, isConnected, hasSigningCapabilities, setLoadingState, handleError, toast, loadTools]);
+
+  const updateEndpoint = useCallback(async (toolId: string, endpoint: string) => {
+    if (!sdk || !walletAddress || !isWalletConnected) {
+      toast({
+        title: "Error",
+        description: "Please connect wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!hasSigningCapabilities) {
+      toast({
+        title: "Error",
+        description: "SDK does not have signing capabilities. Please reconnect your wallet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setLoadingState("updateEndpoint", true);
+
+      const transactionHash = await sdk.registry.updateEndpoint(
+        walletAddress,
+        toolId,
+        endpoint
+      );
+
+      toast({
+        title: "Endpoint Updated",
+        description: `Endpoint for ${toolId} updated successfully. TX: ${transactionHash}`,
+      });
+      await loadTools();
+    } catch (error) {
+      console.error("Endpoint update failed:", error);
+      handleError(error, "endpoint update");
+    } finally {
+      setLoadingState("updateEndpoint", false);
     }
   }, [sdk, walletAddress, isWalletConnected, isConnected, hasSigningCapabilities, setLoadingState, handleError, toast, loadTools]);
 
@@ -443,6 +485,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     initSDKWithWallet,
     forceReconnectWallet,
     registerTool,
+    updateEndpoint,
     loadTools,
     lockFunds,
     loadEscrows,

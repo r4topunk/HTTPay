@@ -9,7 +9,7 @@ import { useSDK } from "./sdk-context";
 import { UsagePostingForm } from "./types";
 
 export const UsagePosting = () => {
-  const { postUsage, walletAddress, walletStatus, loading } = useSDK();
+  const { postUsage, walletAddress, isWalletConnected, loading } = useSDK();
   
   const [usagePosting, setUsagePosting] = useState<UsagePostingForm>({
     escrowId: "",
@@ -68,7 +68,7 @@ export const UsagePosting = () => {
           onClick={handleSubmit}
           disabled={
             !walletAddress ||
-            walletStatus !== "Connected" ||
+            !isWalletConnected ||
             loading.usage
           }
           className="w-full"

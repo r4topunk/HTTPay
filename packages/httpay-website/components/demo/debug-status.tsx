@@ -10,7 +10,10 @@ export const DebugStatus = () => {
     isConnected, 
     hasSigningCapabilities,
     walletAddress,
-    walletStatus,
+    isWalletConnected,
+    isWalletConnecting,
+    isWalletDisconnected,
+    isWalletError,
     loading 
   } = useSDK();
 
@@ -26,8 +29,10 @@ export const DebugStatus = () => {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <strong>Wallet Status:</strong> 
-            <Badge variant={walletStatus === "Connected" ? "default" : "secondary"} className="ml-2">
-              {walletStatus}
+            <Badge variant={isWalletConnected ? "default" : "secondary"} className="ml-2">
+              {isWalletConnected ? "Connected" : 
+               isWalletConnecting ? "Connecting" :
+               isWalletError ? "Error" : "Disconnected"}
             </Badge>
           </div>
           <div>

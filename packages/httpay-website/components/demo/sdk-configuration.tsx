@@ -16,7 +16,8 @@ export const SDKConfiguration = () => {
     forceReconnectWallet,
     isConnected, 
     hasSigningCapabilities,
-    walletStatus,
+    isWalletConnected,
+    isWalletConnecting,
     walletAddress,
     loading 
   } = useSDK();
@@ -115,7 +116,7 @@ export const SDKConfiguration = () => {
               : "Initialize SDK"}
           </Button>
           
-          {walletStatus === "Connected" && walletAddress && (
+          {isWalletConnected && walletAddress && (
             <Button
               onClick={initSDKWithWallet}
               disabled={loading.wallet}
@@ -125,7 +126,7 @@ export const SDKConfiguration = () => {
             </Button>
           )}
           
-          {walletStatus === "Connected" && walletAddress && !hasSigningCapabilities && (
+          {isWalletConnected && walletAddress && !hasSigningCapabilities && (
             <Button
               onClick={forceReconnectWallet}
               disabled={loading.wallet}

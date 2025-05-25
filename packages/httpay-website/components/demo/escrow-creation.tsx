@@ -9,7 +9,7 @@ import { useSDK } from "./sdk-context";
 import { EscrowCreationForm } from "./types";
 
 export const EscrowCreation = () => {
-  const { lockFunds, walletAddress, walletStatus, loading } = useSDK();
+  const { lockFunds, walletAddress, isWalletConnected, loading } = useSDK();
   
   const [escrowCreation, setEscrowCreation] = useState<EscrowCreationForm>({
     toolId: "",
@@ -98,7 +98,7 @@ export const EscrowCreation = () => {
           onClick={handleSubmit}
           disabled={
             !walletAddress ||
-            walletStatus !== "Connected" ||
+            !isWalletConnected ||
             loading.lockFunds
           }
           className="w-full"

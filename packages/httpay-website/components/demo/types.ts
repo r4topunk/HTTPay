@@ -47,7 +47,10 @@ export interface SDKContextType {
   escrows: Escrow[];
   sdkConfig: HTTPaySDKConfig;
   walletAddress: string | undefined;
-  walletStatus: string;
+  isWalletConnected: boolean;
+  isWalletConnecting: boolean;
+  isWalletDisconnected: boolean;
+  isWalletError: boolean;
   
   // Actions
   setSdkConfig: (config: HTTPaySDKConfig) => void;

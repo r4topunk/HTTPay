@@ -43,9 +43,15 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const {
     address: walletAddress,
     status: walletStatus,
+    message: walletMessage,
+    isWalletConnected,
+    isWalletConnecting,
+    isWalletDisconnected,
+    isWalletError,
     getSigningCosmWasmClient,
     connect: connectWallet,
     disconnect: disconnectWallet,
+    enable,
   } = useChain(defaultChainName);
 
   const [sdkConfig, setSdkConfig] = useState<HTTPaySDKConfig>({
@@ -92,10 +98,10 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   }, [sdkConfig, setLoadingState, handleError, toast]);
 
   const initSDKWithWallet = useCallback(async () => {
-    console.log("initSDKWithWallet called with:", { walletAddress, walletStatus });
+    console.log("initSDKWithWallet called with:", { walletAddress, isWalletConnected });
     
-    if (!walletAddress || walletStatus !== "Connected") {
-      console.warn("Cannot initialize SDK with wallet - wallet not ready:", { walletAddress, walletStatus });
+    if (!walletAddress || !isWalletConnected) {
+      console.warn("Cannot initialize SDK with wallet - wallet not ready:", { walletAddress, isWalletConnected });
       toast({
         title: "Error",
         description: "Please connect your wallet first",
@@ -107,7 +113,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     try {
       setLoadingState("wallet", true);
 
-      console.log("Initializing SDK with wallet...", { walletAddress, walletStatus });
+      console.log("Initializing SDK with wallet...", { walletAddress, isWalletConnected });
 
       // Create a new SDK instance with the current configuration
       const newSdk = new HTTPaySDK(sdkConfig);
@@ -148,7 +154,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     } finally {
       setLoadingState("wallet", false);
     }
-  }, [walletAddress, walletStatus, sdkConfig, getSigningCosmWasmClient, setLoadingState, handleError, toast]);
+  }, [walletAddress, isWalletConnected, sdkConfig, getSigningCosmWasmClient, setLoadingState, handleError, toast]);
 
   const loadTools = useCallback(async () => {
     if (!sdk) return;
@@ -168,12 +174,12 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     console.log("registerTool called with state:", { 
       hasSdk: !!sdk, 
       walletAddress, 
-      walletStatus, 
+      isWalletConnected, 
       isConnected, 
       hasSigningCapabilities 
     });
 
-    if (!sdk || !walletAddress || walletStatus !== "Connected") {
+    if (!sdk || !walletAddress || !isWalletConnected) {
       toast({
         title: "Error",
         description: "Please connect wallet first",
@@ -224,7 +230,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     } finally {
       setLoadingState("register", false);
     }
-  }, [sdk, walletAddress, walletStatus, isConnected, hasSigningCapabilities, setLoadingState, handleError, toast, loadTools]);
+  }, [sdk, walletAddress, isWalletConnected, isConnected, hasSigningCapabilities, setLoadingState, handleError, toast, loadTools]);
 
   const getCurrentBlockHeight = useCallback(async (): Promise<number> => {
     if (!sdk) throw new Error("SDK not initialized");
@@ -248,7 +254,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   }, [sdk, setLoadingState, handleError]);
 
   const lockFunds = useCallback(async (escrowData: EscrowCreationForm) => {
-    if (!sdk || !walletAddress || walletStatus !== "Connected") {
+    if (!sdk || !walletAddress || !isWalletConnected) {
       toast({
         title: "Error",
         description: "Please connect wallet first",
@@ -298,7 +304,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     } finally {
       setLoadingState("lockFunds", false);
     }
-  }, [sdk, walletAddress, walletStatus, hasSigningCapabilities, getCurrentBlockHeight, setLoadingState, handleError, toast, loadEscrows]);
+  }, [sdk, walletAddress, isWalletConnected, hasSigningCapabilities, getCurrentBlockHeight, setLoadingState, handleError, toast, loadEscrows]);
 
   const verifyEscrow = useCallback(async (verificationData: EscrowVerificationForm) => {
     if (!sdk) {
@@ -333,7 +339,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   }, [sdk, setLoadingState, handleError, toast]);
 
   const postUsage = useCallback(async (usageData: UsagePostingForm) => {
-    if (!sdk || !walletAddress || walletStatus !== "Connected") {
+    if (!sdk || !walletAddress || !isWalletConnected) {
       toast({
         title: "Error",
         description: "Please connect wallet first",
@@ -374,22 +380,22 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     } finally {
       setLoadingState("usage", false);
     }
-  }, [sdk, walletAddress, walletStatus, hasSigningCapabilities, setLoadingState, handleError, toast]);
+  }, [sdk, walletAddress, isWalletConnected, hasSigningCapabilities, setLoadingState, handleError, toast]);
 
   const forceReconnectWallet = useCallback(async () => {
     console.log("Force reconnecting wallet...");
-    if (walletStatus === "Connected" && walletAddress) {
+    if (isWalletConnected && walletAddress) {
       await initSDKWithWallet();
     } else {
-      console.warn("Cannot force reconnect - wallet not connected:", { walletStatus, walletAddress });
+      console.warn("Cannot force reconnect - wallet not connected:", { isWalletConnected, walletAddress });
     }
-  }, [walletStatus, walletAddress, initSDKWithWallet]);
+  }, [isWalletConnected, walletAddress, initSDKWithWallet]);
 
   // Monitor wallet status changes
   useEffect(() => {
-    console.log("Wallet status changed:", { walletStatus, walletAddress, isConnected, hasSigningCapabilities });
+    console.log("Wallet status changed:", { isWalletConnected, walletAddress, isConnected, hasSigningCapabilities });
     
-    if (walletStatus === "Connected" && walletAddress) {
+    if (isWalletConnected && walletAddress) {
       // Always reinitialize SDK with wallet when wallet connects
       // This handles both cases: no SDK yet, or SDK in read-only mode
       console.log("Wallet connected, initializing SDK with signing capabilities...");
@@ -403,13 +409,13 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       };
       // Add a small delay to ensure the wallet is fully ready
       setTimeout(initSdk, 100);
-    } else if (walletStatus !== "Connected" && isConnected) {
+    } else if (!isWalletConnected && isConnected) {
       console.log("Wallet disconnected, resetting SDK...");
       setIsConnected(false);
       setHasSigningCapabilities(false);
       setSdk(null);
     }
-  }, [walletStatus, walletAddress]); // Removed initSDKWithWallet from dependencies to prevent recreation loops
+  }, [isWalletConnected, walletAddress]); // Removed initSDKWithWallet from dependencies to prevent recreation loops
 
   // Load data when SDK is initialized
   useEffect(() => {
@@ -428,7 +434,10 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     escrows,
     sdkConfig,
     walletAddress,
-    walletStatus,
+    isWalletConnected,
+    isWalletConnecting,
+    isWalletDisconnected,
+    isWalletError,
     setSdkConfig,
     initializeSDK,
     initSDKWithWallet,

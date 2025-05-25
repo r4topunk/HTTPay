@@ -8,7 +8,8 @@ import { useSDK } from "./sdk-context";
 export const WalletConnection = () => {
   const { 
     walletAddress, 
-    walletStatus, 
+    isWalletConnected,
+    isWalletConnecting,
     connectWallet, 
     disconnectWallet, 
     loading, 
@@ -29,12 +30,12 @@ export const WalletConnection = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-4 items-center">
-          {walletStatus !== "Connected" ? (
+          {!isWalletConnected ? (
             <Button
               onClick={connectWallet}
-              disabled={loading.wallet || walletStatus === "Connecting"}
+              disabled={loading.wallet || isWalletConnecting}
             >
-              {walletStatus === "Connecting"
+              {isWalletConnecting
                 ? "Connecting..."
                 : "Connect Wallet"}
             </Button>

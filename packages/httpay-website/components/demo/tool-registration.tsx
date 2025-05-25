@@ -10,7 +10,7 @@ import { useSDK } from "./sdk-context";
 import { ToolRegistrationForm } from "./types";
 
 export const ToolRegistration = () => {
-  const { registerTool, walletAddress, walletStatus, loading } = useSDK();
+  const { registerTool, walletAddress, isWalletConnected, loading } = useSDK();
   
   const [toolRegistration, setToolRegistration] = useState<ToolRegistrationForm>({
     toolId: "",
@@ -83,7 +83,7 @@ export const ToolRegistration = () => {
           onClick={handleSubmit}
           disabled={
             !walletAddress ||
-            walletStatus !== "Connected" ||
+            !isWalletConnected ||
             loading.register
           }
           className="w-full"

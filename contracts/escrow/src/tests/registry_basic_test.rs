@@ -54,6 +54,7 @@ fn test_registry_basic_functionality() {
                 price: Uint128::new(initial_price),
                 denom: None,
                 description: "Registry basic test tool".to_string(),
+                endpoint: "https://api.example.com/registry-basic-tool".to_string(),
             },
             &[],
         )

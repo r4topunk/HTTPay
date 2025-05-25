@@ -45,12 +45,13 @@ fn register_tool_success() {
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     let description = "A test tool for demonstration purposes".to_string();
+    let endpoint = "https://api.example.com/tool1".to_string();
 
     // Execute tool registration
-    let res = execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description.clone()).unwrap();
+    let res = execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description.clone(), endpoint.clone()).unwrap();
 
     // Verify response attributes
-    assert_eq!(7, res.attributes.len());
+    assert_eq!(8, res.attributes.len()); // Updated to 8 attributes
     assert_eq!("register_tool", res.attributes[0].value);
     assert_eq!("tool1", res.attributes[1].value);
     assert_eq!("provider1", res.attributes[2].value);
@@ -58,16 +59,18 @@ fn register_tool_success() {
     assert_eq!("untrn", res.attributes[4].value);  // Default denom
     assert_eq!("true", res.attributes[5].value);
     assert_eq!(description, res.attributes[6].value);
+    assert_eq!(endpoint, res.attributes[7].value); // New endpoint attribute
 
     // Query tool metadata and verify it was stored correctly
     let query_res = query_tool(deps.as_ref(), tool_id).unwrap();
     let tool_response: ToolResponse = from_json(&query_res).unwrap();
 
-    // Validate all tool properties
+    // Validate all tool properties including endpoint
     assert_eq!("tool1", tool_response.tool_id);
     assert_eq!("provider1", tool_response.provider);
     assert_eq!(Uint128::new(100), tool_response.price);
     assert_eq!("untrn", tool_response.denom);
     assert!(tool_response.is_active);
     assert_eq!(description, tool_response.description);
+    assert_eq!(endpoint, tool_response.endpoint); // Verify endpoint field
 }

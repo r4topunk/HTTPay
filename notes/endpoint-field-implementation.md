@@ -69,17 +69,19 @@ pub fn execute_update_endpoint(
 - ✅ Backward compatibility maintained for existing data structures
 
 #### Testing Status
-- ⏳ Unit tests need to be updated (Step 14.2)
-- ⏳ Integration tests need to be updated (Step 14.2)
-- ⏳ Endpoint-specific tests need to be created (Step 14.2)
+- ✅ Unit tests updated (Step 14.2) - ALL TESTS PASSING
+- ✅ Integration tests updated (Step 14.2) - ALL TESTS PASSING
+- ✅ Endpoint-specific tests created (Step 14.2) - ALL TESTS PASSING
 
 ## Next Steps
 
-### 🔄 Step 14.2: Registry Contract Testing (PENDING)
-- Update existing tests to include endpoint field
-- Create endpoint validation tests
-- Test unauthorized update attempts
-- Test error scenarios and edge cases
+### ✅ Step 14.2: Registry Contract Testing (COMPLETED)
+- ✅ Updated existing tests to include endpoint field
+- ✅ Created endpoint validation tests
+- ✅ Tested unauthorized update attempts
+- ✅ Tested error scenarios and edge cases
+- ✅ Updated escrow contract integration tests
+- ✅ All 44 tests passing (20 escrow + 24 registry)
 
 ### 🔄 Step 14.3: TypeScript SDK Updates (PENDING)
 - Update Registry types and interfaces
@@ -92,6 +94,35 @@ pub fn execute_update_endpoint(
 - Documentation updates
 - Deployment and testing
 - Version management
+
+## Step 14.2 Implementation Summary
+
+### Registry Contract Test Updates
+1. **Updated Setup Functions** (`setup_contract.rs`):
+   - Added `register_tool()` helper function with endpoint parameter
+   - Added `register_tool_with_default_endpoint()` for backward compatibility
+
+2. **Updated Existing Tests** (11 test files):
+   - All `RegisterTool` calls now include endpoint parameter
+   - Updated response attribute assertions (7→8 attributes)
+   - Added endpoint verification in all query assertions
+   - Updated: `register_tool_success.rs`, `query_tool_functionality.rs`, `query_all_tools.rs`, `update_price_success.rs`, `pause_resume_tool.rs`, `update_denom_test.rs`, `register_tool_invalid_id.rs`, `register_tool_invalid_description.rs`, `update_price_unauthorized.rs`, `unauthorized_pause_resume.rs`
+
+3. **Created New Endpoint-Specific Tests** (3 new test files):
+   - `register_tool_invalid_endpoint.rs`: Tests endpoint validation (length limits, format validation)
+   - `update_endpoint_test.rs`: Tests endpoint update functionality (authorization, validation, persistence)
+   - `query_endpoint_functionality.rs`: Tests endpoint field presence and data integrity
+
+4. **Updated Escrow Contract Integration Tests** (4 test files):
+   - Updated all `RegisterTool` calls in escrow tests to include endpoint parameter
+   - Files: `setup_contract.rs`, `multi_denom_test.rs`, `registry_basic_test.rs`, `fee_collection_test.rs`
+
+### Test Coverage Results
+- **Registry Tests**: 24 tests passing
+- **Escrow Tests**: 20 tests passing  
+- **Total**: 44 tests passing, 0 failing
+- **Endpoint Validation**: Comprehensive coverage of length limits, format validation, unauthorized access
+- **Integration**: Full compatibility between registry and escrow contracts
 
 ## Notes and Observations
 

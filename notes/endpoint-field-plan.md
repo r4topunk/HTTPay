@@ -2,18 +2,19 @@
 
 ## Current Status: 🔄 IN PROGRESS
 
-**Progress**: 1/10 sections completed (✅ 14.1 completed, 🔄 14.2 next)
+**Progress**: 3/10 sections completed (✅ 14.1, 14.2, 14.3 completed)
 
-**Last Updated**: December 24, 2024
+**Last Updated**: May 24, 2025
 
 ### ✅ Completed Sections:
 - **14.1**: Registry Contract Endpoint Field Implementation (Core contract updates)
+- **14.2**: Registry Contract Tests Review and Updates
+- **14.3**: New Registry Contract Tests for Endpoint Functionality
 
 ### 🔄 Current Section:
-- **14.2**: Registry Contract Tests Review and Updates
+- **14.4**: TypeScript SDK Endpoint Support
 
 ### ⏳ Remaining Sections:
-- 14.3: New Registry Contract Tests for Endpoint Functionality  
 - 14.4: TypeScript SDK Endpoint Support
 - 14.5: SDK Tests Review and Updates
 - 14.6: SDK Version Management and NPM Publishing
@@ -92,45 +93,53 @@ This document contains the comprehensive implementation plan for adding endpoint
 **Status**: All contract core updates completed successfully. Contract compiles without errors.
 **Next Step**: Proceed to 14.2 Registry Contract Tests Review and Updates
 
-### 14.2 Registry Contract Tests Review and Updates
+### 14.2 Registry Contract Tests Review and Updates ✅ COMPLETED
 
 #### Update existing tests for endpoint field
-- [ ] Update `register_tool_success.rs` test to include endpoint field
-- [ ] Update `query_tool_functionality.rs` test to verify endpoint in responses
-- [ ] Update `query_all_tools.rs` test to verify endpoint in all tool responses
-- [ ] Update `update_price_success.rs` test assertions for new field presence
-- [ ] Update `pause_resume_tool.rs` test to handle endpoint field
-- [ ] Update `update_denom_test.rs` test to include endpoint verification
-- [ ] Update all integration tests in escrow contract that use Registry
+- [x] Update `register_tool_success.rs` test to include endpoint field
+- [x] Update `query_tool_functionality.rs` test to verify endpoint in responses
+- [x] Update `query_all_tools.rs` test to verify endpoint in all tool responses
+- [x] Update `update_price_success.rs` test assertions for new field presence
+- [x] Update `pause_resume_tool.rs` test to handle endpoint field
+- [x] Update `update_denom_test.rs` test to include endpoint verification
+- [x] Update all integration tests in escrow contract that use Registry
 
 #### Review and update test helper functions
-- [ ] Update `register_tool` helper function in `setup_contract.rs` to accept endpoint parameter
-- [ ] Update mock data and test constants to include sample endpoints
-- [ ] Ensure all test registrations include valid endpoint data
+- [x] Update `register_tool` helper function in `setup_contract.rs` to accept endpoint parameter
+- [x] Update mock data and test constants to include sample endpoints
+- [x] Ensure all test registrations include valid endpoint data
 
-### 14.3 New Registry Contract Tests for Endpoint Functionality
+**Completion Date**: May 24, 2025
+**Status**: All registry and escrow integration tests updated successfully. 44 tests passing (24 registry + 20 escrow).
+**Next Step**: Proceed to 14.4 TypeScript SDK Endpoint Support
+
+### 14.3 New Registry Contract Tests for Endpoint Functionality ✅ COMPLETED
 
 #### Create endpoint-specific test files
-- [ ] Create `update_endpoint_test.rs` with comprehensive endpoint update tests:
-  - [ ] Test successful endpoint update by authorized provider
-  - [ ] Test unauthorized endpoint update attempts
-  - [ ] Test endpoint update with invalid URL format
-  - [ ] Test endpoint update with excessively long URL
-  - [ ] Test endpoint update for non-existent tool
+- [x] Create `update_endpoint_test.rs` with comprehensive endpoint update tests:
+  - [x] Test successful endpoint update by authorized provider
+  - [x] Test unauthorized endpoint update attempts
+  - [x] Test endpoint update with invalid URL format
+  - [x] Test endpoint update with excessively long URL
+  - [x] Test endpoint update for non-existent tool
 
 #### Create endpoint validation test files
-- [ ] Create `register_tool_invalid_endpoint.rs` with endpoint validation tests:
-  - [ ] Test tool registration with endpoint exceeding 512 characters
-  - [ ] Test tool registration with malformed URL endpoint
-  - [ ] Test tool registration with empty endpoint string
-  - [ ] Verify proper error types are returned
+- [x] Create `register_tool_invalid_endpoint.rs` with endpoint validation tests:
+  - [x] Test tool registration with endpoint exceeding 512 characters
+  - [x] Test tool registration with malformed URL endpoint
+  - [x] Test tool registration with valid endpoint formats
+  - [x] Verify proper error types are returned
 
 #### Create endpoint query test files
-- [ ] Create `query_endpoint_functionality.rs` with endpoint query tests:
-  - [ ] Test endpoint field presence in single tool queries
-  - [ ] Test endpoint field presence in all tools queries
-  - [ ] Test endpoint persistence after tool updates
-  - [ ] Verify endpoint data integrity across operations
+- [x] Create `query_endpoint_functionality.rs` with endpoint query tests:
+  - [x] Test endpoint field presence in single tool queries
+  - [x] Test endpoint field presence in all tools queries
+  - [x] Test endpoint persistence after tool updates
+  - [x] Verify endpoint data integrity across operations
+
+**Completion Date**: May 24, 2025
+**Status**: All endpoint-specific test files created and passing. Comprehensive test coverage for endpoint validation, updates, and queries.
+**Test Files Created**: `update_endpoint_test.rs`, `register_tool_invalid_endpoint.rs`, `query_endpoint_functionality.rs`
 
 ### 14.4 TypeScript SDK Endpoint Support
 
@@ -315,3 +324,39 @@ fn validate_endpoint(endpoint: &str) -> Result<(), ContractError> {
 **Compilation Status**: ✅ All contracts compile successfully without errors
 
 **Next Step**: 🔄 14.2 Registry Contract Tests Review and Updates
+
+### ✅ 14.2 Registry Contract Tests Review and Updates - COMPLETED (May 24, 2025)
+
+**Files Modified**:
+- `contracts/registry/src/tests/setup_contract.rs` - Added helper functions with endpoint support
+- `contracts/registry/src/tests/*.rs` - Updated all 11 existing test files to include endpoint field
+- `contracts/escrow/src/tests/*.rs` - Updated 4 escrow integration test files with endpoint parameter
+
+**Key Features Implemented**:
+- All existing registry tests updated for endpoint compatibility
+- All escrow contract integration tests updated with endpoint parameter
+- Helper functions created for easier test setup
+- Response attribute assertions updated (7→8 attributes)
+- Query assertions updated to verify endpoint field
+
+**Test Results**: ✅ 44 tests passing (24 registry + 20 escrow), 0 failing
+
+**Next Step**: 🔄 14.3 New Registry Contract Tests for Endpoint Functionality
+
+### ✅ 14.3 New Registry Contract Tests for Endpoint Functionality - COMPLETED (May 24, 2025)
+
+**Files Created**:
+- `contracts/registry/src/tests/register_tool_invalid_endpoint.rs` - Endpoint validation tests
+- `contracts/registry/src/tests/update_endpoint_test.rs` - Endpoint update functionality tests
+- `contracts/registry/src/tests/query_endpoint_functionality.rs` - Endpoint query and data integrity tests
+- `contracts/registry/src/tests/mod.rs` - Updated to include new test modules
+
+**Key Features Implemented**:
+- Comprehensive endpoint validation testing (length limits, format validation)
+- Endpoint update authorization and error handling tests
+- Endpoint query functionality and data integrity tests
+- Edge case testing for all endpoint operations
+
+**Test Coverage**: Complete coverage of endpoint validation, updates, queries, and error scenarios
+
+**Next Step**: 🔄 14.4 TypeScript SDK Endpoint Support

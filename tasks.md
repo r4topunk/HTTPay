@@ -448,10 +448,10 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Add endpoint validation and error handling
 
 #### 14.2 Registry Contract Testing
-- [ ] Update existing tests for endpoint field compatibility
-- [ ] Create comprehensive endpoint-specific tests
-- [ ] Test endpoint validation and error scenarios
-- [ ] Verify endpoint data integrity across all operations
+- [x] Update existing tests for endpoint field compatibility
+- [x] Create comprehensive endpoint-specific tests
+- [x] Test endpoint validation and error scenarios
+- [x] Verify endpoint data integrity across all operations
 
 #### 14.3 TypeScript SDK Updates
 - [ ] Update Registry types and interfaces for endpoint support

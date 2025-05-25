@@ -49,7 +49,8 @@ fn register_tool_invalid_description() {
     .to_string();
     
     // Execute tool registration and expect an error
-    let err = execute_register_tool(deps.as_mut(), info, tool_id, price, None, description).unwrap_err();
+    let endpoint = "https://api.provider1.com/long-desc-tool".to_string();
+    let err = execute_register_tool(deps.as_mut(), info, tool_id, price, None, description, endpoint).unwrap_err();
 
     // Verify that the error is the expected DescriptionTooLong error
     match err {

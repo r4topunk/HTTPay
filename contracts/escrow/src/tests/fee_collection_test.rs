@@ -382,6 +382,7 @@ fn test_specific_denom_claim() {
             price: Uint128::new(DEFAULT_MAX_FEE),
             denom: None, // Default to NEUTRON
             description: "NEUTRON tool".to_string(),
+            endpoint: "https://api.example.com/neutron-tool".to_string(),
         },
         &[],
     ).unwrap();
@@ -395,6 +396,7 @@ fn test_specific_denom_claim() {
             price: Uint128::new(DEFAULT_MAX_FEE),
             denom: Some(ATOM.to_string()),
             description: "ATOM tool".to_string(),
+            endpoint: "https://api.example.com/atom-tool".to_string(),
         },
         &[],
     ).unwrap();

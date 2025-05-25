@@ -39,22 +39,24 @@ fn query_tool_functionality() {
     let mut deps = mock_dependencies();
     setup_contract(deps.as_mut()).unwrap();
 
-    // Register a tool with initial values
+    // Register a tool with initial values including endpoint
     let info = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     let description = "Tool for query functionality test".to_string();
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description.clone()).unwrap();
+    let endpoint = "https://api.test.com/tool1".to_string();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description.clone(), endpoint.clone()).unwrap();
 
     // Query the registered tool and verify metadata
     let query_res = query_tool(deps.as_ref(), tool_id).unwrap();
     let tool_response: ToolResponse = from_json(&query_res).unwrap();
 
-    // Validate all fields match expected values
+    // Validate all fields match expected values including endpoint
     assert_eq!("provider1", tool_response.provider);
     assert_eq!(Uint128::new(100), tool_response.price);
     assert!(tool_response.is_active);
     assert_eq!("Tool for query functionality test", tool_response.description);
+    assert_eq!("https://api.test.com/tool1", tool_response.endpoint); // Verify endpoint field
 
     // Query a non-existent tool
     let query_res = query_tool(deps.as_ref(), "nonexistent".to_string()).unwrap();

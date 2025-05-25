@@ -47,7 +47,8 @@ fn unauthorized_pause_resume() {
     let tool_id = "tool1".to_string();
     let price = Uint128::new(100);
     let description = "Tool for unauthorized pause/resume test".to_string();
-    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description).unwrap();
+    let endpoint = "https://api.provider1.com/pause-test-tool".to_string();
+    execute_register_tool(deps.as_mut(), info, tool_id.clone(), price, None, description, endpoint).unwrap();
 
     // Create message info for unauthorized provider (provider2)
     let unauthorized_info = message_info(&Addr::unchecked("provider2"), &[]);

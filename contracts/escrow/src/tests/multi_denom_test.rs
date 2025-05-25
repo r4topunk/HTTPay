@@ -197,6 +197,7 @@ fn test_update_tool_denom_and_lock_funds() {
             price: Uint128::new(PRICE),
             denom: Some(NATIVE_DENOM.to_string()),
             description: "Native denom test tool".to_string(),
+            endpoint: "https://api.example.com/native-tool".to_string(),
         },
         &[],
     ).unwrap();
@@ -249,6 +250,7 @@ fn register_tool_with_custom_denom(contracts: &mut TestContracts, denom: &str) {
             price: Uint128::new(PRICE),
             denom: Some(denom.to_string()),
             description: format!("Custom denom tool: {}", denom),
+            endpoint: format!("https://api.example.com/{}", TOOL_ID),
         },
         &[],
     ).unwrap();

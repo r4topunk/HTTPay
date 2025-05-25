@@ -46,22 +46,25 @@ fn query_all_tools_functionality() {
     let tool_id1 = "tool1".to_string();
     let price1 = Uint128::new(100);
     let desc1 = "First tool description".to_string();
-    execute_register_tool(deps.as_mut(), info1, tool_id1.clone(), price1, None, desc1.clone()).unwrap();
+    let endpoint1 = "https://api.provider1.com/tool1".to_string();
+    execute_register_tool(deps.as_mut(), info1, tool_id1.clone(), price1, None, desc1.clone(), endpoint1.clone()).unwrap();
 
     // Register second tool
     let info2 = message_info(&Addr::unchecked("provider2"), &[]);
     let tool_id2 = "tool2".to_string();
     let price2 = Uint128::new(200);
     let desc2 = "Second tool description".to_string();
+    let endpoint2 = "https://api.provider2.com/tool2".to_string();
     let denom2 = Some("uatom".to_string());
-    execute_register_tool(deps.as_mut(), info2, tool_id2.clone(), price2, denom2.clone(), desc2.clone()).unwrap();
+    execute_register_tool(deps.as_mut(), info2, tool_id2.clone(), price2, denom2.clone(), desc2.clone(), endpoint2.clone()).unwrap();
 
     // Register third tool with same provider as first
     let info3 = message_info(&Addr::unchecked("provider1"), &[]);
     let tool_id3 = "tool3".to_string();
     let price3 = Uint128::new(300);
     let desc3 = "Third tool description".to_string();
-    execute_register_tool(deps.as_mut(), info3, tool_id3.clone(), price3, None, desc3.clone()).unwrap();
+    let endpoint3 = "https://api.provider1.com/tool3".to_string();
+    execute_register_tool(deps.as_mut(), info3, tool_id3.clone(), price3, None, desc3.clone(), endpoint3.clone()).unwrap();
 
     // Query all tools and verify response
     let query_res = query_all_tools(deps.as_ref()).unwrap();
@@ -78,6 +81,7 @@ fn query_all_tools_functionality() {
     assert_eq!("untrn", tool1.denom); // Default denom
     assert!(tool1.is_active);
     assert_eq!(desc1, tool1.description);
+    assert_eq!(endpoint1, tool1.endpoint); // Verify endpoint field
     
     let tool2 = tools_response.tools.iter().find(|t| t.tool_id == tool_id2)
         .expect("Tool 2 should be in response");
@@ -86,6 +90,7 @@ fn query_all_tools_functionality() {
     assert_eq!("uatom", tool2.denom); // Custom denom
     assert!(tool2.is_active);
     assert_eq!(desc2, tool2.description);
+    assert_eq!(endpoint2, tool2.endpoint); // Verify endpoint field
     
     let tool3 = tools_response.tools.iter().find(|t| t.tool_id == tool_id3)
         .expect("Tool 3 should be in response");
@@ -94,4 +99,5 @@ fn query_all_tools_functionality() {
     assert_eq!("untrn", tool3.denom); // Default denom
     assert!(tool3.is_active);
     assert_eq!(desc3, tool3.description);
+    assert_eq!(endpoint3, tool3.endpoint); // Verify endpoint field
 }

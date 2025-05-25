@@ -170,6 +170,7 @@ pub fn register_tool(
             price: Uint128::new(price),
             denom: None,
             description: format!("Test tool: {}", tool_id),
+            endpoint: format!("https://api.example.com/{}", tool_id),
         },
         &[],
     )?;

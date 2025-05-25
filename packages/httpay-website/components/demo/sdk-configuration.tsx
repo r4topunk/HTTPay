@@ -12,7 +12,12 @@ export const SDKConfiguration = () => {
     sdkConfig, 
     setSdkConfig, 
     initializeSDK, 
+    initSDKWithWallet,
+    forceReconnectWallet,
     isConnected, 
+    hasSigningCapabilities,
+    walletStatus,
+    walletAddress,
     loading 
   } = useSDK();
 
@@ -109,6 +114,27 @@ export const SDKConfiguration = () => {
               ? "Connected"
               : "Initialize SDK"}
           </Button>
+          
+          {walletStatus === "Connected" && walletAddress && (
+            <Button
+              onClick={initSDKWithWallet}
+              disabled={loading.wallet}
+              variant="outline"
+            >
+              {loading.wallet ? "Connecting..." : "Connect with Wallet"}
+            </Button>
+          )}
+          
+          {walletStatus === "Connected" && walletAddress && !hasSigningCapabilities && (
+            <Button
+              onClick={forceReconnectWallet}
+              disabled={loading.wallet}
+              variant="destructive"
+            >
+              Force Reconnect
+            </Button>
+          )}
+          
           {isConnected && (
             <Badge
               className="px-4 py-2 flex items-center gap-2"
@@ -116,6 +142,15 @@ export const SDKConfiguration = () => {
             >
               <div className="w-2 h-2 rounded-full bg-green-500" />
               Connected to {sdkConfig.chainId}
+            </Badge>
+          )}
+          {isConnected && (
+            <Badge
+              className="px-4 py-2 flex items-center gap-2"
+              variant={hasSigningCapabilities ? "secondary" : "outline"}
+            >
+              <div className={`w-2 h-2 rounded-full ${hasSigningCapabilities ? 'bg-green-500' : 'bg-gray-400'}`} />
+              {hasSigningCapabilities ? "Signing Enabled" : "Read Only"}
             </Badge>
           )}
         </div>

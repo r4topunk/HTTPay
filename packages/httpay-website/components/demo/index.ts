@@ -7,4 +7,5 @@ export { EscrowCreation } from "./escrow-creation";
 export { EscrowsList } from "./escrows-list";
 export { EscrowVerification } from "./escrow-verification";
 export { UsagePosting } from "./usage-posting";
+export { DebugStatus } from "./debug-status";
 export * from "./types";

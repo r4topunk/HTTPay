@@ -34,6 +34,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const { toast } = useToast();
   const [sdk, setSdk] = useState<HTTPaySDK | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [hasSigningCapabilities, setHasSigningCapabilities] = useState(false);
   const [tools, setTools] = useState<Tool[]>([]);
   const [escrows, setEscrows] = useState<Escrow[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
@@ -78,6 +79,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       await newSdk.connect();
       setSdk(newSdk);
       setIsConnected(true);
+      setHasSigningCapabilities(false);
       toast({
         title: "SDK Initialized",
         description: "Connected to the blockchain successfully",
@@ -90,7 +92,10 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   }, [sdkConfig, setLoadingState, handleError, toast]);
 
   const initSDKWithWallet = useCallback(async () => {
+    console.log("initSDKWithWallet called with:", { walletAddress, walletStatus });
+    
     if (!walletAddress || walletStatus !== "Connected") {
+      console.warn("Cannot initialize SDK with wallet - wallet not ready:", { walletAddress, walletStatus });
       toast({
         title: "Error",
         description: "Please connect your wallet first",
@@ -102,23 +107,30 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     try {
       setLoadingState("wallet", true);
 
+      console.log("Initializing SDK with wallet...", { walletAddress, walletStatus });
+
       // Create a new SDK instance with the current configuration
       const newSdk = new HTTPaySDK(sdkConfig);
       
       // First connect to establish base client
       await newSdk.connect();
+      console.log("SDK base connection established");
 
       // Get the signing client from CosmosKit
       const signingClient = await getSigningCosmWasmClient();
+      console.log("Got signing client from CosmosKit:", !!signingClient);
       
       // Connect the SDK with the signing client
       // This ensures the gasPrice from sdkConfig is properly used
       newSdk.connectWithSigningClient(signingClient);
 
-      console.log("Sdk client", newSdk.getClient());
+      console.log("SDK connected with signing capabilities", newSdk.getClient());
 
       setSdk(newSdk);
       setIsConnected(true);
+      setHasSigningCapabilities(true);
+
+      console.log("State updated: SDK set, isConnected=true, hasSigningCapabilities=true");
 
       toast({
         title: "SDK Connected with Wallet",
@@ -127,6 +139,10 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
 
       return newSdk;
     } catch (error) {
+      console.error("Failed to initialize SDK with wallet:", error);
+      setHasSigningCapabilities(false);
+      setIsConnected(false);
+      setSdk(null);
       handleError(error, "wallet connection");
       return null;
     } finally {
@@ -149,6 +165,14 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   }, [sdk, setLoadingState, handleError]);
 
   const registerTool = useCallback(async (toolData: ToolRegistrationForm) => {
+    console.log("registerTool called with state:", { 
+      hasSdk: !!sdk, 
+      walletAddress, 
+      walletStatus, 
+      isConnected, 
+      hasSigningCapabilities 
+    });
+
     if (!sdk || !walletAddress || walletStatus !== "Connected") {
       toast({
         title: "Error",
@@ -158,8 +182,28 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       return;
     }
 
+    if (!hasSigningCapabilities) {
+      console.error("Attempting to register tool without signing capabilities", {
+        sdk: !!sdk,
+        walletAddress,
+        walletStatus,
+        isConnected,
+        hasSigningCapabilities
+      });
+      toast({
+        title: "Error",
+        description: "SDK does not have signing capabilities. Please reconnect your wallet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setLoadingState("register", true);
+
+      console.log("Registering tool with data:", toolData);
+      console.log("SDK has signing capabilities:", hasSigningCapabilities);
+      console.log("Current SDK client:", sdk.getClient());
 
       // Use the SDK's high-level registerTool method instead of manually constructing messages
       const transactionHash = await sdk.registry.registerTool(
@@ -175,11 +219,12 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       });
       await loadTools();
     } catch (error) {
+      console.error("Tool registration failed:", error);
       handleError(error, "tool registration");
     } finally {
       setLoadingState("register", false);
     }
-  }, [sdk, walletAddress, walletStatus, setLoadingState, handleError, toast, loadTools]);
+  }, [sdk, walletAddress, walletStatus, isConnected, hasSigningCapabilities, setLoadingState, handleError, toast, loadTools]);
 
   const getCurrentBlockHeight = useCallback(async (): Promise<number> => {
     if (!sdk) throw new Error("SDK not initialized");
@@ -212,6 +257,16 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       return;
     }
 
+    if (!hasSigningCapabilities) {
+      toast({
+        title: "Error",
+        description: "SDK does not have signing capabilities. Please reconnect your wallet.",
+        variant: "destructive",
+      });
+      console.error("Attempting to lock funds without signing capabilities");
+      return;
+    }
+
     try {
       setLoadingState("lockFunds", true);
 
@@ -238,11 +293,12 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       });
       await loadEscrows();
     } catch (error) {
+      console.error("Lock funds failed:", error);
       handleError(error, "locking funds");
     } finally {
       setLoadingState("lockFunds", false);
     }
-  }, [sdk, walletAddress, walletStatus, getCurrentBlockHeight, setLoadingState, handleError, toast, loadEscrows]);
+  }, [sdk, walletAddress, walletStatus, hasSigningCapabilities, getCurrentBlockHeight, setLoadingState, handleError, toast, loadEscrows]);
 
   const verifyEscrow = useCallback(async (verificationData: EscrowVerificationForm) => {
     if (!sdk) {
@@ -286,6 +342,16 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       return;
     }
 
+    if (!hasSigningCapabilities) {
+      toast({
+        title: "Error",
+        description: "SDK does not have signing capabilities. Please reconnect your wallet.",
+        variant: "destructive",
+      });
+      console.error("Attempting to post usage without signing capabilities");
+      return;
+    }
+
     try {
       setLoadingState("usage", true);
 
@@ -303,24 +369,47 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
         description: `Usage reported successfully. TX: ${result.txHash}`,
       });
     } catch (error) {
+      console.error("Post usage failed:", error);
       handleError(error, "posting usage");
     } finally {
       setLoadingState("usage", false);
     }
-  }, [sdk, walletAddress, walletStatus, setLoadingState, handleError, toast]);
+  }, [sdk, walletAddress, walletStatus, hasSigningCapabilities, setLoadingState, handleError, toast]);
+
+  const forceReconnectWallet = useCallback(async () => {
+    console.log("Force reconnecting wallet...");
+    if (walletStatus === "Connected" && walletAddress) {
+      await initSDKWithWallet();
+    } else {
+      console.warn("Cannot force reconnect - wallet not connected:", { walletStatus, walletAddress });
+    }
+  }, [walletStatus, walletAddress, initSDKWithWallet]);
 
   // Monitor wallet status changes
   useEffect(() => {
-    if (walletStatus === "Connected" && walletAddress && !isConnected) {
+    console.log("Wallet status changed:", { walletStatus, walletAddress, isConnected, hasSigningCapabilities });
+    
+    if (walletStatus === "Connected" && walletAddress) {
+      // Always reinitialize SDK with wallet when wallet connects
+      // This handles both cases: no SDK yet, or SDK in read-only mode
+      console.log("Wallet connected, initializing SDK with signing capabilities...");
       const initSdk = async () => {
-        await initSDKWithWallet();
+        try {
+          const result = await initSDKWithWallet();
+          console.log("SDK initialization result:", result ? "success" : "failed");
+        } catch (error) {
+          console.error("Failed to initialize SDK with wallet in useEffect:", error);
+        }
       };
-      initSdk();
+      // Add a small delay to ensure the wallet is fully ready
+      setTimeout(initSdk, 100);
     } else if (walletStatus !== "Connected" && isConnected) {
+      console.log("Wallet disconnected, resetting SDK...");
       setIsConnected(false);
+      setHasSigningCapabilities(false);
       setSdk(null);
     }
-  }, [walletStatus, walletAddress, isConnected, initSDKWithWallet]);
+  }, [walletStatus, walletAddress]); // Removed initSDKWithWallet from dependencies to prevent recreation loops
 
   // Load data when SDK is initialized
   useEffect(() => {
@@ -333,6 +422,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const value: SDKContextType = {
     sdk,
     isConnected,
+    hasSigningCapabilities,
     loading,
     tools,
     escrows,
@@ -342,6 +432,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     setSdkConfig,
     initializeSDK,
     initSDKWithWallet,
+    forceReconnectWallet,
     registerTool,
     loadTools,
     lockFunds,

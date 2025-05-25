@@ -41,6 +41,7 @@ export interface Escrow {
 export interface SDKContextType {
   sdk: HTTPaySDK | null;
   isConnected: boolean;
+  hasSigningCapabilities: boolean;
   loading: Record<string, boolean>;
   tools: Tool[];
   escrows: Escrow[];
@@ -52,6 +53,7 @@ export interface SDKContextType {
   setSdkConfig: (config: HTTPaySDKConfig) => void;
   initializeSDK: () => Promise<void>;
   initSDKWithWallet: () => Promise<HTTPaySDK | null>;
+  forceReconnectWallet: () => Promise<void>;
   registerTool: (toolData: ToolRegistrationForm) => Promise<void>;
   loadTools: () => Promise<void>;
   lockFunds: (escrowData: EscrowCreationForm) => Promise<void>;

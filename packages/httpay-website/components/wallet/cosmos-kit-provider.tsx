@@ -12,7 +12,7 @@ const signerOptions: SignerOptions = {
   // @ts-ignore
   signingCosmwasm: (chain: string | Chain) => {
     return {
-      gasPrice: GasPrice.fromString("0.0025untrn"),
+      gasPrice: GasPrice.fromString("0.0053untrn"),
     };
   }
 };

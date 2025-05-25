@@ -460,9 +460,9 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Update SDK tests and documentation
 
 #### 14.4 SDK Release Management
-- [ ] Version bump and changelog updates
-- [ ] NPM publishing with endpoint feature
-- [ ] Verify package integrity and functionality
+- [x] Version bump and changelog updates
+- [x] NPM publishing with endpoint feature
+- [x] Verify package integrity and functionality
 
 #### 14.5 Frontend Debug Page Enhancement
 - [ ] Add endpoint input to tool registration form

@@ -1,12 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Copy, Edit, ExternalLink } from "lucide-react";
 import { useSDK } from "./sdk-context";
 import { useToast } from "@/hooks/use-toast";
@@ -35,7 +48,7 @@ export const ToolsList = () => {
 
   const handleUpdateEndpoint = async () => {
     if (!editingTool || !newEndpoint) return;
-    
+
     await updateEndpoint(editingTool, newEndpoint);
     setEditingTool(null);
     setNewEndpoint("");
@@ -68,24 +81,20 @@ export const ToolsList = () => {
               <div key={index} className="p-4 border rounded-lg space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="font-medium text-lg">{tool.tool_id}</div>
-                  <Badge
-                    variant={tool.is_active ? "default" : "secondary"}
-                  >
+                  <Badge variant={tool.is_active ? "default" : "secondary"}>
                     {tool.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                  <div className="text-muted-foreground">
-                    <strong>Price:</strong> {tool.price} untrn
-                  </div>
-                  <div className="text-muted-foreground">
-                    <strong>Provider:</strong> {tool.provider}
-                  </div>
+
+                <div className="text-muted-foreground">
+                  <strong>Price:</strong> {tool.price} untrn
+                </div>
+                <div className="text-muted-foreground">
+                  <strong>Provider:</strong> {tool.provider}
                 </div>
 
                 {tool.description && (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-muted-foreground">
                     <strong>Description:</strong> {tool.description}
                   </div>
                 )}
@@ -106,7 +115,7 @@ export const ToolsList = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => window.open(tool.endpoint, '_blank')}
+                      onClick={() => window.open(tool.endpoint, "_blank")}
                     >
                       <ExternalLink className="h-4 w-4" />
                     </Button>
@@ -116,7 +125,9 @@ export const ToolsList = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => openUpdateDialog(tool.tool_id, tool.endpoint)}
+                            onClick={() =>
+                              openUpdateDialog(tool.tool_id, tool.endpoint)
+                            }
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -130,7 +141,9 @@ export const ToolsList = () => {
                           </DialogHeader>
                           <div className="space-y-4">
                             <div>
-                              <Label htmlFor="new-endpoint">New Endpoint URL</Label>
+                              <Label htmlFor="new-endpoint">
+                                New Endpoint URL
+                              </Label>
                               <Input
                                 id="new-endpoint"
                                 value={newEndpoint}
@@ -150,9 +163,13 @@ export const ToolsList = () => {
                               </Button>
                               <Button
                                 onClick={handleUpdateEndpoint}
-                                disabled={loading.updateEndpoint || !newEndpoint}
+                                disabled={
+                                  loading.updateEndpoint || !newEndpoint
+                                }
                               >
-                                {loading.updateEndpoint ? "Updating..." : "Update Endpoint"}
+                                {loading.updateEndpoint
+                                  ? "Updating..."
+                                  : "Update Endpoint"}
                               </Button>
                             </div>
                           </div>

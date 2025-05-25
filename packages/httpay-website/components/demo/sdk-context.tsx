@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { HTTPaySDK } from "httpay";
 import type { HTTPaySDKConfig } from "httpay";
 import { useChain } from "@cosmos-kit/react";

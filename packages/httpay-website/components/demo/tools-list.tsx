@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Copy, Edit, ExternalLink, RefreshCw } from "lucide-react";
 import { useSDK } from "./sdk-context";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
 export const ToolsList = () => {

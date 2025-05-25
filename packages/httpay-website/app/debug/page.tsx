@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Toaster } from "@/components/ui/toaster";
 import {
   SDKProvider,
   SDKConfiguration,
@@ -69,6 +70,7 @@ export default function DebugPage() {
   return (
     <SDKProvider>
       <DebugPageContent />
+      <Toaster />
     </SDKProvider>
   );
 }

@@ -5,8 +5,8 @@ import * as React from "react"
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 5 // Allow more toasts simultaneously
+const TOAST_REMOVE_DELAY = 3000 // Set to 3 seconds for visibility while not persisting too long
 
 type ToasterToast = ToastProps & {
   id: string

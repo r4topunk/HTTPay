@@ -114,7 +114,7 @@ Um agente de IA precisa de dados financeiros para análise. Ele consulta o HTTPa
 
 ### Notas do Apresentador
 
-Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e billing manual. APIs tradicionais exigem chaves de API, integrações customizadas e gestão de pagamento complexa. Nenhuma solução foi projetada para milhares de agentes autônomos consumindo APIs dinamicamente. O HTTPay é o primeiro marketplace nativo para consumidores autônomos: descoberta programática, pagamentos instantâneos e liquidação automática via contratos inteligentes.
+Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e billing manual. APIs tradicionais exigem chaves de API, integrações customizadas e gestão de pagamento complexa. Nenhuma solução foi projetada para milhares de agentes autônomos encontrando e consumindo APIs dinamicamente. O HTTPay é o primeiro marketplace de APIs para consumidores autônomos do ecossistema Cosmos: descoberta programática, pagamentos instantâneos e liquidação automática via contratos inteligentes.
 
 ---
 
@@ -122,6 +122,7 @@ Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e bil
 
 ## Tópicos Principais
 
+- Primeiro marketplace de APIs no ecossistema Cosmos
 - Escala para milhões de agentes em múltiplas redes
 - Fundação para uma economia máquina-a-máquina
 - Identidade descentralizada e reputação
@@ -129,7 +130,7 @@ Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e bil
 
 ### Notas do Apresentador
 
-Viso que o HTTPay se torne infraestrutura fundamental para economia de agentes autônomos. A arquitetura suporta milhões de agentes transacionando em múltiplas redes interconectadas. Planejo integrar um sistema de reputação, para dar mais segurança para o pagamento e contratação de serviços dentro do martketplace. E claro, desenvolver bibliotecas focadas nos frameworks de IA mais famosos, como Eliza e LangChain.
+Como primeiro marketplace de APIs do ecossistema Cosmos, viso que o HTTPay se torne infraestrutura fundamental para economia de agentes autônomos. A arquitetura suporta milhões de agentes transacionando em múltiplas redes interconectadas. Planejo integrar um sistema de reputação, para dar mais segurança para o pagamento e contratação de serviços dentro do marketplace. E claro, desenvolver bibliotecas focadas nos frameworks de IA mais famosos, como Eliza e LangChain.
 
 ---
 
@@ -144,4 +145,4 @@ Viso que o HTTPay se torne infraestrutura fundamental para economia de agentes a
 
 ### Notas do Apresentador
 
-O HTTPay conecta desenvolvedores e agentes de IA em um marketplace funcional. Desenvolvi um MVP operacional: Registry para publicar APIs, Escrow para pagamentos seguros e SDK Typescript para fácil integração. Desenvolvedores já podem monetizar APIs e agentes já podem consumi-las autonomamente. Próximos passos: dashboard para desenvolvedores, métricas de uso e parcerias com criadores de APIs. Grande oportunidade para a Cosmos liderar a economia de APIs autônomas. Obrigado!
+O HTTPay conecta desenvolvedores e agentes de IA em um marketplace funcional e é o primeiro marketplace de APIs no ecossistema Cosmos. Desenvolvi um MVP operacional: Registry para publicar APIs, Escrow para pagamentos seguros e SDK Typescript para fácil integração. Desenvolvedores já podem monetizar APIs e agentes já podem consumi-las autonomamente. Próximos passos: dashboard para desenvolvedores, métricas de uso e parcerias com criadores de APIs. Grande oportunidade para a Cosmos liderar a economia de APIs autônomas. Obrigado!

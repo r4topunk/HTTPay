@@ -11,6 +11,7 @@
   "dependencies": {
     "@chain-registry/types": "^0.50.138",
     "@chain-registry/v2": "^1.71.219",
+    "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/stargate": "^0.33.1",
     "@cosmos-kit/core": "^2.16.0",
     "@cosmos-kit/cosmostation": "^2.9.0",
@@ -54,6 +55,7 @@
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.5.1",
     "httpay": "^0.1.3",
+    "httpay-sdk": "file:../httpay-sdk",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",

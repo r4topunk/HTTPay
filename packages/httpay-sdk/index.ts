@@ -1,5 +1,5 @@
 /**
- * HTTPay SDK - TypeScript SDK for HTTPay CosmWasm contracts
+ * HTTPay V2 SDK - TypeScript SDK for HTTPay CosmWasm contracts
  * 
  * This package provides TypeScript bindings, client libraries, and React Query hooks
  * for interacting with HTTPay's Escrow and Registry CosmWasm contracts.

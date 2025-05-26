@@ -17,6 +17,8 @@ import { ToolRegistry } from "./demo/ToolRegistry";
 import { RegisterToolForm } from "./demo/RegisterToolForm";
 import { TestToolDialog } from "./demo/TestToolDialog";
 import { DemoInfoBanner } from "./demo/DemoInfoBanner";
+import { registerToolSchema } from "./demo/types";
+import type { Tool, APIResponse, RegisterToolFormData } from "./demo/types";
 
 const DemoSectionContent = () => {
   const {
@@ -29,31 +31,16 @@ const DemoSectionContent = () => {
     walletAddress,
   } = useSDK();
   const { toast } = useToast();
-  const [selectedTool, setSelectedTool] = useState<any>(null);
+  const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [testDialogOpen, setTestDialogOpen] = useState(false);
   const [testStatus, setTestStatus] = useState<
     "idle" | "creating_escrow" | "requesting_service" | "success" | "error"
   >("idle");
   const [escrowId, setEscrowId] = useState<string>("");
-
-  // Form schema for tool registration
-  const registerToolSchema = z.object({
-    toolId: z.string().min(3, {
-      message: "Tool ID must be at least 3 characters.",
-    }),
-    description: z.string().min(10, {
-      message: "Description must be at least 10 characters.",
-    }),
-    price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Price must be a positive number.",
-    }),
-    endpoint: z.string().url({
-      message: "Please enter a valid URL.",
-    }),
-  });
+  const [apiResponse, setApiResponse] = useState<APIResponse | null>(null);
 
   // Form for tool registration
-  const registerForm = useForm<z.infer<typeof registerToolSchema>>({
+  const registerForm = useForm<RegisterToolFormData>({
     resolver: zodResolver(registerToolSchema),
     defaultValues: {
       toolId: "",
@@ -81,7 +68,7 @@ const DemoSectionContent = () => {
 
   // Handle tool registration
   const onRegisterSubmit = async (
-    values: z.infer<typeof registerToolSchema>
+    values: RegisterToolFormData
   ) => {
     try {
       await registerTool({
@@ -107,7 +94,7 @@ const DemoSectionContent = () => {
   };
 
   // Handle tool testing with escrow and request
-  const handleTestTool = async (tool: any) => {
+  const handleTestTool = async (tool: Tool) => {
     if (!walletAddress) {
       toast({
         title: "Wallet not connected",
@@ -120,6 +107,7 @@ const DemoSectionContent = () => {
     setSelectedTool(tool);
     setTestStatus("idle");
     setEscrowId("");
+    setApiResponse(null);
     setTestDialogOpen(true);
   };
 
@@ -145,25 +133,62 @@ const DemoSectionContent = () => {
       const mockEscrowId = Math.floor(Math.random() * 10000).toString();
       setEscrowId(mockEscrowId);
 
-      // Step 2: Simulate service request
+      // Step 2: Make real API request to the tool endpoint
       setTestStatus("requesting_service");
 
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      try {
+        const response = await fetch(selectedTool.endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
 
-      // Step 3: Success
-      setTestStatus("success");
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
 
-      toast({
-        title: "Tool tested successfully",
-        description: `Tool "${selectedTool.tool_id}" was successfully tested via escrow`,
-      });
+        const responseData = await response.json();
+        setApiResponse(responseData as APIResponse);
 
-      // Auto-close after success
-      setTimeout(() => {
-        setTestDialogOpen(false);
-        setTestStatus("idle");
-      }, 3000);
+        // Step 3: Success
+        setTestStatus("success");
+
+        toast({
+          title: "Tool tested successfully",
+          description: `Tool "${selectedTool.tool_id}" responded successfully via escrow`,
+        });
+
+        // Auto-close after success (longer timeout to let user see response)
+        setTimeout(() => {
+          setTestDialogOpen(false);
+          setTestStatus("idle");
+        }, 8000);
+      } catch (apiError) {
+        console.error("API request failed:", apiError);
+        const errorResponse: APIResponse = {
+          error: true,
+          message: apiError instanceof Error ? apiError.message : 'Unknown API error',
+          timestamp: new Date().toISOString(),
+        };
+        setApiResponse(errorResponse);
+        
+        // Still show success for escrow creation, but note API failure
+        setTestStatus("success");
+        
+        toast({
+          title: "Escrow created, API test failed",
+          description: `Escrow was created but the API at "${selectedTool.endpoint}" failed to respond`,
+          variant: "destructive",
+        });
+
+        // Auto-close after longer timeout to let user see error response
+        setTimeout(() => {
+          setTestDialogOpen(false);
+          setTestStatus("idle");
+        }, 10000);
+      }
     } catch (error) {
       console.error("Error testing tool:", error);
       setTestStatus("error");
@@ -242,6 +267,7 @@ const DemoSectionContent = () => {
         selectedTool={selectedTool}
         testStatus={testStatus}
         escrowId={escrowId}
+        apiResponse={apiResponse}
         executeToolTest={executeToolTest}
       />
     </section>

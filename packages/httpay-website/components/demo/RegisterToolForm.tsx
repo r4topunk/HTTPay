@@ -6,11 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
-import * as z from "zod";
+import type { RegisterToolFormData } from "./types";
 
 interface RegisterToolFormProps {
-  registerForm: UseFormReturn<any>;
-  onRegisterSubmit: (values: any) => Promise<void>;
+  registerForm: UseFormReturn<RegisterToolFormData>;
+  onRegisterSubmit: (values: RegisterToolFormData) => Promise<void>;
   loading: boolean;
 }
 

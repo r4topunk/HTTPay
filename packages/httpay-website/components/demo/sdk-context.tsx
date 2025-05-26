@@ -73,11 +73,11 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     setLoading((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const handleError = useCallback((error: any, operation: string) => {
+  const handleError = useCallback((error: Error | unknown, operation: string) => {
     console.error(`Error in ${operation}:`, error);
     toast({
       title: `Error in ${operation}`,
-      description: error.message || "An unknown error occurred",
+      description: error instanceof Error ? error.message : "An unknown error occurred",
       variant: "destructive",
     });
   }, [toast]);

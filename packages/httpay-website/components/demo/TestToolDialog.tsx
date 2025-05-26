@@ -3,13 +3,20 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { formatAmount } from "@/lib/constants";
+import type { Tool, APIResponse, APIErrorResponse } from "./types";
+
+// Type guard to check if response is an error response
+const isErrorResponse = (response: APIResponse): response is APIErrorResponse => {
+  return 'error' in response && response.error === true;
+};
 
 interface TestToolDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedTool: any;
+  selectedTool: Tool | null;
   testStatus: "idle" | "creating_escrow" | "requesting_service" | "success" | "error";
   escrowId: string;
+  apiResponse: APIResponse | null;
   executeToolTest: () => void;
 }
 
@@ -19,11 +26,12 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
   selectedTool,
   testStatus,
   escrowId,
+  apiResponse,
   executeToolTest,
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Test Tool: {selectedTool?.tool_id}</DialogTitle>
           <DialogDescription>
@@ -60,7 +68,7 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
             </div>
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
               <p className="text-sm text-yellow-800">
-                <strong>Note:</strong> This will create a real escrow transaction on the blockchain and attempt to call the service endpoint.
+                <strong>Note:</strong> This will create a real escrow transaction on the blockchain and make a GET request to the tool's endpoint.
               </p>
             </div>
             <DialogFooter>
@@ -83,7 +91,7 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
                 <p className="text-sm font-medium">Status:</p>
                 <p className="text-sm">
                   {testStatus === "creating_escrow" && "Creating escrow..."}
-                  {testStatus === "requesting_service" && "Requesting service..."}
+                  {testStatus === "requesting_service" && "Making API request..."}
                   {testStatus === "success" && "Test completed successfully"}
                   {testStatus === "error" && "Error occurred"}
                 </p>
@@ -108,11 +116,29 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
                 <AlertCircle className="h-12 w-12 text-destructive" />
               )}
             </div>
+            
+            {/* API Response Section */}
+            {apiResponse && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium">API Response:</p>
+                <div className="bg-gray-50 border rounded-lg p-3 max-h-64 overflow-y-auto">
+                  <pre className="text-xs text-gray-800 whitespace-pre-wrap">
+                    {JSON.stringify(apiResponse, null, 2)}
+                  </pre>
+                </div>
+                {isErrorResponse(apiResponse) && (
+                  <p className="text-xs text-red-600">
+                    The API request failed, but the escrow was successfully created.
+                  </p>
+                )}
+              </div>
+            )}
+            
             <div className="text-center text-sm text-muted-foreground">
               {testStatus === "creating_escrow" &&
                 "Creating an escrow on the blockchain and locking funds..."}
               {testStatus === "requesting_service" &&
-                "Escrow created! Now requesting the service from the provider..."}
+                "Escrow created! Now making a GET request to the tool endpoint..."}
               {testStatus === "success" &&
                 "The tool was successfully tested through the HTTPay protocol"}
               {testStatus === "error" &&

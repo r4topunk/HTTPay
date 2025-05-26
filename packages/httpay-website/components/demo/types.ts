@@ -1,4 +1,24 @@
 import { HTTPaySDK, HTTPaySDKConfig } from "httpay";
+import type { ToolResponse, EscrowResponse } from "httpay";
+import * as z from "zod";
+
+// Form schema for tool registration
+export const registerToolSchema = z.object({
+  toolId: z.string().min(3, {
+    message: "Tool ID must be at least 3 characters.",
+  }),
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
+  }),
+  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Price must be a positive number.",
+  }),
+  endpoint: z.string().url({
+    message: "Please enter a valid URL.",
+  }),
+});
+
+export type RegisterToolFormData = z.infer<typeof registerToolSchema>;
 
 export interface ToolRegistrationForm {
   toolId: string;
@@ -25,24 +45,24 @@ export interface UsagePostingForm {
   usageFee: string;
 }
 
-export interface Tool {
-  tool_id: string;
-  price: string;
-  provider: string;
-  is_active: boolean;
-  description?: string;
-  endpoint: string;
+// Use the ToolResponse from the provider SDK directly
+export type Tool = ToolResponse;
+
+// API Response types for tool endpoint testing
+export interface APISuccessResponse {
+  [key: string]: unknown;
 }
 
-export interface Escrow {
-  escrow_id: number;
-  caller: string;
-  provider: string;
-  max_fee: string;
-  denom: string;
-  expires: number;
-  auth_token: string;
+export interface APIErrorResponse {
+  error: true;
+  message: string;
+  timestamp: string;
 }
+
+export type APIResponse = APISuccessResponse | APIErrorResponse;
+
+// Use the EscrowResponse from the provider SDK directly
+export type Escrow = EscrowResponse;
 
 export interface EscrowsFilter {
   caller?: string;
@@ -84,5 +104,5 @@ export interface SDKContextType {
   connectWallet: () => void;
   disconnectWallet: () => void;
   setLoadingState: (key: string, value: boolean) => void;
-  handleError: (error: any, operation: string) => void;
+  handleError: (error: Error | unknown, operation: string) => void;
 }

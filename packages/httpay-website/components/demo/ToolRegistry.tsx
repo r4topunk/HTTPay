@@ -6,12 +6,13 @@ import { formatAmount } from "@/lib/constants";
 import { truncateAddress, cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import React from "react";
+import type { Tool } from "./types";
 
 interface ToolRegistryProps {
-  tools: any[];
+  tools: Tool[];
   loading: boolean;
   loadTools: () => void;
-  handleTestTool: (tool: any) => void;
+  handleTestTool: (tool: Tool) => void;
   copyToClipboard: (text: string, label: string) => void;
 }
 

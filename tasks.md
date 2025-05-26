@@ -362,7 +362,7 @@ We will implement HTTPay in 3 distinct phases:
 
 ### 10.4 Testing and Documentation
 - [x] Add comprehensive tests for multi-denomination support
-- [ ] Update documentation with multi-denom usage examples
+- [x] Update documentation with multi-denom usage examples
 
 ## Chunk 11: Documentation & Hardening
 

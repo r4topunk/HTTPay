@@ -17,8 +17,8 @@ This file serves as an index and guide to the implementation notes for the HTTPa
 - **deployment.md**: Build, deployment, and contract addresses for Neutron testnet
 - **architecture.md**: High-level architecture and design summary
 - **client-auth-update.md**: Client authentication updated to use private key instead of mnemonic
-- **multidenom-support.md**: Implementation of multi-denomination token support (IBC tokens) - Completed
-- **multidenom-prd-tdd.md**: PRD/TDD for multi-denomination token support - Completed
+- **multidenom-support.md**: Implementation of multi-denomination token support (IBC tokens) - **✅ COMPLETED**
+- **multidenom-prd-tdd.md**: PRD/TDD for multi-denomination token support - **✅ COMPLETED**
 - **description-field-update.md**: Implementation of mandatory description field with max length of 256 characters for tools
 - **get-tools-query-update.md**: Implementation of a query to fetch all available tools in the Registry contract
 - **fee-collection-feature.md**: Implementation of contract fee collection feature with owner-claimable percentage of each tool usage
@@ -28,6 +28,7 @@ This file serves as an index and guide to the implementation notes for the HTTPa
 - **endpoint-field-sdk-support.md**: TypeScript SDK Endpoint Support implementation notes - **✅ COMPLETED**
 - **fetch-escrows-plan.md**: Comprehensive implementation plan for adding GetEscrows query to fetch multiple escrows with filtering and pagination options
 - **fetch-escrows-implementation.md**: GetEscrows query implementation notes - **✅ STEP 15.4 COMPLETED** - core contract updates, comprehensive testing (6 test functions), data integrity validation, TypeScript SDK implementation with 8 new SDK tests, and frontend component enhancement with filtering, pagination, and enhanced escrow display completed
+- **readme-documentation-update-2025-05-26.md**: Comprehensive update to README.md with multi-denomination token support documentation, enhanced feature descriptions, and updated examples - **✅ COMPLETED**
 
 _All files are now located in the `notes/` folder._
 

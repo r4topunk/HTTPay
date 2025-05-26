@@ -36,7 +36,10 @@ HTTPay is a minimal, secure, and extensible pay-per-call escrow system for AI to
 
 - **Registry Contract**: Providers register tools, set prices, pause/resume tools, and update pricing.
 - **Escrow Contract**: Users lock funds for tool usage, providers claim fees, and refunds are automatic on timeout.
+- **Multi-Denomination Support**: Support for any valid IBC token as payment, not just the native token.
 - **Provider SDK (TypeScript)**: Production-ready SDK for off-chain verification, usage reporting, wallet integration, and error handling. Includes demo scripts and comprehensive documentation.
+- **Pagination & Filtering**: Get multiple escrows with filtering by caller/provider and pagination support.
+- **Fee Collection**: Protocol fee collection mechanism with multi-denomination support.
 - **Comprehensive Testing**: All contract flows are covered by unit and integration tests.
 - **Security**: Strict authorization, expiration limits, and contract freezing for emergencies.
 
@@ -57,7 +60,7 @@ toolpay/
 ├── blueprint.md    # Step-by-step implementation plan
 ├── project.md      # Full specification
 ├── tasks.md        # Actionable task list
-├── notes/index.md        # Implementation notes and history
+├── notes/index.md  # Implementation notes and history
 └── ...
 ```
 
@@ -93,8 +96,9 @@ cargo wasm-test
 
 ### Registry Contract
 
-- **RegisterTool**: Register a tool with a unique ID (≤16 chars) and price.
+- **RegisterTool**: Register a tool with a unique ID (≤16 chars), price, and optional token denomination.
 - **UpdatePrice**: Update the price for a registered tool.
+- **UpdateDenom**: Update the token denomination accepted by a tool.
 - **PauseTool/ResumeTool**: Temporarily disable or enable a tool.
 - **GetTool**: Query tool metadata.
 
@@ -106,6 +110,7 @@ cargo wasm-test
 - **Release**: Provider claims usage fee (≤max_fee), remainder refunded to user.
 - **RefundExpired**: User refunds all funds if provider does not claim within TTL.
 - **Freeze**: Admin can freeze contract for emergencies.
+- **GetEscrows**: Query multiple escrows with filtering and pagination support.
 
 **Storage**: `ESCROWS: Map<u64, Escrow>`, `NEXT_ID: Item<u64>`, `CONFIG: Item<Config>`
 
@@ -115,7 +120,9 @@ cargo wasm-test
 
 1. **Smart Contracts & Testing**: Registry and Escrow contracts, full test coverage. **(Complete)**
 2. **Provider SDK**: TypeScript SDK for off-chain verification, usage reporting, wallet integration, and error handling. **(Complete)**
-3. **Frontend**: User-facing app with shadcn UI (planned).
+3. **Multi-Denomination Support**: Support for any IBC token as payment. **(Complete)**
+4. **Escrow Querying Enhancements**: Pagination and filtering for escrow queries. **(Complete)**
+5. **Frontend**: User-facing app with shadcn UI (planned).
 
 See [tasks.md](./tasks.md) for detailed progress and next steps.
 
@@ -134,12 +141,24 @@ const sdk = new PayPerToolSDK({
   escrowAddress: 'neutron1...',
 });
 
+// Verify an escrow with authentication token
 const verification = await sdk.escrowVerifier.verifyEscrow({
   escrowId: '123',
   authToken: 'base64token',
   providerAddr: 'neutron1...',
 });
 
+// Lock funds with IBC tokens
+await sdk.escrow.lockFunds(
+  clientAddress,
+  'premium-tool',
+  '5000000',
+  'auth-token',
+  expires,
+  [{ denom: 'ibc/ATOM', amount: '5000000' }]
+);
+
+// Report usage after providing service
 if (verification.isValid) {
   const result = await sdk.usageReporter.postUsage({
     escrowId: '123',
@@ -159,6 +178,7 @@ See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for ful
 
 - All contract and SDK logic is covered by unit and integration tests using `cw-multi-test` and Jest.
 - Edge cases: TTL violations, over-limit fees, unauthorized access, contract freezing, refunds, and SDK error handling.
+- Multi-denomination flow testing: registering tools with different denoms, locking funds with various tokens, validating error handling for wrong denoms.
 - See `contracts/escrow/src/tests/`, `contracts/registry/src/tests/`, and `packages/provider-sdk/__tests__/` for test modules.
 
 ---
@@ -181,16 +201,18 @@ See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for ful
 - [project.md](./project.md): Full contract and system specification
 - [tasks.md](./tasks.md): Actionable task list and progress tracker
 - [notes/index.md](./notes/index.md): Implementation notes and design decisions
+- [notes/multidenom-support.md](./notes/multidenom-support.md): Multi-denomination implementation details
+- [notes/fetch-escrows-implementation.md](./notes/fetch-escrows-implementation.md): GetEscrows query implementation
 - [cosmwasm-docs/](./cosmwasm-docs/): CosmWasm and cw-multi-test documentation
 
 ---
 
 ## Future Directions
 
-- Multi-asset support (IBC)
 - DAO-based registry governance
 - On-chain metering and dynamic pricing
 - Full-featured provider dashboard and analytics
+- Cross-chain token support
 
 ---
 
@@ -225,6 +247,9 @@ neutrond query wasm contract-state smart neutron1jnxjn7097hqa3snqgwch2vpssnhel3w
 
 # Query an escrow by ID
 neutrond query wasm contract-state smart neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs '{"get_escrow":{"escrow_id":1}}'
+
+# Query multiple escrows with filtering
+neutrond query wasm contract-state smart neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs '{"get_escrows":{"caller":"neutron1...","limit":10}}'
 ```
 
 ---

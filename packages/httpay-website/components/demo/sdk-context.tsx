@@ -14,6 +14,7 @@ import {
   EscrowCreationForm,
   EscrowVerificationForm,
   UsagePostingForm,
+  EscrowsFilter,
 } from "./types";
 
 const SDKContext = createContext<SDKContextType | undefined>(undefined);
@@ -37,6 +38,8 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const [hasSigningCapabilities, setHasSigningCapabilities] = useState(false);
   const [tools, setTools] = useState<Tool[]>([]);
   const [escrows, setEscrows] = useState<Escrow[]>([]);
+  const [escrowsFilter, setEscrowsFilter] = useState<EscrowsFilter>({});
+  const [hasMoreEscrows, setHasMoreEscrows] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
 
   // CosmosKit integration
@@ -58,9 +61,9 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     rpcEndpoint: "https://rpc-falcron.pion-1.ntrn.tech",
     chainId: "pion-1",
     registryAddress:
-      "neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44",
+      "neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn",
     escrowAddress:
-      "neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4",
+      "neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs",
     gasPrice: "0.0053untrn",
     gasAdjustment: 1.3,
   });
@@ -282,18 +285,45 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     return height;
   }, [sdk]);
 
-  const loadEscrows = useCallback(async () => {
+  const loadEscrows = useCallback(async (filter?: EscrowsFilter) => {
     if (!sdk) return;
 
     try {
       setLoadingState("loadEscrows", true);
-      setEscrows([]);
+      
+      // If a new filter is provided, update the current filter and reset pagination
+      if (filter !== undefined) {
+        setEscrowsFilter(filter);
+        setEscrows([]); // Clear existing escrows when applying new filter
+      }
+      
+      // Use provided filter or current filter
+      const activeFilter = filter !== undefined ? filter : escrowsFilter;
+      
+      // Query escrows with current filter
+      const result = await sdk.getEscrows({
+        caller: activeFilter.caller,
+        provider: activeFilter.provider,
+        startAfter: activeFilter.startAfter,
+        limit: activeFilter.limit || 10, // Default limit of 10
+      });
+
+      // Update escrows state - replace if new filter, append if pagination
+      if (filter !== undefined) {
+        setEscrows(result.escrows);
+      } else {
+        setEscrows(prev => [...prev, ...result.escrows]);
+      }
+      
+      // Check if there are more escrows available
+      setHasMoreEscrows(result.escrows.length >= (activeFilter.limit || 10));
+      
     } catch (error) {
       handleError(error, "loading escrows");
     } finally {
       setLoadingState("loadEscrows", false);
     }
-  }, [sdk, setLoadingState, handleError]);
+  }, [sdk, escrowsFilter, setLoadingState, handleError]);
 
   const lockFunds = useCallback(async (escrowData: EscrowCreationForm) => {
     if (!sdk || !walletAddress || !isWalletConnected) {
@@ -424,6 +454,27 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     }
   }, [sdk, walletAddress, isWalletConnected, hasSigningCapabilities, setLoadingState, handleError, toast]);
 
+  const loadMoreEscrows = useCallback(async () => {
+    if (!hasMoreEscrows || escrows.length === 0) return;
+
+    // Set the startAfter to the last escrow's ID for pagination
+    const lastEscrowId = escrows[escrows.length - 1].escrow_id;
+    const paginationFilter = {
+      ...escrowsFilter,
+      startAfter: lastEscrowId,
+    };
+
+    await loadEscrows(paginationFilter);
+  }, [hasMoreEscrows, escrows, escrowsFilter, loadEscrows]);
+
+  const resetEscrowsFilter = useCallback(async () => {
+    const emptyFilter: EscrowsFilter = {};
+    setEscrowsFilter(emptyFilter);
+    setEscrows([]);
+    setHasMoreEscrows(false);
+    await loadEscrows(emptyFilter);
+  }, [loadEscrows]);
+
   const forceReconnectWallet = useCallback(async () => {
     console.log("Force reconnecting wallet...");
     if (isWalletConnected && walletAddress) {
@@ -474,6 +525,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     loading,
     tools,
     escrows,
+    hasMoreEscrows,
     sdkConfig,
     walletAddress,
     isWalletConnected,
@@ -489,6 +541,8 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     loadTools,
     lockFunds,
     loadEscrows,
+    loadMoreEscrows,
+    resetEscrowsFilter,
     verifyEscrow,
     postUsage,
     connectWallet,

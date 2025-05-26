@@ -35,9 +35,20 @@ export interface Tool {
 }
 
 export interface Escrow {
-  id: string;
-  tool_id: string;
+  escrow_id: number;
+  caller: string;
+  provider: string;
   max_fee: string;
+  denom: string;
+  expires: number;
+  auth_token: string;
+}
+
+export interface EscrowsFilter {
+  caller?: string;
+  provider?: string;
+  startAfter?: number;
+  limit?: number;
 }
 
 export interface SDKContextType {
@@ -47,6 +58,7 @@ export interface SDKContextType {
   loading: Record<string, boolean>;
   tools: Tool[];
   escrows: Escrow[];
+  hasMoreEscrows: boolean;
   sdkConfig: HTTPaySDKConfig;
   walletAddress: string | undefined;
   isWalletConnected: boolean;
@@ -63,7 +75,9 @@ export interface SDKContextType {
   updateEndpoint: (toolId: string, endpoint: string) => Promise<void>;
   loadTools: () => Promise<void>;
   lockFunds: (escrowData: EscrowCreationForm) => Promise<void>;
-  loadEscrows: () => Promise<void>;
+  loadEscrows: (filter?: EscrowsFilter) => Promise<void>;
+  loadMoreEscrows: () => Promise<void>;
+  resetEscrowsFilter: () => void;
   verifyEscrow: (verificationData: EscrowVerificationForm) => Promise<void>;
   postUsage: (usageData: UsagePostingForm) => Promise<void>;
   connectWallet: () => void;

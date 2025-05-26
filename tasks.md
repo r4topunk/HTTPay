@@ -506,12 +506,32 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Create comprehensive SDK tests for the new functionality
 
 #### 15.4 Frontend Component Enhancement
-- [ ] Update EscrowsList component with filtering capabilities
-- [ ] Add pagination controls with "Load More" functionality
-- [ ] Implement "My Escrows" filter for connected wallet
-- [ ] Update escrow display to show more details
+- [x] Update EscrowsList component with filtering capabilities
+- [x] Add pagination controls with "Load More" functionality
+- [x] Implement "My Escrows" filter for connected wallet
+- [x] Update escrow display to show more details
 
 #### 15.5 Documentation and Quality Assurance
+- [ ] Update SDK and contract documentation
+- [ ] Perform comprehensive testing across all layers
+- [ ] Version management and release coordination
+- [ ] Monitor post-deployment functionality
+- [x] Deploy fresh Registry contract from scratch
+  - [x] Build and optimize registry.wasm
+  - [x] Store contract on Neutron testnet (Code ID: 11942)
+  - [x] Instantiate registry contract (Address: neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn)
+- [x] Deploy fresh Escrow contract with GetEscrows support
+  - [x] Build and optimize escrow.wasm  
+  - [x] Store contract on Neutron testnet (Code ID: 11943)
+  - [x] Instantiate escrow contract with registry address (Address: neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs)
+- [x] Verify GetEscrows query functionality
+- [x] Update deployment.md with new contract addresses
+- [x] Document deployment transaction hashes for reference
+
+#### 15.7 Remaining Tasks
+- [ ] Update frontend configuration with new contract addresses
+- [ ] Update SDK configuration with new contract addresses
+- [ ] Perform end-to-end testing with new contracts
 - [ ] Update SDK and contract documentation
 - [ ] Perform comprehensive testing across all layers
 - [ ] Version management and release coordination

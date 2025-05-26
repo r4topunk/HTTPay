@@ -105,8 +105,8 @@ import { HTTPaySDK } from 'httpay';
 const sdk = new HTTPaySDK({
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
-  registryAddress: 'neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44',
-  escrowAddress: 'neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4',
+  registryAddress: 'neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn',
+  escrowAddress: 'neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs',
 });
 
 // Connect to the blockchain
@@ -473,8 +473,8 @@ npx tsc --noEmit
 const testnetConfig = {
   rpcEndpoint: 'https://rpc-pion-1.neutron.org',
   chainId: 'pion-1',
-  registryAddress: 'neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44',
-  escrowAddress: 'neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4'
+  registryAddress: 'neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn',
+  escrowAddress: 'neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs'
 };
 ```
 

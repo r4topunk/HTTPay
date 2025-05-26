@@ -35,17 +35,26 @@ neutrond tx wasm store artifacts/registry.wasm \
   --from devwallet \
   --gas auto --gas-adjustment 1.3 \
   --fees 30000untrn \
-  --broadcast-mode sync
+  --broadcast-mode sync \
+  --yes | jq -r '.txhash'
+
+# Query the registry contract deployment code
+neutrond query tx 82853C30C96F44AB182479DE9BB0F7702A9E0EB2865AB5C6061EFC2AE58CC4C4 | jq -r '.events[] | select(.type == "store_code") | .attributes[] | select(.key == "code_id") | .value'
 
 # Instantiate registry contract
-# Replace 11934 with the actual code ID of the registry contract
-neutrond tx wasm instantiate 11934 '{}' \
+# Replace the number with the actual code ID of the registry contract
+neutrond tx wasm instantiate 11941 '{}' \
   --from devwallet \
   --label "toolpay-registry" \
   --no-admin \
   --gas auto --gas-adjustment 1.3 \
   --fees 5000untrn \
-  --broadcast-mode sync
+  --broadcast-mode sync \
+  --yes  | jq -r '.txhash'
+
+# Query the registry contract address
+neutrond query tx F74197C7C97F2FAC07B967AE19469FF65C43A2C79145B67C6758269B452B3E34 | jq -r '.events[] | selec
+t(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value'
 
 # Optimize escrow contract
 wasm-opt \
@@ -61,23 +70,48 @@ neutrond tx wasm store artifacts/escrow.wasm \
   --from devwallet \
   --gas auto --gas-adjustment 1.3 \
   --fees 30000untrn \
-  --broadcast-mode sync
+  --broadcast-mode sync \
+  --yes | jq -r '.txhash'
+
+
+# Query the escrow contract deployment code
+neutrond query tx 4BCB1085014A070F30C341A37579EDCE773E7C06D41E067EFA368BC6EC6954A0 | jq -r '.events[] | select(.type == 
+"store_code") | .attributes[] | select(.key == "code_id") | .value'
 
 # Instantiate escrow contract
 # Replace 11935 with the actual code ID of the escrow contract
-# Replace "neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44" with the actual registry contract address
-neutrond tx wasm instantiate 11935 '{"registry_addr": "neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44","fee_percentage":10}' \
+# Replace "neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn" with the actual registry contract address
+neutrond tx wasm instantiate 11935 '{"registry_addr": "neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn","fee_percentage":10}' \
   --from devwallet \
   --label "toolpay-escrow" \
   --no-admin \
   --gas auto --gas-adjustment 1.3 \
   --fees 5000untrn \
   --broadcast-mode sync
+
+# Query the escrow contract address
+neutrond query tx F74197C7C97F2FAC07B967AE19469FF65C43A2C79145B67C6758269B452B3E34 | jq -r '.events[] | selec
+t(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value'
 ```
 ### Deployed Contract Addresses
-- Registry: neutron1hle9gxr8d6r78qssat9v2rxre4g57yt7tn8559wwrevza0wnuh8sqtsu44
-- Escrow: neutron1ukeqlw2hq48jffhwmj5tm6xq8d3fzjpp4e8y022dsaz842sksgeqxus7z4
 
-### Notes
+#### Latest Deployment (Fresh contracts with GetEscrows query support)
+- Registry Code ID: 11942
+- Registry Address: neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn
+- Escrow Code ID: 11943  
+- Escrow Address: neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs
+
+#### Previous Deployment (Deprecated - missing GetEscrows query)
+- Registry: neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn
+- Escrow: neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs
+
+#### Verification
+- GetEscrows query tested and working: `neutrond query wasm contract-state smart neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs '{"get_escrows":{}}'`
+- Returns: `{"data":{"escrows":[]}}`
+
+#### Changes from Previous Deployment
+- Fresh deployment from scratch to ensure GetEscrows query functionality
+- Updated contract labels to include "-fresh" suffix for identification
+- Both contracts deployed with latest code including all query variants
 - Always deploy and instantiate the Registry contract before the Escrow contract
 - Use the provided addresses for integration testing and SDK development

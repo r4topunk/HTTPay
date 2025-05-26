@@ -18,7 +18,7 @@ import { RegisterToolForm } from "./demo/RegisterToolForm";
 import { TestToolDialog } from "./demo/TestToolDialog";
 import { DemoInfoBanner } from "./demo/DemoInfoBanner";
 import { registerToolSchema } from "./demo/types";
-import type { Tool, APIResponse, RegisterToolFormData } from "./demo/types";
+import type { Tool, APIResponse, RegisterToolFormData, TestToolStatus, EscrowCreationError, APITestError } from "./demo/types";
 
 const DemoSectionContent = () => {
   const {
@@ -33,11 +33,12 @@ const DemoSectionContent = () => {
   const { toast } = useToast();
   const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
   const [testDialogOpen, setTestDialogOpen] = useState(false);
-  const [testStatus, setTestStatus] = useState<
-    "idle" | "creating_escrow" | "requesting_service" | "success" | "error"
-  >("idle");
+  const [testStatus, setTestStatus] = useState<TestToolStatus>("idle");
   const [escrowId, setEscrowId] = useState<string>("");
+  const [escrowCreationError, setEscrowCreationError] = useState<EscrowCreationError | null>(null);
   const [apiResponse, setApiResponse] = useState<APIResponse | null>(null);
+  const [apiTestError, setAPITestError] = useState<APITestError | null>(null);
+  const [authToken, setAuthToken] = useState<string>("");
 
   // Form for tool registration
   const registerForm = useForm<RegisterToolFormData>({
@@ -93,7 +94,7 @@ const DemoSectionContent = () => {
     }
   };
 
-  // Handle tool testing with escrow and request
+  // Handle tool testing with enhanced 2-step process
   const handleTestTool = async (tool: Tool) => {
     if (!walletAddress) {
       toast({
@@ -104,100 +105,173 @@ const DemoSectionContent = () => {
       return;
     }
 
+    // Reset all state for new test
     setSelectedTool(tool);
     setTestStatus("idle");
     setEscrowId("");
+    setEscrowCreationError(null);
     setApiResponse(null);
+    setAPITestError(null);
+    setAuthToken("");
     setTestDialogOpen(true);
   };
 
-  const executeToolTest = async () => {
+  // Step 1: Create Escrow
+  const handleCreateEscrow = async () => {
     if (!selectedTool || !walletAddress) return;
 
     setTestStatus("creating_escrow");
+    setEscrowCreationError(null);
 
     try {
-      // Step 1: Create escrow with the exact price (1 call only)
+      // Generate auth token for this test
+      const newAuthToken = `test-${Date.now()}-${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
+      setAuthToken(newAuthToken);
+
       const escrowData = {
         toolId: selectedTool.tool_id,
-        maxFee: selectedTool.price, // Fixed to 1 call
-        authToken: `test-${Date.now()}-${Math.random()
-          .toString(36)
-          .substr(2, 9)}`,
+        maxFee: selectedTool.price, // Fixed to 1 call for demo
+        authToken: newAuthToken,
         ttl: "50",
       };
 
-      await lockFunds(escrowData);
+      const result = await lockFunds(escrowData);
 
-      // Mock escrow ID for demo (in real implementation, this would come from the contract response)
-      const mockEscrowId = Math.floor(Math.random() * 10000).toString();
-      setEscrowId(mockEscrowId);
-
-      // Step 2: Make real API request to the tool endpoint
-      setTestStatus("requesting_service");
-
-      try {
-        const response = await fetch(selectedTool.endpoint, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const responseData = await response.json();
-        setApiResponse(responseData as APIResponse);
-
-        // Step 3: Success
-        setTestStatus("success");
+      // Use the real escrow ID from the contract response (convert number to string for UI)
+      if (result) {
+        setEscrowId(result.escrowId.toString());
+        
+        setTestStatus("escrow_created");
 
         toast({
-          title: "Tool tested successfully",
-          description: `Tool "${selectedTool.tool_id}" responded successfully via escrow`,
+          title: "Escrow created successfully",
+          description: `Escrow ID ${result.escrowId} created with ${selectedTool.price} NTRN locked`,
         });
-
-        // Auto-close after success (longer timeout to let user see response)
-        setTimeout(() => {
-          setTestDialogOpen(false);
-          setTestStatus("idle");
-        }, 8000);
-      } catch (apiError) {
-        console.error("API request failed:", apiError);
-        const errorResponse: APIResponse = {
-          error: true,
-          message: apiError instanceof Error ? apiError.message : 'Unknown API error',
-          timestamp: new Date().toISOString(),
-        };
-        setApiResponse(errorResponse);
-        
-        // Still show success for escrow creation, but note API failure
-        setTestStatus("success");
-        
-        toast({
-          title: "Escrow created, API test failed",
-          description: `Escrow was created but the API at "${selectedTool.endpoint}" failed to respond`,
-          variant: "destructive",
-        });
-
-        // Auto-close after longer timeout to let user see error response
-        setTimeout(() => {
-          setTestDialogOpen(false);
-          setTestStatus("idle");
-        }, 10000);
+      } else {
+        throw new Error("Failed to get escrow result from lockFunds");
       }
+
     } catch (error) {
-      console.error("Error testing tool:", error);
-      setTestStatus("error");
+      console.error("Error creating escrow:", error);
+      
+      const errorDetails: EscrowCreationError = {
+        message: error instanceof Error ? error.message : 'Unknown escrow creation error',
+        details: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString(),
+      };
+      
+      setEscrowCreationError(errorDetails);
+      setTestStatus("escrow_error");
+      
       toast({
-        title: "Test failed",
-        description: "Failed to test the tool. Please try again.",
+        title: "Escrow creation failed",
+        description: "Failed to create escrow. Please try again.",
         variant: "destructive",
       });
     }
+  };
+
+  // Step 2: Test API
+  const handleTestAPI = async () => {
+    if (!selectedTool) return;
+
+    setTestStatus("testing_api");
+    setAPITestError(null);
+    setApiResponse(null);
+
+    try {
+      const response = await fetch(selectedTool.endpoint, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      setApiResponse(responseData as APIResponse);
+      setTestStatus("success");
+
+      toast({
+        title: "API test successful",
+        description: `Tool "${selectedTool.tool_id}" responded successfully`,
+      });
+
+      // Auto-close after success (longer timeout to let user see response)
+      setTimeout(() => {
+        setTestDialogOpen(false);
+        resetTestState();
+      }, 8000);
+
+    } catch (apiError) {
+      console.error("API request failed:", apiError);
+      
+      const errorDetails: APITestError = {
+        message: apiError instanceof Error ? apiError.message : 'Unknown API error',
+        details: apiError instanceof Error ? apiError.stack : undefined,
+        timestamp: new Date().toISOString(),
+        statusCode: apiError instanceof Response ? apiError.status : undefined,
+      };
+      
+      setAPITestError(errorDetails);
+      
+      // Create error response for display
+      const errorResponse: APIResponse = {
+        error: true,
+        message: errorDetails.message,
+        timestamp: errorDetails.timestamp,
+      };
+      setApiResponse(errorResponse);
+      
+      setTestStatus("api_error");
+      
+      toast({
+        title: "API test failed",
+        description: `The API at "${selectedTool.endpoint}" failed to respond properly`,
+        variant: "destructive",
+      });
+
+      // Auto-close after longer timeout for error
+      setTimeout(() => {
+        setTestDialogOpen(false);
+        resetTestState();
+      }, 12000);
+    }
+  };
+
+  // Retry functions
+  const handleRetryEscrow = async () => {
+    setEscrowCreationError(null);
+    await handleCreateEscrow();
+  };
+
+  const handleRetryAPI = async () => {
+    setAPITestError(null);
+    await handleTestAPI();
+  };
+
+  // Handle dialog close
+  const handleDialogClose = (open: boolean) => {
+    setTestDialogOpen(open);
+    if (!open) {
+      resetTestState();
+    }
+  };
+
+  // Reset test state
+  const resetTestState = () => {
+    setTestStatus("idle");
+    setEscrowId("");
+    setEscrowCreationError(null);
+    setApiResponse(null);
+    setAPITestError(null);
+    setAuthToken("");
   };
 
   return (
@@ -263,12 +337,18 @@ const DemoSectionContent = () => {
       {/* Test Tool Dialog */}
       <TestToolDialog
         open={testDialogOpen}
-        onOpenChange={setTestDialogOpen}
+        onOpenChange={handleDialogClose}
         selectedTool={selectedTool}
         testStatus={testStatus}
         escrowId={escrowId}
+        escrowCreationError={escrowCreationError}
         apiResponse={apiResponse}
-        executeToolTest={executeToolTest}
+        apiTestError={apiTestError}
+        authToken={authToken}
+        onCreateEscrow={handleCreateEscrow}
+        onTestAPI={handleTestAPI}
+        onRetryEscrow={handleRetryEscrow}
+        onRetryAPI={handleRetryAPI}
       />
     </section>
   );

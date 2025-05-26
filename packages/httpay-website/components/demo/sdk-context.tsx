@@ -15,6 +15,7 @@ import {
   EscrowVerificationForm,
   UsagePostingForm,
   EscrowsFilter,
+  LockFundsResult,
 } from "./types";
 
 const SDKContext = createContext<SDKContextType | undefined>(undefined);
@@ -399,6 +400,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
         description: `Escrow ${result.escrowId} created successfully. TX: ${result.transactionHash}`,
       });
       await loadEscrows();
+      return result; // Return the result so caller can access escrowId and transactionHash
     } catch (error) {
       console.error("Lock funds failed:", error);
       handleError(error, "locking funds");

@@ -41,6 +41,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   const [escrowsFilter, setEscrowsFilter] = useState<EscrowsFilter>({});
   const [hasMoreEscrows, setHasMoreEscrows] = useState(false);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
+  const [currentBlockHeight, setCurrentBlockHeight] = useState<number | null>(null);
 
   // CosmosKit integration
   const {
@@ -284,6 +285,34 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     const height = await client.getHeight();
     return height;
   }, [sdk]);
+
+  const updateBlockHeight = useCallback(async () => {
+    if (!sdk || !isConnected) return;
+    
+    try {
+      const height = await getCurrentBlockHeight();
+      setCurrentBlockHeight(height);
+    } catch (error) {
+      // Silently fail for block height updates to avoid spam
+      console.warn("Failed to fetch block height:", error);
+    }
+  }, [sdk, isConnected, getCurrentBlockHeight]);
+
+  // Set up interval to update block height every 10 seconds when connected
+  useEffect(() => {
+    if (!isConnected || !sdk) {
+      setCurrentBlockHeight(null);
+      return;
+    }
+
+    // Initial fetch
+    updateBlockHeight();
+
+    // Set up interval
+    const interval = setInterval(updateBlockHeight, 1000); // 1 second
+
+    return () => clearInterval(interval);
+  }, [isConnected, sdk, updateBlockHeight]);
 
   const loadEscrows = useCallback(async (filter?: EscrowsFilter) => {
     if (!sdk) return;
@@ -532,6 +561,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
     isWalletConnecting,
     isWalletDisconnected,
     isWalletError,
+    currentBlockHeight,
     setSdkConfig,
     initializeSDK,
     initSDKWithWallet,

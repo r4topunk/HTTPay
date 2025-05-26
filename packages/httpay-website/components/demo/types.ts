@@ -65,6 +65,7 @@ export interface SDKContextType {
   isWalletConnecting: boolean;
   isWalletDisconnected: boolean;
   isWalletError: boolean;
+  currentBlockHeight: number | null;
   
   // Actions
   setSdkConfig: (config: HTTPaySDKConfig) => void;

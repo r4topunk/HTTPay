@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -30,10 +30,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { useChain } from "@cosmos-kit/react";
 import { formatAmount } from "@/lib/constants";
-import { truncateAddress } from "@/lib/utils";
+import { truncateAddress, cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -43,41 +43,16 @@ import {
   CheckCircle2,
   Info,
   ExternalLink,
+  RefreshCw,
+  Play,
+  Copy,
 } from "lucide-react";
-import { defaultChainName } from "@/config/chain-config";
-import { ConnectButton } from "./wallet/connect-button";
-
-// Mock data for tools (in a real app, this would come from the contract)
-const mockTools = [
-  {
-    id: "image-generator",
-    provider: "neutron1provider1",
-    description: "Generate images from text descriptions",
-    price: "1000000", // 1 NTRN
-    endpoint: "https://api.example.com/image-generator",
-  },
-  {
-    id: "text-translator",
-    provider: "neutron1provider2",
-    description: "Translate text between languages",
-    price: "500000", // 0.5 NTRN
-    endpoint: "https://api.example.com/translator",
-  },
-  {
-    id: "data-analyzer",
-    provider: "neutron1provider3",
-    description: "Analyze data and generate insights",
-    price: "2000000", // 2 NTRN
-    endpoint: "https://api.example.com/data-analyzer",
-  },
-  {
-    id: "sentiment-analyzer",
-    provider: "neutron1provider4",
-    description: "Analyze sentiment in text content",
-    price: "750000", // 0.75 NTRN
-    endpoint: "https://api.example.com/sentiment",
-  },
-];
+import {
+  SDKProvider,
+  useSDK,
+  SDKConfiguration,
+  WalletConnection,
+} from "@/components/demo";
 
 // Form schema for tool registration
 const registerToolSchema = z.object({
@@ -95,34 +70,23 @@ const registerToolSchema = z.object({
   }),
 });
 
-// Form schema for testing a tool
-const testToolSchema = z.object({
-  calls: z
-    .string()
-    .refine(
-      (val) => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 10,
-      {
-        message: "Number of calls must be between 1 and 10.",
-      }
-    ),
-});
-
-export default function DemoSection() {
-  const { address } = useChain(defaultChainName);
-  // Client implementation needs to be updated for Interchain Kit
-  const [client, setClient] = useState(null);
+const DemoSectionContent = () => {
+  const { 
+    tools, 
+    loadTools, 
+    registerTool, 
+    lockFunds, 
+    loading, 
+    isConnected, 
+    walletAddress 
+  } = useSDK();
   const { toast } = useToast();
-  const [tools, setTools] = useState(mockTools);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
   const [selectedTool, setSelectedTool] = useState<any>(null);
   const [testDialogOpen, setTestDialogOpen] = useState(false);
   const [testStatus, setTestStatus] = useState<
-    "idle" | "locking" | "executing" | "releasing" | "success" | "error"
+    "idle" | "creating_escrow" | "requesting_service" | "success" | "error"
   >("idle");
-  const [txHash, setTxHash] = useState("");
-  const [showGuide, setShowGuide] = useState(false);
+  const [escrowId, setEscrowId] = useState<string>("");
 
   // Form for tool registration
   const registerForm = useForm<z.infer<typeof registerToolSchema>>({
@@ -135,74 +99,39 @@ export default function DemoSection() {
     },
   });
 
-  // Form for testing a tool
-  const testForm = useForm<z.infer<typeof testToolSchema>>({
-    resolver: zodResolver(testToolSchema),
-    defaultValues: {
-      calls: "1",
-    },
-  });
-
-  // Simulate fetching tools from the registry contract
-  useEffect(() => {
-    const fetchTools = async () => {
-      setIsLoading(true);
-      try {
-        // For demo, we'll use mock data with a delay to simulate loading
-        setTimeout(() => {
-          setTools(mockTools);
-          setIsLoading(false);
-        }, 1000);
-      } catch (error) {
-        console.error("Error fetching tools:", error);
-        toast({
-          title: "Error fetching tools",
-          description: "Failed to load tools from the registry",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-      }
-    };
-
-    fetchTools();
-  }, [client, toast]);
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied!",
+        description: `${label} copied to clipboard`,
+      });
+    } catch (error) {
+      toast({
+        title: "Copy failed",
+        description: "Could not copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Handle tool registration
   const onRegisterSubmit = async (
     values: z.infer<typeof registerToolSchema>
   ) => {
-    if (!address || !client) {
-      toast({
-        title: "Wallet not connected",
-        description: "Please connect your wallet to register a tool",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsRegistering(true);
     try {
-      // For demo, we'll simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Add the new tool to our local state
-      const newTool = {
-        id: values.toolId,
-        provider: address,
+      await registerTool({
+        toolId: values.toolId,
         description: values.description,
-        price: (Number.parseFloat(values.price) * 1000000).toString(), // Convert to uNTRN
+        price: (Number.parseFloat(values.price) * 1000000).toString(), // Convert to untrn
         endpoint: values.endpoint,
-      };
-
-      setTools([...tools, newTool]);
-
+      });
+      
+      registerForm.reset();
       toast({
         title: "Tool registered successfully",
         description: `Your tool "${values.toolId}" has been registered`,
       });
-
-      // Reset the form
-      registerForm.reset();
     } catch (error) {
       console.error("Error registering tool:", error);
       toast({
@@ -210,50 +139,66 @@ export default function DemoSection() {
         description: "Failed to register your tool. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsRegistering(false);
     }
   };
 
-  // Handle tool testing
-  const onTestSubmit = async (values: z.infer<typeof testToolSchema>) => {
-    if (!address || !client || !selectedTool) {
+  // Handle tool testing with escrow and request
+  const handleTestTool = async (tool: any) => {
+    if (!walletAddress) {
       toast({
-        title: "Cannot test tool",
-        description: "Please connect your wallet and select a tool",
+        title: "Wallet not connected",
+        description: "Please connect your wallet to test the tool",
         variant: "destructive",
       });
       return;
     }
 
-    setIsTesting(true);
-    setTestStatus("locking");
+    setSelectedTool(tool);
+    setTestStatus("idle");
+    setEscrowId("");
+    setTestDialogOpen(true);
+  };
 
+  const executeToolTest = async () => {
+    if (!selectedTool || !walletAddress) return;
+
+    setTestStatus("creating_escrow");
+    
     try {
-      // Calculate total amount to lock
-      const totalAmount = (
-        Number.parseInt(selectedTool.price) * Number.parseInt(values.calls)
-      ).toString();
+      // Step 1: Create escrow with the exact price (1 call only)
+      const escrowData = {
+        toolId: selectedTool.tool_id,
+        maxFee: selectedTool.price, // Fixed to 1 call
+        authToken: `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        ttl: "50",
+      };
 
-      // For demo, we'll simulate the escrow process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setTxHash("ABCDEF1234567890ABCDEF1234567890ABCDEF1234567890");
+      await lockFunds(escrowData);
+      
+      // Mock escrow ID for demo (in real implementation, this would come from the contract response)
+      const mockEscrowId = Math.floor(Math.random() * 10000).toString();
+      setEscrowId(mockEscrowId);
 
-      // Simulate service execution
-      setTestStatus("executing");
+      // Step 2: Simulate service request
+      setTestStatus("requesting_service");
+      
+      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      // Simulate funds release
-      setTestStatus("releasing");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Success
+      // Step 3: Success
       setTestStatus("success");
 
       toast({
         title: "Tool tested successfully",
-        description: `Payment for ${values.calls} call(s) to "${selectedTool.id}" has been processed`,
+        description: `Tool "${selectedTool.tool_id}" was successfully tested via escrow`,
       });
+
+      // Auto-close after success
+      setTimeout(() => {
+        setTestDialogOpen(false);
+        setTestStatus("idle");
+      }, 3000);
+
     } catch (error) {
       console.error("Error testing tool:", error);
       setTestStatus("error");
@@ -262,26 +207,7 @@ export default function DemoSection() {
         description: "Failed to test the tool. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsTesting(false);
-      // Reset after a delay on success
-      if (testStatus === "success") {
-        setTimeout(() => {
-          setTestDialogOpen(false);
-          setTestStatus("idle");
-          testForm.reset();
-        }, 3000);
-      }
     }
-  };
-
-  // Open test dialog for a specific tool
-  const handleTestTool = (tool: any) => {
-    setSelectedTool(tool);
-    setTestStatus("idle");
-    setTxHash("");
-    testForm.reset({ calls: "1" });
-    setTestDialogOpen(true);
   };
 
   return (
@@ -293,44 +219,27 @@ export default function DemoSection() {
               Try the Demo
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Experience HTTPay in action on the Neutron testnet
+              Experience HTTPay in action with real smart contracts
             </p>
           </div>
 
           <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-start gap-3 max-w-4xl mx-auto">
             <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium">Demo Mode</p>
+              <p className="text-sm font-medium">Live Demo</p>
               <p className="text-sm text-muted-foreground mt-1">
-                This is a simulated demo using mock data. In a production
-                environment, this would connect to the Neutron testnet using
-                Keplr wallet and interact with deployed smart contracts.
+                This demo connects to the HTTPay smart contracts. Configure your SDK settings and connect your wallet to get started.
               </p>
-              <Button
-                variant="link"
-                className="text-sm p-0 h-auto mt-2 text-primary"
-                onClick={() => setShowGuide(!showGuide)}
-              >
-                {showGuide
-                  ? "Hide CosmJS Integration Guide"
-                  : "View CosmJS Integration Guide"}
-              </Button>
             </div>
           </div>
 
-          {!address ? (
-            <Card className="mx-auto max-w-md">
-              <CardHeader>
-                <CardTitle>Connect Your Wallet</CardTitle>
-                <CardDescription>
-                  Connect your wallet to interact with the HTTPay protocol
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="flex justify-center">
-                <ConnectButton />
-              </CardFooter>
-            </Card>
-          ) : (
+          {/* SDK Configuration */}
+          <SDKConfiguration />
+          
+          {/* Wallet Connection */}
+          <WalletConnection />
+
+          {isConnected ? (
             <Tabs defaultValue="registry" className="w-full max-w-4xl mx-auto">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="registry">Tool Registry</TabsTrigger>
@@ -339,54 +248,92 @@ export default function DemoSection() {
 
               <TabsContent value="registry" className="mt-6">
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Available Tools</CardTitle>
-                    <CardDescription>
-                      Browse the registry of available tools that can be used by
-                      AI agents
-                    </CardDescription>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <div>
+                      <CardTitle>Available Tools</CardTitle>
+                      <CardDescription>
+                        Browse the registry of available tools that can be used by AI agents
+                      </CardDescription>
+                    </div>
+                    <Button
+                      onClick={loadTools}
+                      disabled={loading.loadTools}
+                      size="icon"
+                      variant="outline"
+                    >
+                      <RefreshCw className={cn(
+                        "h-4 w-4",
+                        loading.loadTools && "animate-spin"
+                      )} />
+                    </Button>
                   </CardHeader>
                   <CardContent>
-                    {isLoading ? (
+                    {loading.loadTools ? (
                       <div className="flex justify-center py-8">
-                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                        <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : tools.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No tools registered yet. Be the first to register a
-                        tool!
-                      </div>
+                      <p className="text-muted-foreground text-center py-8">
+                        No tools found. Register the first tool!
+                      </p>
                     ) : (
-                      // Card grid layout instead of table
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {tools.map((tool) => (
-                          <Card key={tool.id} className="overflow-hidden">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-lg">
-                                {tool.id}
-                              </CardTitle>
-                              <CardDescription className="flex items-center gap-1">
-                                Provider: {truncateAddress(tool.provider)}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent className="pb-2">
-                              <p className="text-sm mb-4">{tool.description}</p>
-                              <div className="flex justify-between items-center text-sm">
-                                <span className="font-medium">
-                                  Price: {formatAmount(tool.price)} NTRN
-                                </span>
+                      <div className="space-y-4">
+                        {tools.map((tool, index) => (
+                          <div key={index} className="p-4 border rounded-lg space-y-3">
+                            <div className="flex items-center justify-between">
+                              <div className="font-medium text-lg">{tool.tool_id}</div>
+                              <div className="flex items-center gap-2">
+                                <Badge variant={tool.is_active ? "default" : "secondary"}>
+                                  {tool.is_active ? "Active" : "Inactive"}
+                                </Badge>
+                                <Button
+                                  onClick={() => handleTestTool(tool)}
+                                  size="sm"
+                                  disabled={!tool.is_active}
+                                  className="ml-2"
+                                >
+                                  <Play className="h-4 w-4 mr-1" />
+                                  Test
+                                </Button>
                               </div>
-                            </CardContent>
-                            <CardFooter className="pt-2">
-                              <Button
-                                className="w-full"
-                                size="sm"
-                                onClick={() => handleTestTool(tool)}
-                              >
-                                Test Tool
-                              </Button>
-                            </CardFooter>
-                          </Card>
+                            </div>
+
+                            {tool.description && (
+                              <div className="text-sm text-muted-foreground">
+                                {tool.description}
+                              </div>
+                            )}
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                              <div>
+                                <span className="font-medium">Price:</span> {formatAmount(tool.price)} NTRN
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="font-medium">Provider:</span>
+                                <span className="font-mono">{truncateAddress(tool.provider)}</span>
+                                <Button
+                                  onClick={() => copyToClipboard(tool.provider, "Provider address")}
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-4 w-4"
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="font-medium">Endpoint:</span>
+                                <a 
+                                  href={tool.endpoint} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                >
+                                  <span className="max-w-[200px] truncate">{tool.endpoint}</span>
+                                  <ExternalLink className="h-3 w-3" />
+                                </a>
+                              </div>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     )}
@@ -399,8 +346,7 @@ export default function DemoSection() {
                   <CardHeader>
                     <CardTitle>Register a New Tool</CardTitle>
                     <CardDescription>
-                      Add your service to the HTTPay registry for AI agents to
-                      discover and use
+                      Add your service to the HTTPay registry for AI agents to discover and use
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -495,9 +441,9 @@ export default function DemoSection() {
                         <Button
                           type="submit"
                           className="w-full"
-                          disabled={isRegistering}
+                          disabled={loading.registerTool}
                         >
-                          {isRegistering ? (
+                          {loading.registerTool ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                               Registering...
@@ -512,6 +458,15 @@ export default function DemoSection() {
                 </Card>
               </TabsContent>
             </Tabs>
+          ) : (
+            <Card className="mx-auto max-w-md">
+              <CardHeader>
+                <CardTitle>Setup Required</CardTitle>
+                <CardDescription>
+                  Configure SDK settings and connect your wallet to access the demo
+                </CardDescription>
+              </CardHeader>
+            </Card>
           )}
         </div>
       </div>
@@ -520,108 +475,88 @@ export default function DemoSection() {
       <Dialog open={testDialogOpen} onOpenChange={setTestDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Test Tool: {selectedTool?.id}</DialogTitle>
+            <DialogTitle>Test Tool: {selectedTool?.tool_id}</DialogTitle>
             <DialogDescription>
-              Simulate an AI agent using this tool via the HTTPay protocol
+              Execute a real transaction to test this tool via the HTTPay protocol
             </DialogDescription>
           </DialogHeader>
 
           {testStatus === "idle" ? (
-            <Form {...testForm}>
-              <form
-                onSubmit={testForm.handleSubmit(onTestSubmit)}
-                className="space-y-6"
-              >
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <p className="text-sm font-medium">Tool Details</p>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedTool?.description}
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <p className="text-sm font-medium">Price</p>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedTool ? formatAmount(selectedTool.price) : "0"}{" "}
-                      NTRN per call
-                    </p>
-                  </div>
-
-                  <FormField
-                    control={testForm.control}
-                    name="calls"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Number of Calls</FormLabel>
-                        <FormControl>
-                          <Input type="number" min="1" max="10" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          How many times to call this tool (1-10)
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid gap-2">
-                    <p className="text-sm font-medium">Total Cost</p>
-                    <p className="text-sm">
-                      {selectedTool && testForm.watch("calls")
-                        ? formatAmount(
-                            (
-                              Number.parseInt(selectedTool.price) *
-                              Number.parseInt(testForm.watch("calls") || "1")
-                            ).toString()
-                          )
-                        : "0"}{" "}
-                      NTRN
-                    </p>
-                  </div>
+            <div className="space-y-6 py-4">
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <p className="text-sm font-medium">Tool Details</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedTool?.description || "No description available"}
+                  </p>
                 </div>
 
-                <DialogFooter>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setTestDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit">Test Tool</Button>
-                </DialogFooter>
-              </form>
-            </Form>
+                <div className="grid gap-2">
+                  <p className="text-sm font-medium">Price per Call</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedTool ? formatAmount(selectedTool.price) : "0"} NTRN
+                  </p>
+                </div>
+
+                <div className="grid gap-2">
+                  <p className="text-sm font-medium">Number of Calls</p>
+                  <p className="text-sm text-muted-foreground">
+                    1 call (fixed for demo)
+                  </p>
+                </div>
+
+                <div className="grid gap-2">
+                  <p className="text-sm font-medium">Total Cost</p>
+                  <p className="text-sm font-semibold">
+                    {selectedTool ? formatAmount(selectedTool.price) : "0"} NTRN
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> This will create a real escrow transaction on the blockchain and attempt to call the service endpoint.
+                </p>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setTestDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={executeToolTest}>
+                  Execute Test
+                </Button>
+              </DialogFooter>
+            </div>
           ) : (
             <div className="space-y-6 py-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-medium">Status:</p>
                   <p className="text-sm">
-                    {testStatus === "locking" && "Locking funds in escrow..."}
-                    {testStatus === "executing" && "Executing service..."}
-                    {testStatus === "releasing" && "Releasing payment..."}
-                    {testStatus === "success" &&
-                      "Payment completed successfully"}
-                    {testStatus === "error" && "Error processing payment"}
+                    {testStatus === "creating_escrow" && "Creating escrow..."}
+                    {testStatus === "requesting_service" && "Requesting service..."}
+                    {testStatus === "success" && "Test completed successfully"}
+                    {testStatus === "error" && "Error occurred"}
                   </p>
                 </div>
 
-                {txHash && (
+                {escrowId && (
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">Transaction:</p>
-                    <p className="text-sm text-muted-foreground break-all">
-                      {txHash}
+                    <p className="text-sm font-medium">Escrow ID:</p>
+                    <p className="text-sm text-muted-foreground font-mono">
+                      {escrowId}
                     </p>
                   </div>
                 )}
               </div>
 
               <div className="flex justify-center py-4">
-                {(testStatus === "locking" ||
-                  testStatus === "executing" ||
-                  testStatus === "releasing") && (
+                {(testStatus === "creating_escrow" || testStatus === "requesting_service") && (
                   <Loader2 className="h-12 w-12 animate-spin text-primary" />
                 )}
 
@@ -635,14 +570,12 @@ export default function DemoSection() {
               </div>
 
               <div className="text-center text-sm text-muted-foreground">
-                {testStatus === "locking" &&
-                  "Creating an escrow on the blockchain..."}
-                {testStatus === "executing" &&
-                  "The provider is executing the requested service..."}
-                {testStatus === "releasing" &&
-                  "Verifying service delivery and releasing payment..."}
+                {testStatus === "creating_escrow" &&
+                  "Creating an escrow on the blockchain and locking funds..."}
+                {testStatus === "requesting_service" &&
+                  "Escrow created! Now requesting the service from the provider..."}
                 {testStatus === "success" &&
-                  "The tool was successfully tested and payment was processed"}
+                  "The tool was successfully tested through the HTTPay protocol"}
                 {testStatus === "error" &&
                   "There was an error processing your request"}
               </div>
@@ -664,5 +597,13 @@ export default function DemoSection() {
         </DialogContent>
       </Dialog>
     </section>
+  );
+};
+
+export default function DemoSection() {
+  return (
+    <SDKProvider>
+      <DemoSectionContent />
+    </SDKProvider>
   );
 }

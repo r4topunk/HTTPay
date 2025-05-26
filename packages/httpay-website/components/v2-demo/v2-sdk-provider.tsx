@@ -7,9 +7,7 @@ import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
   RegistryQueryClient,
   RegistryClient,
-  ToolResponse,
-  ToolsResponse,
-  Uint128,
+  RegistryTypes,
 } from "httpay-sdk";
 
 // Default chain configuration
@@ -35,8 +33,8 @@ interface V2SDKContextType {
   signingClient: RegistryClient | null;
   
   // Data
-  tools: ToolResponse[];
-  
+  tools: RegistryTypes.ToolResponse[];
+
   // Loading states
   loading: Record<string, boolean>;
   
@@ -86,7 +84,7 @@ export const V2SDKProvider = ({ children }: V2SDKProviderProps) => {
   const [signingClient, setSigningClient] = useState<RegistryClient | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [hasSigningCapabilities, setHasSigningCapabilities] = useState(false);
-  const [tools, setTools] = useState<ToolResponse[]>([]);
+  const [tools, setTools] = useState<RegistryTypes.ToolResponse[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
 
   // CosmosKit integration
@@ -181,8 +179,8 @@ export const V2SDKProvider = ({ children }: V2SDKProviderProps) => {
 
     try {
       setLoadingState("tools", true);
-      
-      const response: ToolsResponse = await queryClient.getTools();
+
+      const response: RegistryTypes.ToolsResponse = await queryClient.getTools();
       setTools(response.tools);
     } catch (error) {
       handleError(error, "loading tools");
@@ -207,7 +205,7 @@ export const V2SDKProvider = ({ children }: V2SDKProviderProps) => {
 
       const result = await signingClient.registerTool({
         toolId: toolData.toolId,
-        price: toolData.price as Uint128,
+        price: toolData.price as RegistryTypes.Uint128,
         description: toolData.description,
         endpoint: toolData.endpoint,
         denom: toolData.denom,

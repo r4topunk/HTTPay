@@ -1,0 +1,37 @@
+# Source files
+src/
+*.ts
+!dist/*.d.ts
+
+# Development files
+tsconfig.json
+rollup.config.js
+.eslintrc*
+.prettierrc*
+
+# Build artifacts
+node_modules/
+coverage/
+*.log
+*.tgz
+
+# IDE and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Testing
+__tests__/
+*.test.*
+*.spec.*
+jest.config.*
+
+# Development dependencies
+pnpm-lock.yaml
+yarn.lock
+package-lock.json

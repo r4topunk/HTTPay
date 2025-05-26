@@ -1,14 +1,15 @@
-# HTTPay – Pagamentos Autônomos para a Era IA + Web3
+# HTTPay – Marketplace de APIs com Pagamentos Autônomos
 
 ## Tópicos Principais
 
-- Integração IA e blockchain para mercados automatizados
-- Capacita agentes de IA para transações autônomas
-- Infraestrutura para a nova economia de agentes
+- Marketplace onde desenvolvedores monetizam APIs para agentes de IA
+- Pagamentos autônomos via contratos inteligentes
+- Nova fonte de receita para desenvolvedores e criadores de APIs
+- Infraestrutura para economia de APIs automatizada
 
 ### Notas do Apresentador
 
-Gm, jurados. Apresento o HTTPay, um protocolo que une Inteligência Artificial e Web3 para permitir que agentes autônomos realizem pagamentos com segurança e automaticamente. Meu projeto surge para acompanhar a convergência entre IA e blockchain – duas tendências tecnológicas fundamentais – criando infraestrutura essencial para uma futura economia de agentes autônomos (máquinas negociando com máquinas). Em resumo, o HTTPay capacita agentes de IA para pagar e receber uns dos outros sem intervenção humana, de forma confiável. Vou mostrar como isso traz valor de mercado e impacto estratégico, suportado pela tecnologia da Cosmos.
+Gm, jurados. Apresento o HTTPay, um marketplace que permite desenvolvedores monetizarem suas APIs através de pagamentos autônomos de agentes de IA. O projeto explora uma nova economia emergente onde APIs são descobertas, contratadas e pagas automaticamente, sem intervenção humana no processo de contratação de serviços. Vou mostrar como isso gera valor tanto para desenvolvedores quanto consumidores.
 
 ---
 
@@ -16,14 +17,14 @@ Gm, jurados. Apresento o HTTPay, um protocolo que une Inteligência Artificial e
 
 ## Tópicos Principais
 
-- Agentes de IA precisam acessar serviços e dados pagos
-- Faltam meios confiáveis para transações autônomas
-- Pagamentos tradicionais dificultam a automação completa
-- Barreira técnica para a autonomia da IA
+- Desenvolvedores têm APIs valiosas mas dificuldade em monetizar para IAs
+- Agentes de IA precisam descobrir e pagar por serviços automaticamente
+- Falta marketplace focado em consumidores autônomos
+- Oportunidade de criar nova economia de APIs
 
 ### Notas do Apresentador
 
-Que problema quero resolver? Com a ascensão de agentes de IA cada vez mais capazes (pense em frameworks como ElizaOS e OnChainKit), encontramos uma limitação prática: esses agentes não conseguem pagar por recursos ou serviços por conta própria. Se uma IA precisa acessar uma API paga, contratar um serviço online ou remunerar outra IA, ela depende de um humano para intervir e fazer o pagamento. Isso cria atrito, atrasos e custos – exatamente o oposto da eficiência esperada da automação. Os métodos de pagamento atuais (cartões de crédito, gateways centralizados) simplesmente não foram projetados para decisões autônomas em tempo real. Assim, há uma grande oportunidade: o desenvolvimento de um protocolo para preencher essa lacuna – possibilitando pagamentos autônomos seguros – isso desbloqueará um novo nível de serviços automatizados e eficientes que rodam noite e dia sem supervisão humana.
+Desenvolvedores criam APIs poderosas mas monetizar para agentes de IA é complexo. Agentes autônomos (ElizaOS, LangChain) precisam descobrir e contratar APIs dinamicamente, mas não existe marketplace focado neles. Métodos atuais exigem integrações manuais e pagamentos pré-aprovados por humanos. A oportunidade: criar um marketplace onde desenvolvedores listam APIs e agentes as descobrem e pagam pelo seu uso, desbloqueando nova fonte de receita e automação completa.
 
 ---
 
@@ -31,14 +32,14 @@ Que problema quero resolver? Com a ascensão de agentes de IA cada vez mais capa
 
 ## Tópicos Principais
 
-- Protocolo de pagamento para agentes de IA
-- Transações autônomas sem intervenção humana
-- Contratos inteligentes que garantem confiança e regras automáticas
-- API para integração com IAs
+- Marketplace descentralizado de APIs para agentes de IA
+- Empresas registram e precificam suas APIs no Registry
+- Agentes descobrem, contratam e pagam automaticamente
+- Contratos inteligentes garantem pagamentos seguros
 
 ### Notas do Apresentador
 
-Conheça minha solução: o HTTPay é um protocolo de pagamento por serviços de API feita focada em agentes autônomos. Na prática, o HTTPay funciona como a 'carteira digital e orquestrador de pagamentos' para um agente. Com ele, um agente de IA pode utilizar de uma carteira crypto para interagir com serviços da internet. Por exemplo, uma IA pode remunerar outra por um serviço prestado ou pagar pelo acesso a uma API de dados de mercado, tudo sem precisar de um humano para autorizar. Construí essas regras usando Contratos Inteligentes CosmWasm na blockchain Cosmos – o que garante que cada transação obedeça às condições programadas e seja transparente e segura. E para facilitar a adoção, ofereço integração simples via SDK Typescript: desenvolvedores podem conectar seus agentes ao HTTPay com poucas linhas de código, habilitando pagamentos autônomos rapidamente.
+O HTTPay é um marketplace descentralizado onde desenvolvedores publicam suas APIs e agentes de IA as consomem autonomamente. Funciona em duas etapas: primeiro, desenvolvedores registram suas APIs no Registry Contract com preços por chamada. Segundo, agentes descobrem essas APIs, bloqueiam fundos no Escrow Contract e são cobrados automaticamente após enviada a resposta da API. Construído com CosmWasm, garantimos transparência e segurança. Buscando uma adoção em massa, oferecemos uma SDK Typescript para desenvolvedores integrarem facilmente seus agentes ao marketplace.
 
 ---
 
@@ -46,14 +47,14 @@ Conheça minha solução: o HTTPay é um protocolo de pagamento por serviços de
 
 ## Tópicos Principais
 
-- Possibilita serviços automatizados 24/7
-- Reduz custos em microtransações frequentes
-- Posiciona a Cosmos na vanguarda de IA + Web3
-- Mercado em expansão: união de indústrias bilionárias
+- Nova fonte de receita para desenvolvedores e criadores de APIs
+- Monetização automatizada sem gestão manual de billing
+- Mercado de APIs estimado em $6+ bilhões globalmente
+- Primeiro marketplace focado em consumidores autônomos
 
 ### Notas do Apresentador
 
-Qual é o valor que o HTTPay entrega e por que isso é estrategicamente importante? Primeiro, o protocolo desbloqueia uma nova geração de serviços automatizados. Imagine ecossistemas onde agentes podem contratar outros agentes, ou ter acessos a dados atualizados, 24 horas por dia – isso se torna viável quando eliminamos a barreira do pagamento manual. Estrategicamente, ao unir IA e blockchain, posiciono o ecossistema Cosmos na vanguarda dessa união high-tech. Isso atrai novos desenvolvedores e usuários para a Cosmos, apresentando um caso de uso inovador alinhado com as maiores tendências do momento. Finalmente, o potencial de mercado aqui é enorme: estamos na interseção de duas indústrias bilionárias em crescimento exponencial. Em outras palavras, o impacto do desenvolvimento do protocolo HTTPay pode ser global, servindo como infraestrutura para um mercado emergente e altamente valioso.
+Para desenvolvedores: o HTTPay cria nova fonte de receita automatizada. APIs que antes tinham poucos clientes agora podem ser monetizadas por milhares de agentes autônomos, sem gestão manual de billing ou integrações complexas. Para agentes: acesso instantâneo a serviços especializados sem depender de humanos para configuração. O mercado global de APIs já vale $6+ bilhões e está crescendo 25% ao ano. Somos o primeiro marketplace projetado especificamente para consumidores autônomos, posicionando a Cosmos na vanguarda dessa convergência entre AI e Blockchain.
 
 ---
 
@@ -68,7 +69,7 @@ Qual é o valor que o HTTPay entrega e por que isso é estrategicamente importan
 
 ### Notas do Apresentador
 
-Vale destacar o timing da minha solução em relação às tendências. Estamos vivenciando duas revoluções tecnológicas simultâneas: por um lado, a explosão da IA generativa e agentes autônomos capazes de executar tarefas complexas (vemos iniciativas como o framework Eliza e OnChainKit evoluindo rapidamente); por outro, o avanço da Web3 e blockchains, que oferecem um ambiente sem confiança central e com ativos digitais programáveis. É natural que esses dois mundos comecem a convergir – e, de fato, já vemos grandes empresas e startups investindo pesadamente nessa interseção entre IA e blockchain. O HTTPay nasce precisamente nesse contexto: o protocolo busca aproveitar o melhor dos dois universos, unindo a capacidade de tomada de decisão autônoma que a IA traz com a capacidade de execução financeira segura que o blockchain proporciona. Estou posicionado na crista dessa onda de convergência, o que aumenta as chances de adoção e relevância da da solução.
+O timing é perfeito: vemos explosão da IA generativa e agentes autônomos, enquanto Web3 oferece ativos digitais programáveis. Grandes empresas já investem pesadamente nessa interseção. O HTTPay aproveita o melhor dos dois mundos: decisão autônoma da IA + execução financeira segura do blockchain.
 
 ---
 
@@ -83,7 +84,7 @@ Vale destacar o timing da minha solução em relação às tendências. Estamos 
 
 ### Notas do Apresentador
 
-Desenvolvi minha solução diretamente na plataforma Cosmos, aproveitando o CosmWasm para escrever os contratos inteligentes que gerenciam os pagamentos dos agentes. O CosmWasm me dá a flexibilidade para programar lógicas complexas de forma rápida e segura, ideal no contexto de hackathon e além. Outra vantagem-chave do Cosmos é o IBC – Inter-Blockchain Communication: com ele, o HTTPay não está restrito a uma única cadeia, e pode transferir valor entre múltiplas blockchains no ecossistema. Isso significa que um agente em uma rede pode pagar outro agente em outra rede de forma transparente, expandindo enormemente o alcance da solução. Tecnicamente, o Cosmos também fornece a escalabilidade e baixas taxas necessárias para suportar um grande volume de microtransações (que é o caso de agentes trocando valor frequentemente). E tudo isso vem com a robustez de uma rede descentralizada de múltiplos nós validadores, garantindo a segurança e confiabilidade que uma infraestrutura de pagamento autônoma exige.
+CosmWasm me dá flexibilidade para programar lógicas complexas rapidamente. O IBC permite que agentes em diferentes redes possam utilizar o protocolo, expandindo o alcance do marketplace. A Cosmos fornece escalabilidade e baixas taxas para microtransações frequentes, com segurança de uma rede descentralizada.
 
 ---
 
@@ -91,14 +92,14 @@ Desenvolvi minha solução diretamente na plataforma Cosmos, aproveitando o Cosm
 
 ## Tópicos Principais
 
-- IA compra dados externos via pagamento autônomo
-- Contrato inteligente garante liberação após entrega
-- Processo inteiro sem intervenção humana
-- Transação rápida, confiável e rastreável
+- Agente descobre API de dados financeiros no marketplace
+- Bloqueia fundos no escrow e recebe token de autenticação
+- Consome API e provedor verifica pagamento automaticamente
+- Processo marketplace completo sem intervenção humana
 
 ### Notas do Apresentador
 
-Para tornar tudo mais concreto, vamos ver um caso de uso. Imagine um assistente de vendas virtual, uma IA autônoma, que identificou um cliente potencial e quer impressioná-lo com uma análise de mercado personalizada. Para isso, essa IA precisa de dados financeiros atualizados de uma fonte externa que cobra pelo acesso. Em vez de acionar uma pessoa para aprovar a compra desses dados, o próprio agente de IA faz o pagamento usando o HTTPay. O contrato inteligente do HTTPay entra em cena: ele mantém o valor em custódia e só libera o pagamento para a API após os dados serem entregues de volta ao agente. Tudo é registrado na blockchain para transparência. No final, a tarefa foi concluída sem qualquer intervenção humana – o agente conseguiu comprar as informações necessárias de forma autônoma, rápida e confiável.
+Um agente de IA precisa de dados financeiros para análise. Ele consulta o HTTPay Registry, encontra uma API de dados em tempo real criada por um desenvolvedor independente por 0.01 NTRN por chamada. O agente bloqueia fundos no escrow, e usa o token de autenticação para chamar a API. O desenvolvedor verifica o escrow, entrega os dados e reivindica o pagamento automaticamente. Todo o ciclo marketplace-descoberta-pagamento-entrega acontece sem humanos (a não ser que o humano decida aprovar antes de cada pagamento).
 
 ---
 
@@ -106,13 +107,14 @@ Para tornar tudo mais concreto, vamos ver um caso de uso. Imagine um assistente 
 
 ## Tópicos Principais
 
-- Alternativas dependem de intermediários centralizados
-- Blockchains genéricas não otimizam microtransações automáticas
-- Design específico para agentes de IA
+- Marketplaces existentes focam em humanos, não agentes
+- APIs empresariais exigem contratos e integrações manuais
+- Primeiro marketplace nativo para consumidores autônomos
+- Contratos inteligentes eliminam intermediários e billing manual
 
 ### Notas do Apresentador
 
-Como me posiciono em relação às possíveis soluções existentes? Hoje, mesmo as poucas tentativas de viabilizar pagamentos para IAs acabam dependendo de intermediários. Por exemplo, usando um provedor de pagamento centralizado ou armazenando um cartão de crédito em um serviço – isso requer confiança em terceiros e remove a autonomia do agente. Por outro lado, plataformas blockchain genéricas atuais não foram projetadas com agentes de IA em mente: elas não lidam bem com milhares de microtransações automatizadas, nem fornecem gatilhos fáceis para uma IA iniciar pagamentos por conta própria. O HTTPay se diferencia precisamente por esse foco. Desde o início, concebi o protocolo orientado às necessidades dos agentes autônomos: automação de ponta a ponta (do gatilho à liquidação), integração nativa com sistemas de IA e otimização para transações frequentes e pequenas.
+Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e billing manual. APIs tradicionais exigem chaves de API, integrações customizadas e gestão de pagamento complexa. Nenhuma solução foi projetada para milhares de agentes autônomos consumindo APIs dinamicamente. O HTTPay é o primeiro marketplace nativo para consumidores autônomos: descoberta programática, pagamentos instantâneos e liquidação automática via contratos inteligentes.
 
 ---
 
@@ -127,7 +129,7 @@ Como me posiciono em relação às possíveis soluções existentes? Hoje, mesmo
 
 ### Notas do Apresentador
 
-Olhando para o futuro, vejo o HTTPay evoluindo para se tornar uma infraestrutura fundamental na emergente economia de agentes autônomos. A arquitetura nasceu com escalabilidade em mente – quero suportar, no futuro, milhões de agentes transacionando simultaneamente em múltiplas redes blockchain interconectadas. Visualizo o HTTPay como um pilar central de uma economia máquina-a-máquina, na qual agentes automatizados negociam serviços, fecham contratos e fazem pagamentos entre si sem qualquer intervenção humana. Para chegar lá, planejo integrar recursos como sistemas de identidade descentralizada e reputação de agentes, permitindo que cada agente tenha credenciais confiáveis na blockchain. Também vejo a importância de padronizar o protocolo e colaborar com a comunidade – quero que o HTTPay seja amplamente adotado por projetos de IA e até mesmo em aplicações DeFi envolvendo automação. Em resumo, minha visão é que o protocolo se torne a espinha dorsal da economia autônoma, onde não apenas pessoas, mas máquinas e agentes inteligentes, participam de forma ativa e segura.
+Viso que o HTTPay se torne infraestrutura fundamental para economia de agentes autônomos. A arquitetura suporta milhões de agentes transacionando em múltiplas redes interconectadas. Planejo integrar um sistema de reputação, para dar mais segurança para o pagamento e contratação de serviços dentro do martketplace. E claro, desenvolver bibliotecas focadas nos frameworks de IA mais famosos, como Eliza e LangChain.
 
 ---
 
@@ -142,4 +144,4 @@ Olhando para o futuro, vejo o HTTPay evoluindo para se tornar uma infraestrutura
 
 ### Notas do Apresentador
 
-Para concluir, o HTTPay mostra como é possível conectar duas das maiores tendências tecnológicas do momento – IA e Web3 – em uma solução prática, inovadora e funcional. Durante o hackathon, consegui desenvolver um MVP totalmente operacional usando contratos CosmWasm, provando a viabilidade técnica da ideia (ou seja, agentes de IA já podem fazer pagamentos no meu protótipo). E isso é apenas o começo: estou pronto para levar o HTTPay além do protótipo do hackathon. Tenho algumas ideias para os próximos passos, incluindo melhorias técnicas em escala e segurança, e estou buscando parcerias estratégicas no ecossistema (tanto na comunidade Cosmos quanto com projetos de IA) para acelerar a adoção. Vejo uma grande oportunidade aqui para o ecossistema Cosmos liderar a inovação na economia de agentes autônomos, e estou motivado e preparado para levar essa visão adiante. Obrigado a todos pela atenção – muito obrigado!
+O HTTPay conecta desenvolvedores e agentes de IA em um marketplace funcional. Desenvolvi um MVP operacional: Registry para publicar APIs, Escrow para pagamentos seguros e SDK Typescript para fácil integração. Desenvolvedores já podem monetizar APIs e agentes já podem consumi-las autonomamente. Próximos passos: dashboard para desenvolvedores, métricas de uso e parcerias com criadores de APIs. Grande oportunidade para a Cosmos liderar a economia de APIs autônomas. Obrigado!

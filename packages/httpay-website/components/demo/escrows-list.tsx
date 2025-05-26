@@ -137,8 +137,8 @@ export const EscrowsList = () => {
             </Alert>
           ) : (
             <>
-              {escrows.map((escrow) => (
-                <div key={escrow.escrow_id} className="p-4 border rounded-lg space-y-2">
+              {escrows.map((escrow, index) => (
+                <div key={`escrow-${escrow.escrow_id}-${index}`} className="p-4 border rounded-lg space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="font-medium text-lg">
                       Escrow #{escrow.escrow_id}

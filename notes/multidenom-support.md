@@ -1,10 +1,10 @@
 # Multi-Denomination Token Support Implementation
 
-This file documents the implementation of multi-denomination token support in the Pay-Per-Tool contracts and SDK.
+This file documents the implementation of multi-denomination token support in the HTTPay contracts and SDK.
 
 ## Overview
 
-The Pay-Per-Tool system was extended to support any valid IBC token as payment, in addition to the native `untrn` token. This involved changes to both the Registry and Escrow contracts, as well as the TypeScript SDK.
+The HTTPay system was extended to support any valid IBC token as payment, in addition to the native `untrn` token. This involved changes to both the Registry and Escrow contracts, as well as the TypeScript SDK.
 
 ## Registry Contract Changes
 
@@ -56,4 +56,4 @@ Tests should include:
 
 ## Conclusion
 
-The Pay-Per-Tool system now supports any valid IBC token, expanding its utility across the Cosmos ecosystem while maintaining backward compatibility with the native token.
+The HTTPay system now supports any valid IBC token, expanding its utility across the Cosmos ecosystem while maintaining backward compatibility with the native token.

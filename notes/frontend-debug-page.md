@@ -188,7 +188,7 @@ The implementation validates that:
 - The UI provides good developer experience
 - The integration pattern is clear for other developers
 
-This debug page can serve as the foundation for building production user interfaces that integrate with the Pay-Per-Tool system.
+This debug page can serve as the foundation for building production user interfaces that integrate with the HTTPay system.
 
 ## ✅ Frontend Debug Page - Fully Completed & Debugged
 

@@ -1,7 +1,7 @@
 # Endpoint Field Implementation Notes
 
 ## Overview
-This document tracks the implementation of the endpoint field feature for the Pay-Per-Tool Registry contract. The endpoint field will store API endpoint URLs that users will fetch to interact with each registered tool.
+This document tracks the implementation of the endpoint field feature for the HTTPay Registry contract. The endpoint field will store API endpoint URLs that users will fetch to interact with each registered tool.
 
 ## Implementation Status
 

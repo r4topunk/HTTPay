@@ -1,11 +1,11 @@
-# Blueprint for Pay-Per-Tool MVP
+# Blueprint for HTTPay MVP
 
-This document defines a step-by-step plan to build the Pay-Per-Tool MVP. It is organized into three distinct implementation phases with clear deliverables for each phase.
+This document defines a step-by-step plan to build the HTTPay MVP. It is organized into three distinct implementation phases with clear deliverables for each phase.
 
 ## Implementation Phases
 
 ### Phase 1: Smart Contracts & Testing
-Focus on implementing and thoroughly testing the core CosmWasm contracts that power the Pay-Per-Tool system.
+Focus on implementing and thoroughly testing the core CosmWasm contracts that power the HTTPay system.
 
 ### Phase 2: Provider SDK
 Develop the TypeScript SDK for providers once the contracts are stable and tested. (CLI tools are out-of-scope for MVP.)

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Pay-Per-Tool registry contract has been enhanced by adding a mandatory description field to the tool metadata. This field allows providers to include a description of their tool that can be helpful for users browsing the registry. The description has a maximum length of 256 characters.
+The HTTPay registry contract has been enhanced by adding a mandatory description field to the tool metadata. This field allows providers to include a description of their tool that can be helpful for users browsing the registry. The description has a maximum length of 256 characters.
 
 ## Changes Made
 

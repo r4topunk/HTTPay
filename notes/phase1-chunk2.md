@@ -1,6 +1,6 @@
 # Phase 1, Chunk 2: Registry Contract Implementation
 
-This file documents the implementation notes for Phase 1, Chunk 2 of the Pay-Per-Tool MVP: Registry Contract Implementation.
+This file documents the implementation notes for Phase 1, Chunk 2 of the HTTPay MVP: Registry Contract Implementation.
 
 ## Overview
 The Registry contract has been fully implemented and tested. All required functionality for registering, updating, pausing, and querying tools has been successfully implemented and verified with a comprehensive test suite.

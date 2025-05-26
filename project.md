@@ -1,4 +1,4 @@
-# Pay-Per-Tool MVP — Minimal Viable Specification
+# HTTPay MVP — Minimal Viable Specification
 
 
 _(Target stack: CosmWasm 1.5 on Neutron + TypeScript SDK/CLI)_
@@ -90,7 +90,7 @@ _Safety toggles:_ hard‑coded TTL = user-defined (max 50 blocks); contract owne
 
 ## **3. Off‑chain Provider SDK (TypeScript)**
 
-The Provider SDK (`@toolpay/provider-sdk`) is production-ready and enables tool providers to interact with Pay-Per-Tool smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
+The Provider SDK (`@toolpay/provider-sdk`) is production-ready and enables tool providers to interact with HTTPay smart contracts (Registry and Escrow) on Neutron. It provides type-safe, ergonomic APIs for contract interaction, escrow verification, usage reporting, and integration with provider backends/CLI tools.
 
 ### Features
 - **Escrow Verification**: Verify escrow existence, validity, and authorization (escrow existence, provider address, auth token, expiration)
@@ -150,7 +150,7 @@ See [packages/provider-sdk/README.md](./packages/provider-sdk/README.md) for ful
 
 ## **4. AI‑Wallet Client (TypeScript)**
 
-The AI-Wallet client demo is implemented in `packages/provider-sdk/scripts/aiWalletDemo.ts` and demonstrates the full Pay-Per-Tool workflow:
+The AI-Wallet client demo is implemented in `packages/provider-sdk/scripts/aiWalletDemo.ts` and demonstrates the full HTTPay workflow:
 1. Provider registration
 2. Tool discovery by client
 3. Fund locking in escrow

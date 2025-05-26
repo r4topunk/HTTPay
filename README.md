@@ -1,4 +1,4 @@
-# Pay-Per-Tool
+# HTTPay
 
 **Pay-per-call escrow for AI tools on Neutron (CosmWasm 1.5 + TypeScript SDK)**
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-Pay-Per-Tool is a minimal, secure, and extensible pay-per-call escrow system for AI tool providers and consumers, built on the Neutron blockchain using CosmWasm smart contracts. It enables users to lock funds for a tool call, providers to verify and claim fees, and ensures refunds if a provider does not deliver within a set time window.
+HTTPay is a minimal, secure, and extensible pay-per-call escrow system for AI tool providers and consumers, built on the Neutron blockchain using CosmWasm smart contracts. It enables users to lock funds for a tool call, providers to verify and claim fees, and ensures refunds if a provider does not deliver within a set time window.
 
 ---
 
@@ -210,7 +210,7 @@ MIT
 
 ## Deployed Contracts
 
-Pay-Per-Tool contracts are deployed on Neutron testnet (pion-1) with the following addresses:
+HTTPay contracts are deployed on Neutron testnet (pion-1) with the following addresses:
 
 | Contract  | Address                                                             |
 |-----------|---------------------------------------------------------------------|

@@ -1,10 +1,10 @@
-# Pay-Per-Tool MVP Implementation Tasks
+# HTTPay MVP Implementation Tasks
 
-This document provides a comprehensive, actionable tasklist for implementing the Pay-Per-Tool MVP. Each task is broken down into specific subtasks with clear deliverables.
+This document provides a comprehensive, actionable tasklist for implementing the HTTPay MVP. Each task is broken down into specific subtasks with clear deliverables.
 
 ## Implementation Phases
 
-We will implement Pay-Per-Tool in 3 distinct phases:
+We will implement HTTPay in 3 distinct phases:
 
 1. **Phase 1: Smart Contracts & Testing** - Focus on implementing and thoroughly testing the core CosmWasm contracts
 2. **Phase 2: Provider SDK** - Develop the TypeScript SDK for providers (no CLI)

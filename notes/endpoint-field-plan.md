@@ -27,7 +27,7 @@
 
 ## Overview
 
-This document contains the comprehensive implementation plan for adding endpoint field support to the Pay-Per-Tool MVP. The endpoint field will store the API endpoint URL that users will fetch to interact with each registered tool.
+This document contains the comprehensive implementation plan for adding endpoint field support to the HTTPay MVP. The endpoint field will store the API endpoint URL that users will fetch to interact with each registered tool.
 
 ## Field Specifications
 
@@ -312,7 +312,7 @@ This document contains the comprehensive implementation plan for adding endpoint
 
 ## Implementation Notes
 
-This implementation adds comprehensive endpoint field support across all components of the Pay-Per-Tool MVP system. The endpoint field enables users to discover and interact with tool APIs while maintaining proper validation and security measures.
+This implementation adds comprehensive endpoint field support across all components of the HTTPay MVP system. The endpoint field enables users to discover and interact with tool APIs while maintaining proper validation and security measures.
 
 The implementation follows the existing patterns and conventions established in the codebase, ensuring consistency and maintainability. All changes are backward compatible and include comprehensive testing to ensure system reliability.
 

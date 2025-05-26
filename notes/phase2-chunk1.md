@@ -1,6 +1,6 @@
 # Phase 2, Chunk 1: Provider SDK Project Setup
 
-This file documents the implementation notes for Phase 2, Chunk 1 of the Pay-Per-Tool MVP: Provider SDK Project Setup.
+This file documents the implementation notes for Phase 2, Chunk 1 of the HTTPay MVP: Provider SDK Project Setup.
 
 ## Overview
 The Provider SDK project setup has been completed successfully, establishing the foundational structure for the TypeScript SDK. This setup focused on creating the necessary directory structure, configuring TypeScript, and setting up development tools.

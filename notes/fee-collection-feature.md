@@ -1,6 +1,6 @@
 # Fee Collection Feature Implementation
 
-This document describes the implementation of the fee collection feature in the Pay-Per-Tool escrow contract.
+This document describes the implementation of the fee collection feature in the HTTPay escrow contract.
 
 ## Overview
 

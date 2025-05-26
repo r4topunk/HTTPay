@@ -1,6 +1,6 @@
 # Phase 1, Chunk 4: Contract Unit Tests
 
-This file documents the implementation notes for Phase 1, Chunk 4 of the Pay-Per-Tool MVP: Contract Unit Tests.
+This file documents the implementation notes for Phase 1, Chunk 4 of the HTTPay MVP: Contract Unit Tests.
 
 ## Overview
 Comprehensive unit tests for both the Registry and Escrow contracts have been implemented and are now passing successfully. A robust testing environment with cw-multi-test has been established that allows for proper integration testing between contracts.

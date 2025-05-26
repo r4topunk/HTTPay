@@ -7,7 +7,7 @@ This phase focused on enhancing the Provider SDK with comprehensive documentatio
 
 ### Documentation
 - Added JSDoc/TSDoc comments to all public classes and methods in the SDK, including:
-  - `Pay-Per-ToolSDK` - Main entry point with comprehensive documentation
+  - `HTTPaySDK` - Main entry point with comprehensive documentation
   - `EscrowVerifier` - Documentation with usage examples and parameter descriptions
   - `UsageReporter` - Documentation with detailed interface explanations
   - Various utility modules and client wrappers
@@ -34,7 +34,7 @@ This phase focused on enhancing the Provider SDK with comprehensive documentatio
 - All tests are passing successfully
 
 ### AI-Wallet Client Demo
-- Implemented `aiWalletDemo.ts` script demonstrating the full Pay-Per-Tool workflow:
+- Implemented `aiWalletDemo.ts` script demonstrating the full HTTPay workflow:
   1. Provider registration
   2. Tool discovery by client
   3. Fund locking in escrow
@@ -66,4 +66,4 @@ This phase focused on enhancing the Provider SDK with comprehensive documentatio
   - Create test wallets and implementation flows
 
 ## Summary
-Phase 5 successfully transformed the Provider SDK from a functional implementation to a production-ready package with comprehensive documentation, testing, and example code. The SDK now follows best practices for TypeScript libraries and provides a clear, well-documented API for tool providers to interact with Pay-Per-Tool contracts. All major components have been implemented and thoroughly tested with a complete test suite.
+Phase 5 successfully transformed the Provider SDK from a functional implementation to a production-ready package with comprehensive documentation, testing, and example code. The SDK now follows best practices for TypeScript libraries and provides a clear, well-documented API for tool providers to interact with HTTPay contracts. All major components have been implemented and thoroughly tested with a complete test suite.

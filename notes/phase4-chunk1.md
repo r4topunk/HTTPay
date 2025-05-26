@@ -1,6 +1,6 @@
 # Phase 4, Chunk 1: Utilities and Configuration Implementation
 
-This file documents the implementation notes for Phase 4, Chunk 1 of the Pay-Per-Tool Provider SDK: Utilities and Configuration.
+This file documents the implementation notes for Phase 4, Chunk 1 of the HTTPay Provider SDK: Utilities and Configuration.
 
 ## Overview
 
@@ -29,7 +29,7 @@ Phase 4 focused on enhancing the Provider SDK with robust configuration handling
 ### Error Handling
 
 - Designed a comprehensive error class hierarchy in `utils/errors.ts`:
-  - Created base `Pay-Per-ToolError` class with code and details support
+  - Created base `HTTPayError` class with code and details support
   - Implemented specific error subclasses:
     - `ConfigurationError` for SDK configuration issues
     - `NetworkError` for RPC connection problems
@@ -40,9 +40,9 @@ Phase 4 focused on enhancing the Provider SDK with robust configuration handling
   - Added `normalizeError` utility function to standardize error handling throughout the SDK
   - Ensured error objects contain rich context data to help diagnose issues
 
-## Integration with Pay-Per-ToolSDK
+## Integration with HTTPaySDK
 
-Modified the main Pay-Per-ToolSDK class to use these new utilities:
+Modified the main HTTPaySDK class to use these new utilities:
 - Applied configuration validation in the constructor
 - Used wallet utilities for mnemonic handling
 - Implemented error normalization across all public methods

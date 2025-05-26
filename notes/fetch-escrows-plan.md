@@ -20,7 +20,7 @@
 
 ## Overview
 
-This document contains the comprehensive implementation plan for adding a feature to fetch multiple escrows with filtering and pagination options to the Pay-Per-Tool MVP. This will enable users to efficiently search, filter, and display lists of escrows based on various criteria.
+This document contains the comprehensive implementation plan for adding a feature to fetch multiple escrows with filtering and pagination options to the HTTPay MVP. This will enable users to efficiently search, filter, and display lists of escrows based on various criteria.
 
 ## Query Specifications
 
@@ -300,4 +300,4 @@ const EscrowsList = () => {
 4. **Compatibility**: Ensure backward compatibility with existing clients
 5. **Testing**: Thoroughly test with varying data volumes and filter combinations
 
-This plan provides a comprehensive roadmap for implementing the GetEscrows feature across the contract, SDK, and frontend layers of the Pay-Per-Tool MVP.
+This plan provides a comprehensive roadmap for implementing the GetEscrows feature across the contract, SDK, and frontend layers of the HTTPay MVP.

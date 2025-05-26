@@ -1,6 +1,6 @@
 # Phase 1, Chunk 3: Escrow Contract Implementation
 
-This file documents the implementation notes for Phase 1, Chunk 3 of the Pay-Per-Tool MVP: Escrow Contract Implementation.
+This file documents the implementation notes for Phase 1, Chunk 3 of the HTTPay MVP: Escrow Contract Implementation.
 
 ## Overview
 Work has begun on implementing the Escrow contract. We've completed defining the core message and state types and have implemented the `LockFunds` functionality, which allows users to lock funds for tool usage. Testing infrastructure has been set up and the first integration test for the complete flow is now working correctly.

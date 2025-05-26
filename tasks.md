@@ -213,6 +213,16 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Note any issues encountered during deployment
 - [x] Update deployment notes with proper Registry-Escrow connection
 
+### 5.4 Automated deployment script ✅
+- [x] Create bash script for automated deployment (`scripts/deploy.sh`)
+- [x] Implement error handling and transaction verification
+- [x] Add colored output for better user experience
+- [x] Capture and output code IDs and contract addresses for both contracts
+- [x] Save deployment information to timestamped JSON file
+- [x] Export environment variables for easy access
+- [x] Verify deployment by testing GetEscrows query
+- [x] Document script features and usage in deployment.md
+
 ## Chunk 6: CI & Localnet Configuration
 
 ### 6.1 Set up GitHub Actions workflow

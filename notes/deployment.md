@@ -2,6 +2,42 @@
 
 This file documents the build and deployment sequence for Pay-Per-Tool contracts on the Neutron testnet (pion-1), including contract addresses and example commands.
 
+## Automated Deployment Script
+
+For automated deployment, use the provided bash script:
+
+```bash
+# Run the automated deployment script
+./scripts/deploy.sh
+```
+
+The script will:
+- Build and optimize both contracts
+- Deploy and instantiate the Registry contract first
+- Deploy and instantiate the Escrow contract with the Registry address
+- Capture and display all code IDs and contract addresses
+- Save deployment information to a timestamped JSON file
+- Export environment variables for easy access
+- Verify the deployment by testing the GetEscrows query
+
+### Script Features
+
+- **Error handling**: Exits on any error and provides clear error messages
+- **Transaction verification**: Waits for transaction confirmation before proceeding
+- **Colored output**: Uses colors to distinguish between info, success, error, and warning messages
+- **Deployment logging**: Saves complete deployment information to a JSON file
+- **Environment variables**: Exports contract addresses and code IDs for easy access
+- **Verification testing**: Tests the GetEscrows query to ensure proper deployment
+
+### Script Output
+
+The script outputs:
+- Registry Code ID and Address
+- Escrow Code ID and Address
+- All transaction hashes for reference
+- Deployment timestamp and configuration
+- JSON file with complete deployment information
+
 ## Build and Deployment Sequence
 1. Build and optimize both contracts
 2. Deploy and instantiate the Registry contract first

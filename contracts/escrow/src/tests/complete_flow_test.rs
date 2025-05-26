@@ -1,6 +1,6 @@
 //! # Complete Flow Integration Test
 //! 
-//! This module tests the complete flow of the Pay-Per-Tool system:
+//! This module tests the complete flow of the HTTPay system:
 //! 1. Register a tool in the Registry contract
 //! 2. Lock funds for that tool in the Escrow contract
 //! 3. Release funds from escrow to the provider
@@ -24,7 +24,7 @@ use crate::tests::setup_contract::{
 
 /// # Test: Complete Flow - Register Tool → Lock Funds → Release → Verify Balances
 /// 
-/// This test ensures the full workflow of the Pay-Per-Tool system functions correctly,
+/// This test ensures the full workflow of the HTTPay system functions correctly,
 /// from tool registration through fund release, with proper balance verification.
 /// 
 /// ## Test Steps:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deploy Pay-Per-Tool contracts to Neutron Testnet (pion-1)
+# Deploy HTTPay contracts to Neutron Testnet (pion-1)
 # This script builds, optimizes, deploys, and instantiates both Registry and Escrow contracts
 # It captures and outputs the code IDs and contract addresses for both contracts
 
@@ -76,7 +76,7 @@ get_contract_address() {
     neutrond query tx $txhash --output json | jq -r '.events[] | select(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") | .value'
 }
 
-print_status "Starting Pay-Per-Tool contract deployment..."
+print_status "Starting HTTPay contract deployment..."
 
 # Check if required tools are available
 for tool in cargo wasm-opt neutrond jq; do

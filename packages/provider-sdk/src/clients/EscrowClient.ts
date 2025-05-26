@@ -7,7 +7,7 @@
 import { CosmWasmClient, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import type { Coin } from '@cosmjs/stargate';
 import type { Uint128 } from '../types/common.js';
-import type { EscrowExecuteMsg, EscrowResponse, CollectedFeesResponse } from '../types/escrow.js';
+import type { EscrowExecuteMsg, EscrowResponse, CollectedFeesResponse, EscrowsResponse } from '../types/escrow.js';
 
 /**
  * Result type for lockFunds transaction
@@ -63,6 +63,32 @@ export class EscrowClient {
   async getEscrow(escrowId: number): Promise<EscrowResponse> {
     return await this.client.queryContractSmart(this.contractAddress, {
       get_escrow: { escrow_id: escrowId },
+    });
+  }
+
+  /**
+   * Query multiple escrows with optional filtering and pagination
+   *
+   * @param options - Options for filtering and pagination
+   * @param options.caller - Optional filter by caller address
+   * @param options.provider - Optional filter by provider address  
+   * @param options.startAfter - Optional pagination cursor (start after this escrow ID)
+   * @param options.limit - Optional limit on number of results (default: 30, max: 30)
+   * @returns Array of escrow information matching the criteria
+   */
+  async getEscrows(options: {
+    caller?: string;
+    provider?: string;
+    startAfter?: number;
+    limit?: number;
+  } = {}): Promise<EscrowsResponse> {
+    return await this.client.queryContractSmart(this.contractAddress, {
+      get_escrows: {
+        caller: options.caller,
+        provider: options.provider,
+        start_after: options.startAfter,
+        limit: options.limit,
+      },
     });
   }
 

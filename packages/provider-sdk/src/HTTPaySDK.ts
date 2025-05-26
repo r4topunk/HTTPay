@@ -474,6 +474,34 @@ export class HTTPaySDK {
   }
 
   /**
+   * Get escrows with filtering and pagination (convenience method)
+   *
+   * This is a convenience method that delegates to the EscrowClient.
+   * It fetches multiple escrows with optional filtering by caller/provider
+   * and cursor-based pagination.
+   *
+   * @param options - Optional filtering and pagination parameters
+   * @param options.caller - Filter by caller address
+   * @param options.provider - Filter by provider address
+   * @param options.startAfter - Pagination cursor (start after this escrow ID)
+   * @param options.limit - Limit number of results (default: 30, max: 30)
+   * @returns Promise with array of escrow information
+   * @throws Error if query fails
+   */
+  async getEscrows(options: {
+    caller?: string;
+    provider?: string;
+    startAfter?: number;
+    limit?: number;
+  } = {}) {
+    try {
+      return await this.escrow.getEscrows(options);
+    } catch (error: unknown) {
+      throw normalizeError(error, 'Failed to get escrows');
+    }
+  }
+
+  /**
    * Get the current client
    *
    * @returns CosmWasm client

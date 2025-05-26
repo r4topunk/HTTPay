@@ -174,6 +174,65 @@ describe('HTTPaySDK', () => {
     expect(mockReporter.postUsage).toHaveBeenCalledWith('neutron1provider', params);
   });
 
+  it('should delegate getEscrows to EscrowClient', async () => {
+    // Arrange
+    const sdk = new HTTPaySDK(mockConfig);
+    await sdk.connect();
+
+    const mockEscrowsResponse = {
+      escrows: [
+        {
+          id: 1,
+          caller: 'neutron1caller',
+          provider: 'neutron1provider',
+          tool_id: 'test-tool',
+          max_fee: '1000000',
+          usage_fee: '500000',
+          auth_token: 'test-token',
+          expires: 1000,
+          denom: 'untrn',
+        },
+      ],
+    };
+
+    const options = {
+      caller: 'neutron1caller',
+      provider: 'neutron1provider',
+      startAfter: 0,
+      limit: 10,
+    };
+
+    // Mock the escrow client's getEscrows method
+    const mockGetEscrows = jest.fn().mockResolvedValue(mockEscrowsResponse);
+    jest.spyOn(sdk.escrow, 'getEscrows').mockImplementation(mockGetEscrows);
+
+    // Act
+    const result = await sdk.getEscrows(options);
+
+    // Assert
+    expect(mockGetEscrows).toHaveBeenCalledWith(options);
+    expect(result).toEqual(mockEscrowsResponse);
+  });
+
+  it('should call getEscrows with empty options when no parameters provided', async () => {
+    // Arrange
+    const sdk = new HTTPaySDK(mockConfig);
+    await sdk.connect();
+
+    const mockEscrowsResponse = { escrows: [] };
+
+    // Mock the escrow client's getEscrows method
+    const mockGetEscrows = jest.fn().mockResolvedValue(mockEscrowsResponse);
+    jest.spyOn(sdk.escrow, 'getEscrows').mockImplementation(mockGetEscrows);
+
+    // Act
+    const result = await sdk.getEscrows();
+
+    // Assert
+    expect(mockGetEscrows).toHaveBeenCalledWith({});
+    expect(result).toEqual(mockEscrowsResponse);
+  });
+
   it('should provide access to clients through getter methods', async () => {
     // Arrange
     const sdk = new HTTPaySDK(mockConfig);

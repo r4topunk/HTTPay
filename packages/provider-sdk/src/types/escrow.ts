@@ -56,7 +56,15 @@ export type EscrowExecuteMsg =
  */
 export type EscrowQueryMsg = 
   | { get_escrow: { escrow_id: number } } // uint64
-  | { get_collected_fees: {} };
+  | { get_collected_fees: {} }
+  | { 
+      get_escrows: { 
+        caller?: string;
+        provider?: string;
+        start_after?: number; // uint64
+        limit?: number; // uint32
+      } 
+    };
 
 /**
  * EscrowResponse from the Escrow contract
@@ -71,6 +79,15 @@ export interface EscrowResponse {
   denom: string;
   expires: number; // uint64
   auth_token: string;
+}
+
+/**
+ * EscrowsResponse from the Escrow contract
+ * 
+ * This is the return type for a GetEscrows query
+ */
+export interface EscrowsResponse {
+  escrows: EscrowResponse[];
 }
 
 /**

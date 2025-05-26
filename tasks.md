@@ -500,10 +500,10 @@ We will implement Pay-Per-Tool in 3 distinct phases:
 - [x] Test edge cases and empty results scenarios
 
 #### 15.3 TypeScript SDK Updates
-- [ ] Update Escrow types for GetEscrows query
-- [ ] Implement getEscrows method in EscrowClient
-- [ ] Add helper method in HTTPaySDK
-- [ ] Create comprehensive SDK tests for the new functionality
+- [x] Update Escrow types for GetEscrows query
+- [x] Implement getEscrows method in EscrowClient
+- [x] Add helper method in HTTPaySDK
+- [x] Create comprehensive SDK tests for the new functionality
 
 #### 15.4 Frontend Component Enhancement
 - [ ] Update EscrowsList component with filtering capabilities

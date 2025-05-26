@@ -323,19 +323,176 @@ let expires2 = current_height2 + DEFAULT_TTL + 5; // Correct - uses current heig
 
 This fix ensures that expiration times are calculated based on the actual block height when each escrow is created, making the test accurate and reliable.
 
+## Task 15.3: TypeScript SDK Implementation
+
+✅ **COMPLETED** - Successfully implemented TypeScript SDK support for the GetEscrows functionality.
+
+### Implementation Details
+
+#### 1. Type System Updates
+
+**Updated EscrowQueryMsg Type**:
+```typescript
+export type EscrowQueryMsg =
+  | { get_escrow: { escrow_id: number } }
+  | { get_collected_fees: {} }
+  | {
+      get_escrows: {
+        caller?: string;
+        provider?: string;
+        start_after?: number;
+        limit?: number;
+      };
+    };
+```
+
+**Added EscrowsResponse Interface**:
+```typescript
+/**
+ * Response containing multiple escrow records
+ * This is the return type for a GetEscrows query
+ */
+export interface EscrowsResponse {
+  escrows: EscrowResponse[];
+}
+```
+
+#### 2. EscrowClient Method Implementation
+
+Added `getEscrows` method in EscrowClient with comprehensive parameter support:
+
+```typescript
+/**
+ * Get multiple escrows with optional filtering and pagination
+ *
+ * @param options.caller - Optional filter by caller address
+ * @param options.provider - Optional filter by provider address  
+ * @param options.startAfter - Optional pagination cursor (start after this escrow ID)
+ * @param options.limit - Optional limit on number of results (default: 30, max: 30)
+ * @returns Array of escrow information matching the criteria
+ */
+async getEscrows(options: {
+  caller?: string;
+  provider?: string;
+  startAfter?: number;
+  limit?: number;
+} = {}): Promise<EscrowsResponse> {
+  return await this.client.queryContractSmart(this.contractAddress, {
+    get_escrows: {
+      caller: options.caller,
+      provider: options.provider,
+      start_after: options.startAfter,
+      limit: options.limit,
+    },
+  });
+}
+```
+
+#### 3. HTTPaySDK Convenience Method
+
+Added convenience method in HTTPaySDK for easier access:
+
+```typescript
+/**
+ * Get escrows with filtering and pagination (convenience method)
+ *
+ * This is a convenience method that delegates to the EscrowClient.
+ * It fetches multiple escrows with optional filtering by caller/provider
+ * and cursor-based pagination.
+ *
+ * @param options - Optional filtering and pagination parameters
+ * @param options.caller - Filter by caller address
+ * @param options.provider - Filter by provider address
+ * @param options.startAfter - Pagination cursor (start after this escrow ID)
+ * @param options.limit - Limit number of results (default: 30, max: 30)
+ * @returns Promise with array of escrow information
+ * @throws Error if query fails
+ */
+async getEscrows(options: {
+  caller?: string;
+  provider?: string;
+  startAfter?: number;
+  limit?: number;
+} = {}) {
+  try {
+    return await this.escrow.getEscrows(options);
+  } catch (error: unknown) {
+    throw normalizeError(error, 'Failed to get escrows');
+  }
+}
+```
+
+#### 4. Comprehensive Test Coverage
+
+**EscrowClient Tests** (8 test functions):
+- ✅ `should call getEscrows with no parameters`
+- ✅ `should call getEscrows with caller filter`
+- ✅ `should call getEscrows with provider filter`
+- ✅ `should call getEscrows with pagination parameters`
+- ✅ `should call getEscrows with all parameters`
+- ✅ `should handle empty results`
+- ✅ `should propagate contract query errors`
+- ✅ `should handle different escrow data types correctly`
+
+**HTTPaySDK Tests** (2 additional test functions):
+- ✅ `should delegate getEscrows to EscrowClient`
+- ✅ `should call getEscrows with empty options when no parameters provided`
+
+### Test Results
+
+All 54 SDK tests pass, including the 8 new EscrowClient tests and 2 new HTTPaySDK tests. No regressions detected.
+
+### Usage Examples
+
+```typescript
+// Initialize SDK
+const sdk = new HTTPaySDK({
+  rpcEndpoint: 'https://rpc-pion-1.neutron.org',
+  chainId: 'pion-1',
+  registryAddress: 'neutron1...',
+  escrowAddress: 'neutron1...',
+});
+
+await sdk.connect();
+
+// Get all escrows
+const allEscrows = await sdk.getEscrows();
+
+// Filter by caller
+const myEscrows = await sdk.getEscrows({
+  caller: 'neutron1mycalleraddress...'
+});
+
+// Filter by provider with pagination
+const providerEscrows = await sdk.getEscrows({
+  provider: 'neutron1myprovideraddress...',
+  limit: 10,
+  startAfter: 5
+});
+
+// Combined filtering
+const specificEscrows = await sdk.getEscrows({
+  caller: 'neutron1caller...',
+  provider: 'neutron1provider...',
+  limit: 20
+});
+```
+
+### Direct EscrowClient Usage
+
+```typescript
+// Access via escrow client directly
+const escrows = await sdk.escrow.getEscrows({
+  caller: 'neutron1...',
+  limit: 15
+});
+```
+
 ## Next Steps
 
-The next phase (15.3) will involve updating the TypeScript SDK to support the new GetEscrows query functionality, including:
+The next phase (15.4) will involve updating the frontend components to use the new GetEscrows functionality, including:
 
-- Updating TypeScript interfaces and types
-- Implementing the `getEscrows` method in EscrowClient
-- Adding helper methods in HTTPaySDK
-- Creating SDK-level tests
-
-## Notes
-
-- All test functions follow CosmWasm testing best practices
-- Comprehensive coverage ensures reliability of the GetEscrows feature
-- Tests serve as documentation for expected behavior
-- The test suite provides confidence for future refactoring and enhancements
-- No performance regressions detected in the comprehensive test suite
+- Updating EscrowsList component with filtering capabilities
+- Adding pagination controls with "Load More" functionality  
+- Implementing "My Escrows" filter for connected wallet
+- Updating escrow display to show more details

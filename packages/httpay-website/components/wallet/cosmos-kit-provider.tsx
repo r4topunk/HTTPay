@@ -5,12 +5,11 @@ import { wallets } from "@cosmos-kit/keplr-extension";
 import { ChainProvider } from "@cosmos-kit/react";
 import { PropsWithChildren } from "react";
 import { SignerOptions } from "@cosmos-kit/core";
-import { Chain } from "@chain-registry/types";
 import { GasPrice } from "@cosmjs/stargate";
 
 const signerOptions: SignerOptions = {
-  // @ts-ignore
-  signingCosmwasm: (chain: string | Chain) => {
+  // @ts-expect-error - cosmjs typing doesn't match cosmos-kit's expected signature
+  signingCosmwasm: () => {
     return {
       gasPrice: GasPrice.fromString("0.0053untrn"),
     };

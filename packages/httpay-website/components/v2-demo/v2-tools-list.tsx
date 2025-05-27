@@ -19,7 +19,7 @@ export const V2ToolsList = () => {
         title: "Copied!",
         description: `${label} copied to clipboard`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Copy failed",
         description: "Could not copy to clipboard",

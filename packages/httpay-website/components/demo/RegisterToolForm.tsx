@@ -59,7 +59,7 @@ export const RegisterToolForm: React.FC<RegisterToolFormProps> = ({
                     <Textarea placeholder="Describe what your tool does..." {...field} />
                   </FormControl>
                   <FormDescription>
-                    A brief description of your tool's functionality
+                    A brief description of your tool&apos;s functionality
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

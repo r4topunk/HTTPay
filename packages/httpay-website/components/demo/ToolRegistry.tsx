@@ -1,10 +1,9 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, RefreshCw, Play, Copy, ExternalLink } from "lucide-react";
 import { formatAmount } from "@/lib/constants";
 import { truncateAddress, cn } from "@/lib/utils";
-import { useToast } from "@/components/ui/use-toast";
 import React from "react";
 import type { Tool } from "./types";
 

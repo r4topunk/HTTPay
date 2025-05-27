@@ -8,7 +8,7 @@ import { defaultChainName } from "@/config/chain-config"
 import { ConnectButton } from "./wallet/connect-button"
 
 export default function HeroSection() {
-  const { address, status } = useChain(defaultChainName)
+  const { address } = useChain(defaultChainName)
 
   return (
     <section id="hero" className="section-container relative">

@@ -18,7 +18,6 @@ export const DebugStatus = () => {
   // Derive wallet error state - if we're not connecting and not connected, assume no error
   // In a real app, you'd want to track error state explicitly
   const isWalletError = false; // Could be derived from error handling
-  const isWalletDisconnected = !isWalletConnected && !isWalletConnecting;
 
   return (
     <Card>

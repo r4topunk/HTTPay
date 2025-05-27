@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { useSDK } from "@/providers/sdk-provider";
 import {
   SDKConfiguration,
@@ -57,7 +55,7 @@ const DemoSectionContent = () => {
         title: "Copied!",
         description: `${label} copied to clipboard`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Copy failed",
         description: "Could not copy to clipboard",

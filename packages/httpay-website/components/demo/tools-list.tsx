@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Copy, Edit, ExternalLink, RefreshCw } from "lucide-react";
+import { Copy, Edit, RefreshCw } from "lucide-react";
 import { useSDK } from "@/providers/sdk-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,7 @@ export const ToolsList = () => {
         title: "Copied!",
         description: `${label} copied to clipboard`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Copy failed",
         description: "Could not copy to clipboard",

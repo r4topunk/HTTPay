@@ -70,7 +70,7 @@ export default function VisionSection() {
           <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-8 border text-center space-y-6">
             <h3 className="text-2xl font-medium">Ready to build with {APP_NAME}?</h3>
             <p className="text-lg max-w-2xl mx-auto">
-              Whether you're developing AI agents or providing services, {APP_NAME} offers a trustless payment protocol
+              Whether you&apos;re developing AI agents or providing services, {APP_NAME} offers a trustless payment protocol
               that enables autonomous transactions.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">

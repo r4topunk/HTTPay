@@ -1,7 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, CheckCircle2, AlertCircle, Clock, ArrowRight } from "lucide-react";
+import { Loader2, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
 import { formatAmount } from "@/lib/constants";
 import type { Tool, APIResponse, APIErrorResponse, TestToolStatus, EscrowCreationError, APITestError } from "./types";
 
@@ -57,11 +57,6 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
     }
   };
 
-  const isStep1Complete = ["escrow_created", "testing_api", "success", "api_error"].includes(testStatus);
-  const isStep1Error = testStatus === "escrow_error";
-  const isStep2Complete = testStatus === "success";
-  const isStep2Error = testStatus === "api_error";
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl max-h-[85vh] overflow-y-auto">
@@ -110,7 +105,7 @@ export const TestToolDialog: React.FC<TestToolDialogProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground text-xs">2</span>
-                    Test the tool's API endpoint
+                    Test the tool&apos;s API endpoint
                   </div>
                 </div>
               </div>

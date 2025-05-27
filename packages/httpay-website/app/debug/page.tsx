@@ -2,8 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/toaster";
+import { useSDK } from "@/providers/sdk-provider";
 import {
-  SDKProvider,
   SDKConfiguration,
   WalletConnection,
   ToolRegistration,
@@ -12,7 +12,6 @@ import {
   EscrowsList,
   EscrowVerification,
   UsagePosting,
-  useSDK,
 } from "@/components/demo";
 
 const DebugPageContent = () => {
@@ -67,10 +66,12 @@ const DebugPageContent = () => {
 };
 
 export default function DebugPage() {
+  // Note: SDKProvider is already provided at the app root level in providers.tsx
+  // No need to include it here
   return (
-    <SDKProvider>
+    <>
       <DebugPageContent />
       <Toaster />
-    </SDKProvider>
+    </>
   );
 }

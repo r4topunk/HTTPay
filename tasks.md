@@ -583,6 +583,11 @@ We will implement HTTPay in 3 distinct phases:
 - [x] Document deployment transaction hashes for reference
 
 #### 15.7 Remaining Tasks
+- [x] Reorganize SDK integration in Next.js project for better code structure
+  - [x] Move SDK context provider from demo components to dedicated providers folder
+  - [x] Update import paths across the application
+  - [x] Improve folder structure and component organization
+  - [x] Add proper documentation to SDK integration components
 - [ ] Update frontend configuration with new contract addresses
 - [ ] Update SDK configuration with new contract addresses
 - [ ] Perform end-to-end testing with new contracts

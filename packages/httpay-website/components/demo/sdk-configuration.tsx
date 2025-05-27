@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { useSDK } from "./sdk-context";
+import { useSDK } from "@/providers/sdk-provider";
 
 export const SDKConfiguration = () => {
   const { 

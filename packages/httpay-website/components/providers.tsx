@@ -6,8 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 // Create a wrapper that ensures WalletProvider is loaded before SDKProvider
+// Dynamic import prevents SSR issues with wallet components
 const DynamicWalletAndSDKProvider = dynamic(
-  () => import("@/components/wallet/wallet-sdk-wrapper").then(mod => mod.WalletAndSDKProvider),
+  () => import("@/components/wallet").then(mod => mod.WalletAndSDKProvider),
   { ssr: false }
 );
 

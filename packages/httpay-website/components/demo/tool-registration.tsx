@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useSDK } from "./sdk-context";
+import { useSDK } from "@/providers/sdk-provider";
 import { ToolRegistrationForm } from "./types";
 
 export const ToolRegistration = () => {

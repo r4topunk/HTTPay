@@ -13,6 +13,11 @@ interface SDKProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Provides the HTTPay SDK context to the application.
+ * This component integrates with Cosmos Kit to get wallet information
+ * and provides it to the HTTPay SDK.
+ */
 export const SDKProvider = ({ children }: SDKProviderProps) => {
   const { toast } = useToast();
   

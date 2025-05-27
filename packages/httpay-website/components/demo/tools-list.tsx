@@ -21,7 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Copy, Edit, ExternalLink, RefreshCw } from "lucide-react";
-import { useSDK } from "./sdk-context";
+import { useSDK } from "@/providers/sdk-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 

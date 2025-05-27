@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useSDK } from "./sdk-context";
+import { useSDK } from "@/providers/sdk-provider";
 
 export const WalletConnection = () => {
   const { 

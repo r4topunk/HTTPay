@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { useSDK } from "./sdk-context";
+import { useSDK } from "@/providers/sdk-provider";
 import type { EscrowsFilter } from "./types";
 
 export const EscrowsList = () => {

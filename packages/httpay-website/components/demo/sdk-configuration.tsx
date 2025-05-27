@@ -9,8 +9,8 @@ import { useSDK } from "./sdk-context";
 
 export const SDKConfiguration = () => {
   const { 
-    sdkConfig, 
-    setSdkConfig, 
+    config, 
+    setConfig, 
     initializeSDK, 
     forceReconnectWallet,
     isConnected, 
@@ -35,10 +35,10 @@ export const SDKConfiguration = () => {
             <Label htmlFor="rpc">RPC Endpoint</Label>
             <Input
               id="rpc"
-              value={sdkConfig.rpcEndpoint}
+              value={config.rpcEndpoint}
               onChange={(e) =>
-                setSdkConfig({
-                  ...sdkConfig,
+                setConfig({
+                  ...config,
                   rpcEndpoint: e.target.value,
                 })
               }
@@ -49,10 +49,10 @@ export const SDKConfiguration = () => {
             <Label htmlFor="chainId">Chain ID</Label>
             <Input
               id="chainId"
-              value={sdkConfig.chainId}
+              value={config.chainId}
               onChange={(e) =>
-                setSdkConfig({
-                  ...sdkConfig,
+                setConfig({
+                  ...config,
                   chainId: e.target.value,
                 })
               }
@@ -63,10 +63,10 @@ export const SDKConfiguration = () => {
             <Label htmlFor="registry">Registry Address</Label>
             <Input
               id="registry"
-              value={sdkConfig.registryAddress}
+              value={config.registryAddress}
               onChange={(e) =>
-                setSdkConfig({
-                  ...sdkConfig,
+                setConfig({
+                  ...config,
                   registryAddress: e.target.value,
                 })
               }
@@ -77,10 +77,10 @@ export const SDKConfiguration = () => {
             <Label htmlFor="escrow">Escrow Address</Label>
             <Input
               id="escrow"
-              value={sdkConfig.escrowAddress}
+              value={config.escrowAddress}
               onChange={(e) =>
-                setSdkConfig({
-                  ...sdkConfig,
+                setConfig({
+                  ...config,
                   escrowAddress: e.target.value,
                 })
               }
@@ -91,10 +91,10 @@ export const SDKConfiguration = () => {
             <Label htmlFor="gasPrice">Gas Price</Label>
             <Input
               id="gasPrice"
-              value={sdkConfig.gasPrice}
+              value={config.gasPrice}
               onChange={(e) =>
-                setSdkConfig({
-                  ...sdkConfig,
+                setConfig({
+                  ...config,
                   gasPrice: e.target.value,
                 })
               }
@@ -131,7 +131,7 @@ export const SDKConfiguration = () => {
               variant="secondary"
             >
               <div className="w-2 h-2 rounded-full bg-green-500" />
-              Connected to {sdkConfig.chainId}
+              Connected to {config.chainId}
             </Badge>
           )}
           {isConnected && (

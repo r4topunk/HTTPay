@@ -44,7 +44,7 @@ export const EscrowCreation = () => {
             id="escrowToolId"
             value={escrowCreation.toolId}
             onChange={(e) =>
-              setEscrowCreation((prev) => ({
+              setEscrowCreation((prev: EscrowCreationForm) => ({
                 ...prev,
                 toolId: e.target.value,
               }))
@@ -58,7 +58,7 @@ export const EscrowCreation = () => {
             id="maxFee"
             value={escrowCreation.maxFee}
             onChange={(e) =>
-              setEscrowCreation((prev) => ({
+              setEscrowCreation((prev: EscrowCreationForm) => ({
                 ...prev,
                 maxFee: e.target.value,
               }))
@@ -72,7 +72,7 @@ export const EscrowCreation = () => {
             id="authToken"
             value={escrowCreation.authToken}
             onChange={(e) =>
-              setEscrowCreation((prev) => ({
+              setEscrowCreation((prev: EscrowCreationForm) => ({
                 ...prev,
                 authToken: e.target.value,
               }))
@@ -86,7 +86,7 @@ export const EscrowCreation = () => {
             id="ttl"
             value={escrowCreation.ttl}
             onChange={(e) =>
-              setEscrowCreation((prev) => ({
+              setEscrowCreation((prev: EscrowCreationForm) => ({
                 ...prev,
                 ttl: e.target.value,
               }))

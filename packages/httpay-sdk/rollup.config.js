@@ -6,6 +6,7 @@ const external = [
   '@cosmjs/cosmwasm-stargate',
   '@cosmjs/proto-signing',
   '@cosmjs/stargate',
+  '@cosmos-kit/react',
   '@tanstack/react-query',
   'react',
   'react/jsx-runtime'

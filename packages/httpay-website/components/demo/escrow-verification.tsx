@@ -37,7 +37,7 @@ export const EscrowVerification = () => {
               id="verifyEscrowId"
               value={escrowVerification.escrowId}
               onChange={(e) =>
-                setEscrowVerification((prev) => ({
+                setEscrowVerification((prev: EscrowVerificationForm) => ({
                   ...prev,
                   escrowId: e.target.value,
                 }))
@@ -51,7 +51,7 @@ export const EscrowVerification = () => {
               id="verifyAuthToken"
               value={escrowVerification.authToken}
               onChange={(e) =>
-                setEscrowVerification((prev) => ({
+                setEscrowVerification((prev: EscrowVerificationForm) => ({
                   ...prev,
                   authToken: e.target.value,
                 }))
@@ -65,7 +65,7 @@ export const EscrowVerification = () => {
               id="verifyProviderAddr"
               value={escrowVerification.providerAddr}
               onChange={(e) =>
-                setEscrowVerification((prev) => ({
+                setEscrowVerification((prev: EscrowVerificationForm) => ({
                   ...prev,
                   providerAddr: e.target.value,
                 }))

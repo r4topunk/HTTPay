@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
-  SDKProvider,
   useSDK,
   SDKConfiguration,
   WalletConnection,
@@ -355,9 +354,5 @@ const DemoSectionContent = () => {
 };
 
 export default function DemoSection() {
-  return (
-    <SDKProvider>
-      <DemoSectionContent />
-    </SDKProvider>
-  );
+  return <DemoSectionContent />;
 }

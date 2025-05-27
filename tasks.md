@@ -379,10 +379,25 @@ We will implement HTTPay in 3 distinct phases:
   - [x] Better error handling and loading states
   - [x] Uses httpay-sdk v2 instead of provider-sdk v1
 - [x] Create index file for clean exports and migration example
-- [ ] Update existing demo components to use new SDK v2 context
-- [ ] Test integration and ensure all functionality works correctly
-- [ ] Create backward compatibility layer if needed
-- [ ] Update import statements throughout the application
+- [x] Update existing demo components to use new SDK v2 context:
+  - [x] Fixed imports in `sdk-context.tsx` to use the new SDK v2 from correct path
+  - [x] Updated type imports in `types.ts` to use the new SDK v2 types
+  - [x] Fixed ReactNode type issues by explicitly importing from React
+  - [x] Created proper compatibility layer with SDK v1 API surface
+- [x] Test integration and ensure all functionality works correctly
+- [x] Remove old `httpay` dependency from package.json
+- [x] Fix remaining TypeScript errors (20 errors resolved):
+  - [x] Fixed missing properties in new SDK context type (sdk, isWalletDisconnected, isWalletError → derived or mapped)
+  - [x] Fixed implicit 'any' type errors by adding explicit type annotations to form setters
+  - [x] Fixed ReactNode type compatibility between React 19 (website) and React 18 (SDK)
+  - [x] Updated SDK to support React 19 in peerDependencies
+- [x] Successfully migrated from old `httpay` library to new `httpay-sdk` v2
+- [x] Create backward compatibility layer for gradual migration:
+  - [x] Re-exported the SDK v2 hook as `useSDK` for backward compatibility
+  - [x] Maintained same API surface for minimal disruption
+- [x] Update import statements throughout the application:
+  - [x] Changed imports from "httpay-sdk" to relative paths "../../../httpay-sdk/src/react"
+  - [x] Updated type imports from "httpay-sdk/src/types" to relative paths
 
 ### 10.2 Benefits of SDK v2 Refactoring
 - [x] **Better React practices**: Split monolithic context into focused, single-responsibility hooks

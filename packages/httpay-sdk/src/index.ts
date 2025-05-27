@@ -1,5 +1,5 @@
 /**
- * HTTPay SDK - Source Exports
+ * HTTPay SDK V2 - Source Exports
  * 
  * This file exports all components and utilities from the SDK source.
  */

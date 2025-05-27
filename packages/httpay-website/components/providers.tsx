@@ -5,9 +5,9 @@ import dynamic from "next/dynamic";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
-// Dynamically import WalletProvider with SSR disabled
-const WalletProvider = dynamic(
-  () => import("@/components/wallet/cosmos-kit-provider").then(mod => mod.WalletProvider),
+// Create a wrapper that ensures WalletProvider is loaded before SDKProvider
+const DynamicWalletAndSDKProvider = dynamic(
+  () => import("@/components/wallet/wallet-sdk-wrapper").then(mod => mod.WalletAndSDKProvider),
   { ssr: false }
 );
 
@@ -20,10 +20,10 @@ export function Providers({ children }: PropsWithChildren) {
       disableTransitionOnChange
       storageKey="httpay-theme"
     >
-      <WalletProvider>
+      <DynamicWalletAndSDKProvider>
         {children}
         <Toaster />
-      </WalletProvider>
+      </DynamicWalletAndSDKProvider>
     </ThemeProvider>
   );
 }

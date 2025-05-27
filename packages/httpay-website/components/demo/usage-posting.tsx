@@ -41,7 +41,7 @@ export const UsagePosting = () => {
               id="usageEscrowId"
               value={usagePosting.escrowId}
               onChange={(e) =>
-                setUsagePosting((prev) => ({
+                setUsagePosting((prev: UsagePostingForm) => ({
                   ...prev,
                   escrowId: e.target.value,
                 }))
@@ -55,7 +55,7 @@ export const UsagePosting = () => {
               id="usageFee"
               value={usagePosting.usageFee}
               onChange={(e) =>
-                setUsagePosting((prev) => ({
+                setUsagePosting((prev: UsagePostingForm) => ({
                   ...prev,
                   usageFee: e.target.value,
                 }))

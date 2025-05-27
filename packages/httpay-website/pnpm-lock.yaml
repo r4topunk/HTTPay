@@ -36,7 +36,7 @@ importers:
         specifier: ^2.9.0
         version: 2.15.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.32.4)(@walletconnect/types@2.20.3)(cosmjs-types@0.9.0)(typescript@5.8.3)(zod@3.25.23)
       '@cosmos-kit/react':
-        specifier: ^2.9.0
+        specifier: ^2.22.0
         version: 2.22.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.32.4)(@interchain-ui/react@1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@hookform/resolvers':
         specifier: latest
@@ -146,12 +146,9 @@ importers:
       embla-carousel-react:
         specifier: 8.5.1
         version: 8.5.1(react@19.1.0)
-      httpay:
-        specifier: ^0.1.3
-        version: 0.1.3
       httpay-sdk:
-        specifier: file:../httpay-sdk
-        version: file:../httpay-sdk(@cosmjs/amino@0.33.1)(@cosmjs/cosmwasm-stargate@0.32.4)(@cosmjs/proto-signing@0.32.4)(@cosmjs/stargate@0.33.1)(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        specifier: link:../httpay-sdk
+        version: link:../httpay-sdk
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2145,21 +2142,6 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
-  '@tanstack/query-core@4.36.1':
-    resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
-
-  '@tanstack/react-query@4.36.1':
-    resolution: {integrity: sha512-y7ySVHFyyQblPl3J3eQBWpXZkliroki3ARnBKsdJchlgt7yJLRDUcf4B8soufgiYt3pEQIkBWBx1N9/ZPIeUWw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-
   '@tanstack/react-virtual@3.13.9':
     resolution: {integrity: sha512-SPWC8kwG/dWBf7Py7cfheAPOxuvIv4fFQ54PdmYbg7CpXfsKxkucak43Q0qKsxVthhUJQ1A7CIMAIplq4BjVwA==}
     peerDependencies:
@@ -2917,19 +2899,6 @@ packages:
 
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
-
-  httpay-sdk@file:../httpay-sdk:
-    resolution: {directory: ../httpay-sdk, type: directory}
-    peerDependencies:
-      '@cosmjs/amino': ^0.32.0
-      '@cosmjs/cosmwasm-stargate': ^0.32.4
-      '@cosmjs/proto-signing': ^0.33.1
-      '@cosmjs/stargate': ^0.33.1
-      '@tanstack/react-query': ^4.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  httpay@0.1.3:
-    resolution: {integrity: sha512-cu53BWBklxV1O1MC3WY6UISnHXuW0AWrzhqg14sZCkHPj/vniLgMpmSsb5bAVdkJ4T4OzW7mxFbhtTXgRR9ESQ==}
 
   idb-keyval@6.2.2:
     resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
@@ -6869,16 +6838,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@tanstack/query-core@4.36.1': {}
-
-  '@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@tanstack/query-core': 4.36.1
-      react: 19.1.0
-      use-sync-external-store: 1.5.0(react@19.1.0)
-    optionalDependencies:
-      react-dom: 19.1.0(react@19.1.0)
-
   '@tanstack/react-virtual@3.13.9(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@tanstack/virtual-core': 3.13.9
@@ -7863,25 +7822,6 @@ snapshots:
       hash.js: 1.1.7
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
-
-  httpay-sdk@file:../httpay-sdk(@cosmjs/amino@0.33.1)(@cosmjs/cosmwasm-stargate@0.32.4)(@cosmjs/proto-signing@0.32.4)(@cosmjs/stargate@0.33.1)(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
-    dependencies:
-      '@cosmjs/amino': 0.33.1
-      '@cosmjs/cosmwasm-stargate': 0.32.4
-      '@cosmjs/proto-signing': 0.32.4
-      '@cosmjs/stargate': 0.33.1
-      '@tanstack/react-query': 4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react: 19.1.0
-
-  httpay@0.1.3:
-    dependencies:
-      '@cosmjs/cosmwasm-stargate': 0.32.4
-      '@cosmjs/proto-signing': 0.33.1
-      '@cosmjs/stargate': 0.33.1
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - utf-8-validate
 
   idb-keyval@6.2.2: {}
 

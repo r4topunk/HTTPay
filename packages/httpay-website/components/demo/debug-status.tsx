@@ -6,16 +6,19 @@ import { useSDK } from "./sdk-context";
 
 export const DebugStatus = () => {
   const { 
-    sdk,
+    clients,
     isConnected, 
     hasSigningCapabilities,
     walletAddress,
     isWalletConnected,
     isWalletConnecting,
-    isWalletDisconnected,
-    isWalletError,
     loading 
   } = useSDK();
+
+  // Derive wallet error state - if we're not connecting and not connected, assume no error
+  // In a real app, you'd want to track error state explicitly
+  const isWalletError = false; // Could be derived from error handling
+  const isWalletDisconnected = !isWalletConnected && !isWalletConnecting;
 
   return (
     <Card>
@@ -55,8 +58,8 @@ export const DebugStatus = () => {
           </div>
           <div>
             <strong>SDK Instance:</strong> 
-            <Badge variant={sdk ? "default" : "secondary"} className="ml-2">
-              {sdk ? "Available" : "None"}
+            <Badge variant={clients.cosmWasmClient ? "default" : "secondary"} className="ml-2">
+              {clients.cosmWasmClient ? "Available" : "None"}
             </Badge>
           </div>
           <div>

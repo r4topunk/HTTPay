@@ -45,7 +45,7 @@ export const ToolRegistration = () => {
             id="toolId"
             value={toolRegistration.toolId}
             onChange={(e) =>
-              setToolRegistration((prev) => ({
+              setToolRegistration((prev: ToolRegistrationForm) => ({
                 ...prev,
                 toolId: e.target.value,
               }))
@@ -59,7 +59,7 @@ export const ToolRegistration = () => {
             id="price"
             value={toolRegistration.price}
             onChange={(e) =>
-              setToolRegistration((prev) => ({
+              setToolRegistration((prev: ToolRegistrationForm) => ({
                 ...prev,
                 price: e.target.value,
               }))
@@ -73,7 +73,7 @@ export const ToolRegistration = () => {
             id="description"
             value={toolRegistration.description}
             onChange={(e) =>
-              setToolRegistration((prev) => ({
+              setToolRegistration((prev: ToolRegistrationForm) => ({
                 ...prev,
                 description: e.target.value,
               }))
@@ -87,7 +87,7 @@ export const ToolRegistration = () => {
             id="endpoint"
             value={toolRegistration.endpoint}
             onChange={(e) =>
-              setToolRegistration((prev) => ({
+              setToolRegistration((prev: ToolRegistrationForm) => ({
                 ...prev,
                 endpoint: e.target.value,
               }))

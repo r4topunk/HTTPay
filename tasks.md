@@ -187,6 +187,17 @@ We will implement HTTPay in 3 distinct phases:
 - [x] Reviewed and updated all escrow contract tests to replace `Addr::unchecked` with Bech32-compliant addresses using `addr_make`.
 - [x] Verified and resolved warnings in test files, including unused imports.
 
+### 4.7 Migration Guide and Examples
+- [x] Fixed TypeScript errors in migration-example.tsx:
+  - [x] Replaced connection object with individual properties (isConnected, hasSigningCapabilities, walletAddress)
+  - [x] Fixed registerTool return type handling (void instead of result checking)
+  - [x] Updated error handling to use try/catch pattern
+  - [x] Updated migration documentation with breaking changes
+
+### 4.8 Documentation
+- [x] Created dedicated note file `/notes/sdk-v2-refactoring.md` with comprehensive documentation of the SDK v2 migration process, architecture decisions, and future steps
+- [x] Updated main notes index to reference the dedicated SDK v2 refactoring notes file
+
 ## Chunk 5: Deployment to Testnet
 
 ### 5.1 Build optimized contracts
@@ -336,33 +347,49 @@ We will implement HTTPay in 3 distinct phases:
 - [x] Release funds and verify balances
 - [ ] Test refund flow with timeout
 
-## Chunk 10: Multi-Denomination Token Support
+## Chunk 10: Frontend SDK v2 Refactoring
 
-### 10.1 Registry Contract Multi-Denom Support
-- [x] Create PRD/TDD for multi-denomination token support
-- [x] Update `ToolMeta` struct with `denom` field
-- [x] Add optional `denom` parameter to `RegisterTool` message
-- [x] Create `UpdateDenom` message type
-- [x] Implement `execute_update_denom` handler function
-- [x] Update query responses to include denom information
-- [x] Add default "untrn" token for backward compatibility
+### 10.1 HTTPay Website SDK Context Refactoring
+- [x] Analyze current SDK context implementation (~500+ lines monolithic file)
+- [x] Create new folder structure `/components/sdk-v2/` with proper organization:
+  - [x] `types/` - Comprehensive type definitions with Zod validation
+  - [x] `utils/` - Client creation and utility functions  
+  - [x] `hooks/` - Specialized React hooks for different concerns
+  - [x] `providers/` - Main provider component
+- [x] Create comprehensive type definitions (`types/index.ts`):
+  - [x] HTTPaySDKConfig, HTTPayClients interfaces
+  - [x] Form schemas with Zod validation (toolRegistrationSchema, escrowCreationSchema, etc.)
+  - [x] Result types (LockFundsResult, VerificationResult, etc.)
+  - [x] Main context type (HTTPaySDKContextType) with all required methods
+- [x] Create utility functions (`utils/client-utils.ts`):
+  - [x] Client creation (createQueryClients, createSigningClients)
+  - [x] Error handling (handleSDKError)
+  - [x] Token formatting and validation utilities
+  - [x] Address validation and formatting helpers
+- [x] Create specialized React hooks:
+  - [x] `use-registry.ts`: Registry operations (registerTool, updateEndpoint, updatePrice, etc.)
+  - [x] `use-escrow.ts`: Escrow operations (lockFunds, verifyEscrow, postUsage, etc.)
+  - [x] `use-wallet-integration.ts`: Wallet connection and CosmosKit integration
+  - [x] `use-block-height.ts`: Block height tracking with automatic updates
+- [x] Create main provider component (`providers/httpay-sdk-provider.tsx`):
+  - [x] Combines all specialized hooks using dependency injection
+  - [x] Maintains same API surface for backward compatibility
+  - [x] Better error handling and loading states
+  - [x] Uses httpay-sdk v2 instead of provider-sdk v1
+- [x] Create index file for clean exports and migration example
+- [ ] Update existing demo components to use new SDK v2 context
+- [ ] Test integration and ensure all functionality works correctly
+- [ ] Create backward compatibility layer if needed
+- [ ] Update import statements throughout the application
 
-### 10.2 Escrow Contract Multi-Denom Support
-- [x] Update `Escrow` struct with `denom` field
-- [x] Modify `lock_funds` to validate token denomination
-- [x] Update `release` and `refund_expired` to use stored denom
-- [x] Add appropriate error types for denom-related issues
-- [x] Add denom field to events and responses
-
-### 10.3 TypeScript SDK Multi-Denom Support
-- [x] Update registry and escrow types to include denom
-- [x] Update RegistryClient with denom support
-- [x] Modify EscrowClient to handle denom information
-- [x] Create implementation notes
-
-### 10.4 Testing and Documentation
-- [x] Add comprehensive tests for multi-denomination support
-- [x] Update documentation with multi-denom usage examples
+### 10.2 Benefits of SDK v2 Refactoring
+- [x] **Better React practices**: Split monolithic context into focused, single-responsibility hooks
+- [x] **Improved TypeScript support**: Uses generated TypeScript clients from httpay-sdk v2
+- [x] **Better maintainability**: Organized folder structure with clear separation of concerns
+- [x] **Enhanced error handling**: Normalized error messages and better error reporting
+- [x] **Better testing**: Dependency injection allows for easier mocking and testing
+- [x] **Performance**: More granular loading states and optimized re-renders
+- [x] **Future-proof**: Uses the latest SDK v2 with better contract bindings
 
 ## Chunk 11: Documentation & Hardening
 

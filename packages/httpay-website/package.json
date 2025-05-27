@@ -11,6 +11,7 @@
   "dependencies": {
     "@chain-registry/types": "^0.50.138",
     "@chain-registry/v2": "^1.71.219",
+    "@cosmjs/amino": "^0.33.1",
     "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/stargate": "^0.33.1",
     "@cosmos-kit/core": "^2.16.0",

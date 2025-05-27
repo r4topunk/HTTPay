@@ -29,6 +29,7 @@ This file serves as an index and guide to the implementation notes for the HTTPa
 - **fetch-escrows-plan.md**: Comprehensive implementation plan for adding GetEscrows query to fetch multiple escrows with filtering and pagination options
 - **fetch-escrows-implementation.md**: GetEscrows query implementation notes - **✅ STEP 15.4 COMPLETED** - core contract updates, comprehensive testing (6 test functions), data integrity validation, TypeScript SDK implementation with 8 new SDK tests, and frontend component enhancement with filtering, pagination, and enhanced escrow display completed
 - **readme-documentation-update-2025-05-26.md**: Comprehensive update to README.md with multi-denomination token support documentation, enhanced feature descriptions, and updated examples - **✅ COMPLETED**
+- **sdk-v2-refactoring.md**: Comprehensive implementation of HTTPay website SDK v2 migration, refactoring monolithic context into organized React hooks and components - **✅ COMPLETED**
 
 _All files are now located in the `notes/` folder._
 
@@ -48,3 +49,13 @@ When a new phase or chunk begins, or when a topic grows too large:
 _Example:_
 - When starting Phase 2, Chunk 2, create `phase2-chunk2.md` and update this index.
 - For a new topic like frontend integration, create `frontend.md` and add it here.
+
+## Recent Completed Features and Enhancements
+
+For detailed implementation notes on specific features, please refer to the corresponding files in this folder.
+
+**Recently Completed:**
+- **May 26, 2025**: SDK v2 Refactoring - See `sdk-v2-refactoring.md` for comprehensive notes about the migration from monolithic SDK v1 to modular SDK v2 architecture with focused React hooks and comprehensive TypeScript support.
+- **May 20, 2025**: README Documentation Update - Enhanced documentation with multi-denomination token support and updated examples.
+- **April 15, 2025**: GetEscrows Query Implementation - Added pagination and filtering for escrows.
+- **March 22, 2025**: Endpoint Field Support - Added endpoint field to Registry contract with comprehensive validation.

@@ -2,6 +2,8 @@
 
 This document provides a comprehensive, actionable tasklist for implementing the HTTPay MVP. Each task is broken down into specific subtasks with clear deliverables.
 
+**NEVER** write here the complete implementation, only the high level plan to keep track of progress.
+
 ## Implementation Phases
 
 We will implement HTTPay in 3 distinct phases:

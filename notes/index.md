@@ -56,7 +56,5 @@ _Example:_
 For detailed implementation notes on specific features, please refer to the corresponding files in this folder.
 
 **Recently Completed:**
+- **January 2025**: SDK v2 Structure Reorganization - Complete restructuring of httpay-sdk package with perfect organization: contract code in `src/`, React components promoted to root level, clean export structure, and full TypeScript support. Ready for production use. Website integration remains hybrid with both SDKs available.
 - **May 26, 2025**: SDK v2 Refactoring - See `sdk-v2-refactoring.md` for comprehensive notes about the migration from monolithic SDK v1 to modular SDK v2 architecture with focused React hooks and comprehensive TypeScript support.
-- **May 20, 2025**: README Documentation Update - Enhanced documentation with multi-denomination token support and updated examples.
-- **April 15, 2025**: GetEscrows Query Implementation - Added pagination and filtering for escrows.
-- **March 22, 2025**: Endpoint Field Support - Added endpoint field to Registry contract with comprehensive validation.

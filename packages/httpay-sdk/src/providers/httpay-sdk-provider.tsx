@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
-import { useChain } from "@cosmos-kit/react";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 import type { 
   HTTPaySDKConfig, 
@@ -55,13 +55,20 @@ interface HTTPaySDKProviderProps {
   initialConfig?: Partial<HTTPaySDKConfig>;
   chainName: string; // Application provides the chain name
   toast: ToastFunction; // Application provides the toast function
+  // Wallet integration props (injected by the application)
+  walletAddress?: string | null;
+  isWalletConnected?: boolean;
+  getSigningCosmWasmClient?: () => Promise<SigningCosmWasmClient>;
 }
 
 export function HTTPaySDKProvider({ 
   children, 
   initialConfig, 
   chainName, 
-  toast 
+  toast,
+  walletAddress,
+  isWalletConnected = false,
+  getSigningCosmWasmClient
 }: HTTPaySDKProviderProps) {
   
   // Configuration state
@@ -84,14 +91,32 @@ export function HTTPaySDKProvider({
   // Loading states
   const [loading, setLoading] = useState<LoadingStates>(defaultLoadingStates);
   const [escrowsFilter, setEscrowsFilter] = useState<EscrowsFilter>({});
+  
+  // Loading state helper
+  const setLoadingState = useCallback((key: keyof LoadingStates, value: boolean) => {
+    setLoading(prev => ({ ...prev, [key]: value }));
+  }, []);
 
-  // Wallet integration
+  // Use wallet integration hook
   const {
-    address: walletAddress,
+    clients: walletClients,
+    isConnected: walletIsConnected,
+    hasSigningCapabilities: walletHasSigningCapabilities,
+    initializeSDK: initializeSDKFromHook,
+    initializeWalletSDK,
+    forceReconnectWallet,
+    // Other wallet-related properties provided by the hook
+  } = useWalletIntegration({
+    config,
+    setLoadingState,
+    chainName,
+    toast,
+    // Pass the injected wallet properties
+    walletAddress,
     isWalletConnected,
     getSigningCosmWasmClient,
-  } = useChain(chainName);
-
+  });
+  
   // Block height tracking
   const { currentBlockHeight, getCurrentBlockHeight } = useBlockHeight({ 
     clients, 
@@ -106,119 +131,43 @@ export function HTTPaySDKProvider({
       currentBlockHeight,
     }));
   }, [walletAddress, currentBlockHeight]);
-
-  // Loading state helper
-  const setLoadingState = useCallback((key: keyof LoadingStates, value: boolean) => {
-    setLoading(prev => ({ ...prev, [key]: value }));
-  }, []);
+  
+  // Update clients when wallet clients change
+  useEffect(() => {
+    if (walletClients.signingClient) {
+      setClients(prev => ({
+        ...prev,
+        ...walletClients,
+      }));
+      
+      setConnection(prev => ({
+        ...prev,
+        isConnected: walletIsConnected,
+        hasSigningCapabilities: walletHasSigningCapabilities,
+      }));
+    }
+  }, [walletClients, walletIsConnected, walletHasSigningCapabilities]);
 
   // Configuration update
   const updateConfig = useCallback((newConfig: Partial<HTTPaySDKConfig>) => {
     setConfig(prev => ({ ...prev, ...newConfig }));
   }, []);
 
-  // SDK initialization (query-only)
+  // Use the hook's functions for SDK initialization
   const initializeSDK = useCallback(async () => {
-    try {
-      setLoadingState("connecting", true);
-      
-      const queryClients = await createQueryClients(config);
-      
-      setClients(prev => ({
-        ...prev,
-        cosmWasmClient: queryClients.cosmWasmClient,
-        registryQuery: queryClients.registryQuery,
-        escrowQuery: queryClients.escrowQuery,
-      }));
-
-      setConnection(prev => ({
-        ...prev,
-        isConnected: true,
-        hasSigningCapabilities: false,
-      }));
-
-      toast({
-        title: "SDK Initialized",
-        description: "Connected to the blockchain successfully",
-      });
-    } catch (error) {
-      console.error("Error initializing SDK:", error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to initialize SDK",
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingState("connecting", false);
-    }
-  }, [config, setLoadingState, toast]);
+    await initializeSDKFromHook();
+  }, [initializeSDKFromHook]);
 
   // SDK initialization with wallet (signing capabilities)
   const initSDKWithWallet = useCallback(async (): Promise<boolean> => {
-    if (!walletAddress || !isWalletConnected) {
-      toast({
-        title: "Error",
-        description: "Please connect your wallet first",
-        variant: "destructive",
-      });
-      return false;
-    }
-
     try {
-      setLoadingState("wallet", true);
-
-      // First ensure we have query clients
-      if (!clients.cosmWasmClient || !clients.registryQuery || !clients.escrowQuery) {
-        const queryClients = await createQueryClients(config);
-        setClients(prev => ({
-          ...prev,
-          cosmWasmClient: queryClients.cosmWasmClient,
-          registryQuery: queryClients.registryQuery,
-          escrowQuery: queryClients.escrowQuery,
-        }));
-      }
-
-      // Get signing client from wallet
-      const signingClient = await getSigningCosmWasmClient();
-      
-      // Create signing clients
-      const signingClients = createSigningClients(signingClient, walletAddress, config);
-
-      setClients(prev => ({
-        ...prev,
-        signingClient,
-        registry: signingClients.registry,
-        escrow: signingClients.escrow,
-      }));
-
-      setConnection(prev => ({
-        ...prev,
-        isConnected: true,
-        hasSigningCapabilities: true,
-      }));
-
-      toast({
-        title: "SDK Connected with Wallet",
-        description: `Using wallet address: ${walletAddress}`,
-      });
-
+      await initializeWalletSDK();
       return true;
     } catch (error) {
-      console.error("Error connecting wallet to SDK:", error);
-      setConnection(prev => ({
-        ...prev,
-        hasSigningCapabilities: false,
-      }));
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to connect wallet",
-        variant: "destructive",
-      });
+      console.error("Error in initSDKWithWallet:", error);
       return false;
-    } finally {
-      setLoadingState("wallet", false);
     }
-  }, [walletAddress, isWalletConnected, clients, config, getSigningCosmWasmClient, setLoadingState, toast]);
+  }, [initializeWalletSDK]);
 
   // Disconnect
   const disconnect = useCallback(() => {

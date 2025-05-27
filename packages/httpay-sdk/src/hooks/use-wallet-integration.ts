@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from "react";
-import { useChain } from "@cosmos-kit/react";
+import type { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import type { HTTPaySDKConfig, HTTPayClients, LoadingStates } from "../types";
 import { createQueryClients, createSigningClients, createEmptyClients, handleSDKError } from "../utils/client-utils";
 import type { ToastFunction } from "./use-registry";
@@ -28,32 +28,42 @@ export interface UseWalletIntegrationProps {
   setLoadingState: (key: string, loading: boolean) => void;
   chainName: string; // Application provides chain name instead of importing it
   toast: ToastFunction; // Application provides the toast function
+  // Wallet integration props (injected by the application)
+  walletAddress?: string | null;
+  isWalletConnected?: boolean;
+  isWalletConnecting?: boolean;
+  isWalletDisconnected?: boolean;
+  isWalletError?: boolean;
+  walletStatus?: any;
+  walletMessage?: string;
+  getSigningCosmWasmClient?: () => Promise<SigningCosmWasmClient>;
+  connectWallet?: () => Promise<void>;
+  disconnectWallet?: () => Promise<void>;
 }
 
 export function useWalletIntegration({ 
   config, 
   setLoadingState, 
   chainName, 
-  toast 
+  toast,
+  walletAddress,
+  isWalletConnected = false,
+  isWalletConnecting = false,
+  isWalletDisconnected = true,
+  isWalletError = false,
+  walletStatus = 'disconnected',
+  walletMessage = '',
+  getSigningCosmWasmClient,
+  connectWallet = async () => { 
+    console.warn('connectWallet not provided to useWalletIntegration'); 
+  },
+  disconnectWallet = async () => { 
+    console.warn('disconnectWallet not provided to useWalletIntegration'); 
+  }
 }: UseWalletIntegrationProps): UseWalletIntegrationReturn {
   const [clients, setClients] = useState<HTTPayClients>(createEmptyClients());
   const [isConnected, setIsConnected] = useState(false);
   const [hasSigningCapabilities, setHasSigningCapabilities] = useState(false);
-
-  // CosmosKit integration
-  const {
-    address: walletAddress,
-    status: walletStatus,
-    message: walletMessage,
-    isWalletConnected,
-    isWalletConnecting,
-    isWalletDisconnected,
-    isWalletError,
-    getSigningCosmWasmClient,
-    connect: connectWallet,
-    disconnect: disconnectWallet,
-    enable,
-  } = useChain(chainName);
 
   const handleError = useCallback((error: unknown, operation: string) => {
     const normalizedError = handleSDKError(error, operation);

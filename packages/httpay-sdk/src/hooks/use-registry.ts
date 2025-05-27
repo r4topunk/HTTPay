@@ -1,7 +1,15 @@
 import { useCallback, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
 import type { ToolRegistrationForm, Tool, LoadingStates, HTTPayClients } from "../types";
 import { handleSDKError } from "../utils/client-utils";
+
+// Define types for toast functionality to be provided by the consuming application
+export interface ToastFunction {
+  (options: {
+    title: string;
+    description: string;
+    variant?: "default" | "destructive";
+  }): void;
+}
 
 interface UseRegistryProps {
   clients: HTTPayClients;
@@ -10,6 +18,7 @@ interface UseRegistryProps {
   hasSigningCapabilities: boolean;
   loading: LoadingStates;
   setLoadingState: (key: string, loading: boolean) => void;
+  toast: ToastFunction; // Application provides the toast function
 }
 
 export function useRegistry({
@@ -19,8 +28,8 @@ export function useRegistry({
   hasSigningCapabilities,
   loading,
   setLoadingState,
+  toast,
 }: UseRegistryProps) {
-  const { toast } = useToast();
   const [tools, setTools] = useState<Tool[]>([]);
 
   const handleError = useCallback((error: unknown, operation: string) => {

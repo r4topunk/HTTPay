@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { useChain } from "@cosmos-kit/react";
-import { defaultChainName } from "@/config/chain-config";
-import { useToast } from "@/components/ui/use-toast";
 
 import type { 
   HTTPaySDKConfig, 
@@ -15,7 +13,7 @@ import type {
 } from "../types";
 
 import { createQueryClients, createSigningClients, createEmptyClients } from "../utils/client-utils";
-import { useRegistry } from "../hooks/use-registry";
+import { useRegistry, type ToastFunction } from "../hooks/use-registry";
 import { useEscrow } from "../hooks/use-escrow";
 import { useWalletIntegration } from "../hooks/use-wallet-integration";
 import { useBlockHeight } from "../hooks/use-block-height";
@@ -55,10 +53,16 @@ const defaultLoadingStates: LoadingStates = {
 interface HTTPaySDKProviderProps {
   children: ReactNode;
   initialConfig?: Partial<HTTPaySDKConfig>;
+  chainName: string; // Application provides the chain name
+  toast: ToastFunction; // Application provides the toast function
 }
 
-export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProviderProps) {
-  const { toast } = useToast();
+export function HTTPaySDKProvider({ 
+  children, 
+  initialConfig, 
+  chainName, 
+  toast 
+}: HTTPaySDKProviderProps) {
   
   // Configuration state
   const [config, setConfig] = useState<HTTPaySDKConfig>({
@@ -86,7 +90,7 @@ export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProvider
     address: walletAddress,
     isWalletConnected,
     getSigningCosmWasmClient,
-  } = useChain(defaultChainName);
+  } = useChain(chainName);
 
   // Block height tracking
   const { currentBlockHeight, getCurrentBlockHeight } = useBlockHeight({ 
@@ -116,7 +120,7 @@ export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProvider
   // SDK initialization (query-only)
   const initializeSDK = useCallback(async () => {
     try {
-      setLoadingState("init", true);
+      setLoadingState("connecting", true);
       
       const queryClients = await createQueryClients(config);
       
@@ -145,7 +149,7 @@ export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProvider
         variant: "destructive",
       });
     } finally {
-      setLoadingState("init", false);
+      setLoadingState("connecting", false);
     }
   }, [config, setLoadingState, toast]);
 
@@ -236,6 +240,7 @@ export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProvider
     hasSigningCapabilities: connection.hasSigningCapabilities,
     loading,
     setLoadingState,
+    toast,
   });
 
   const { escrows, hasMoreEscrows, ...escrowMethods } = useEscrow({
@@ -246,6 +251,7 @@ export function HTTPaySDKProvider({ children, initialConfig }: HTTPaySDKProvider
     loading,
     setLoadingState,
     getCurrentBlockHeight,
+    toast,
   });
 
   // Load tools effect

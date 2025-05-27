@@ -6,18 +6,21 @@
  */
 
 // Export Escrow contract types with prefix to avoid conflicts
-export * as EscrowTypes from './Escrow/Escrow.types';
-export * from './Escrow/Escrow.client';
-export * from './Escrow/Escrow.react-query';
+export * as EscrowTypes from './src/Escrow/Escrow.types';
+export * from './src/Escrow/Escrow.client';
+export * from './src/Escrow/Escrow.react-query';
 
 // Export Registry contract types with prefix to avoid conflicts  
-export * as RegistryTypes from './Registry/Registry.types';
-export * from './Registry/Registry.client';
-export * from './Registry/Registry.react-query';
+export * as RegistryTypes from './src/Registry/Registry.types';
+export * from './src/Registry/Registry.client';
+export * from './src/Registry/Registry.react-query';
 
 // Export organized namespace (backward compatibility)
-export { contracts as Escrow } from './Escrow';
-export { contracts as Registry } from './Registry';
+export { contracts as Escrow } from './src/Escrow';
+export { contracts as Registry } from './src/Registry';
+
+// Export React integration
+export * as ReactSDK from './src/react';
 
 // Re-export everything under HTTPay namespace for better organization
 export * as HTTPay from './namespace';

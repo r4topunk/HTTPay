@@ -2,8 +2,8 @@
  * Organized namespace exports for HTTPay SDK
  */
 
-import { contracts as EscrowContracts } from './Escrow';
-import { contracts as RegistryContracts } from './Registry';
+import { contracts as EscrowContracts } from './src/Escrow';
+import { contracts as RegistryContracts } from './src/Registry';
 
 export const Escrow = EscrowContracts.Escrow;
 export const Registry = RegistryContracts.Registry;

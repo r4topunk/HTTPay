@@ -1,17 +1,41 @@
 import { useCallback, useState, useEffect } from "react";
 import { useChain } from "@cosmos-kit/react";
-import { useToast } from "@/components/ui/use-toast";
-import { defaultChainName } from "@/config/chain-config";
 import type { HTTPaySDKConfig, HTTPayClients, LoadingStates } from "../types";
 import { createQueryClients, createSigningClients, createEmptyClients, handleSDKError } from "../utils/client-utils";
+import type { ToastFunction } from "./use-registry";
 
-interface UseWalletIntegrationProps {
-  config: HTTPaySDKConfig;
-  setLoadingState: (key: string, loading: boolean) => void;
+// Define return type for better type inference
+interface UseWalletIntegrationReturn {
+  clients: HTTPayClients;
+  isConnected: boolean;
+  hasSigningCapabilities: boolean;
+  walletAddress: string | undefined;
+  isWalletConnected: boolean;
+  isWalletConnecting: boolean;
+  isWalletDisconnected: boolean;
+  isWalletError: boolean;
+  walletStatus: any;
+  walletMessage: string | undefined;
+  initializeSDK: () => Promise<void>;
+  initializeWalletSDK: () => Promise<void>;
+  forceReconnectWallet: () => Promise<void>;
+  connectWallet: () => Promise<void>;
+  disconnectWallet: () => Promise<void>;
 }
 
-export function useWalletIntegration({ config, setLoadingState }: UseWalletIntegrationProps) {
-  const { toast } = useToast();
+export interface UseWalletIntegrationProps {
+  config: HTTPaySDKConfig;
+  setLoadingState: (key: string, loading: boolean) => void;
+  chainName: string; // Application provides chain name instead of importing it
+  toast: ToastFunction; // Application provides the toast function
+}
+
+export function useWalletIntegration({ 
+  config, 
+  setLoadingState, 
+  chainName, 
+  toast 
+}: UseWalletIntegrationProps): UseWalletIntegrationReturn {
   const [clients, setClients] = useState<HTTPayClients>(createEmptyClients());
   const [isConnected, setIsConnected] = useState(false);
   const [hasSigningCapabilities, setHasSigningCapabilities] = useState(false);
@@ -29,7 +53,7 @@ export function useWalletIntegration({ config, setLoadingState }: UseWalletInteg
     connect: connectWallet,
     disconnect: disconnectWallet,
     enable,
-  } = useChain(defaultChainName);
+  } = useChain(chainName);
 
   const handleError = useCallback((error: unknown, operation: string) => {
     const normalizedError = handleSDKError(error, operation);

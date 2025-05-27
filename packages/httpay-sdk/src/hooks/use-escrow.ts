@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { Coin } from "@cosmjs/amino";
-import { useToast } from "@/components/ui/use-toast";
 import type { 
   EscrowCreationForm, 
   EscrowVerificationForm, 
@@ -13,6 +12,7 @@ import type {
   HTTPayClients 
 } from "../types";
 import { handleSDKError, toBase64, extractEscrowIdFromTx } from "../utils/client-utils";
+import type { ToastFunction } from "./use-registry";
 
 interface UseEscrowProps {
   clients: HTTPayClients;
@@ -22,6 +22,7 @@ interface UseEscrowProps {
   loading: LoadingStates;
   setLoadingState: (key: string, loading: boolean) => void;
   getCurrentBlockHeight: () => Promise<number>;
+  toast: ToastFunction; // Application provides the toast function
 }
 
 export function useEscrow({
@@ -32,8 +33,8 @@ export function useEscrow({
   loading,
   setLoadingState,
   getCurrentBlockHeight,
+  toast,
 }: UseEscrowProps) {
-  const { toast } = useToast();
   const [escrows, setEscrows] = useState<Escrow[]>([]);
   const [escrowsFilter, setEscrowsFilter] = useState<EscrowsFilter>({});
   const [hasMoreEscrows, setHasMoreEscrows] = useState(false);

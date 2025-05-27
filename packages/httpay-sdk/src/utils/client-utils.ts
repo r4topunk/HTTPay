@@ -1,5 +1,6 @@
 import { CosmWasmClient, SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { RegistryClient, RegistryQueryClient, EscrowClient, EscrowQueryClient } from "httpay-sdk";
+import { RegistryClient, RegistryQueryClient } from "../Registry/Registry.client";
+import { EscrowClient, EscrowQueryClient } from "../Escrow/Escrow.client";
 import type { HTTPaySDKConfig, HTTPayClients } from "../types";
 
 /**

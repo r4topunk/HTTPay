@@ -573,3 +573,41 @@ We will implement HTTPay in 3 distinct phases:
 - [ ] Perform comprehensive testing across all layers
 - [ ] Version management and release coordination
 - [ ] Monitor post-deployment functionality
+
+## SDK Structure Reorganization ✅ COMPLETED
+
+### Task: Reorganize httpay-sdk directory structure
+
+**Status**: ✅ **COMPLETED**
+
+**Objective**: Move Escrow and Registry folders inside src, and promote v2 contents to main src level
+
+#### Completed Reorganization Steps:
+- [x] **Directory Restructuring**: 
+  - Moved `Escrow/` and `Registry/` folders into `src/`
+  - Moved all contents from `src/v2/` to `src/` root level
+  - Removed empty `v2` directory
+- [x] **Import Path Updates**: Fixed all import statements to work with new structure
+  - Updated imports in `types/index.ts` to reference `../Registry/Registry.client` and `../Escrow/Escrow.client`
+  - Updated imports in `utils/client-utils.ts` to use correct relative paths
+  - Fixed namespace.ts to reference `./src/Escrow` and `./src/Registry`
+- [x] **TypeScript Configuration**: Added explicit return type to `useWalletIntegration` hook
+- [x] **Build Verification**: 
+  - SDK builds successfully with new structure
+  - Website builds successfully and imports work correctly
+  - No TypeScript errors or build issues
+
+#### Final Structure:
+```
+src/
+├── Escrow/           # Contract client and types
+├── Registry/         # Contract client and types  
+├── hooks/            # React hooks (promoted from v2)
+├── providers/        # React providers (promoted from v2)
+├── types/            # TypeScript types (promoted from v2)
+├── utils/            # Utility functions (promoted from v2)
+├── index.ts          # Main exports
+└── react.ts          # React-specific exports
+```
+
+**Result**: ✅ Clean, organized structure with contract code and React utilities at appropriate levels

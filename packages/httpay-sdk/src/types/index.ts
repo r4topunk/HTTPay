@@ -2,12 +2,14 @@ import * as z from "zod";
 import { CosmWasmClient, SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { 
   RegistryClient, 
-  RegistryQueryClient, 
+  RegistryQueryClient 
+} from "../Registry/Registry.client";
+import * as RegistryTypes from "../Registry/Registry.types";
+import { 
   EscrowClient, 
-  EscrowQueryClient,
-  RegistryTypes,
-  EscrowTypes
-} from "httpay-sdk";
+  EscrowQueryClient
+} from "../Escrow/Escrow.client";
+import * as EscrowTypes from "../Escrow/Escrow.types";
 
 // SDK Configuration
 export interface HTTPaySDKConfig {

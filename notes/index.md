@@ -29,7 +29,8 @@ This file serves as an index and guide to the implementation notes for the HTTPa
 - **fetch-escrows-plan.md**: Comprehensive implementation plan for adding GetEscrows query to fetch multiple escrows with filtering and pagination options
 - **fetch-escrows-implementation.md**: GetEscrows query implementation notes - **✅ STEP 15.4 COMPLETED** - core contract updates, comprehensive testing (6 test functions), data integrity validation, TypeScript SDK implementation with 8 new SDK tests, and frontend component enhancement with filtering, pagination, and enhanced escrow display completed
 - **readme-documentation-update-2025-05-26.md**: Comprehensive update to README.md with multi-denomination token support documentation, enhanced feature descriptions, and updated examples - **✅ COMPLETED**
-- **sdk-v2-refactoring.md**: Comprehensive implementation of HTTPay website SDK v2 migration, refactoring monolithic context into organized React hooks and components - **✅ COMPLETED**
+- **sdk-v2-migration.md**: Complete migration and reorganization of SDK v2 code from httpay-website to httpay-sdk package with improved architecture, dependency injection, legacy cleanup, and optimal directory structure - **✅ FULLY COMPLETED WITH PERFECT STRUCTURE**
+- **sdk-v2-migration.md**: Complete migration of SDK v2 React components from httpay-website to httpay-sdk package for improved separation of concerns and reusability - **✅ COMPLETED**
 
 _All files are now located in the `notes/` folder._
 

@@ -1,11 +1,11 @@
 /**
- * HTTPay SDK v2 - Refactored Context with React Best Practices
+ * HTTPay SDK v2 - React Integration
  * 
- * This is the refactored version of the HTTPay SDK context that follows React best practices:
- * - Smaller, focused components instead of one large context
+ * This module provides React components, hooks, and utilities for integrating
+ * with the HTTPay protocol. It follows React best practices with:
+ * - Smaller, focused components instead of monolithic contexts
  * - Proper separation of concerns
  * - TypeScript-first approach with comprehensive type safety
- * - Uses httpay-sdk v2 instead of the legacy provider-sdk
  * - Better error handling and loading states
  * - Proper dependency injection for better testability
  */
@@ -14,7 +14,7 @@
 export { HTTPaySDKProvider, useHTTPaySDK, useSDK } from "./providers/httpay-sdk-provider";
 
 // Specialized hooks (can be used independently if needed)
-export { useRegistry } from "./hooks/use-registry";
+export { useRegistry, type ToastFunction } from "./hooks/use-registry";
 export { useEscrow } from "./hooks/use-escrow";
 export { useWalletIntegration } from "./hooks/use-wallet-integration";
 export { useBlockHeight } from "./hooks/use-block-height";

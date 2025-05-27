@@ -1,36 +1,39 @@
 /**
- * Migration Guide: Using SDK v2 instead of v1
+ * Migration Guide: Using HTTPay SDK v2
  * 
- * This file demonstrates how to migrate from the old sdk-context.tsx to the new SDK v2.
+ * This file demonstrates how to use the HTTPay SDK v2 in your React application.
  * 
- * OLD IMPORTS (v1):
- * import { useSDK } from "@/components/demo/sdk-context";
- * import { HTTPaySDK } from "httpay";
- * 
- * NEW IMPORTS (v2):
- * import { useHTTPaySDK } from "@/components/sdk-v2";
+ * IMPORTS:
+ * import { HTTPaySDKProvider, useHTTPaySDK } from "httpay-sdk/v2";
  * import { RegistryClient, EscrowClient } from "httpay-sdk";
  * 
- * BREAKING CHANGES:
- * 1. The main hook is now `useHTTPaySDK()` instead of `useSDK()`
- * 2. Uses individual RegistryClient and EscrowClient instead of a single HTTPaySDK class
- * 3. Connection state is now individual properties (isConnected, hasSigningCapabilities, walletAddress)
+ * KEY FEATURES:
+ * 1. The main hook is `useHTTPaySDK()` for accessing SDK functionality
+ * 2. Uses individual RegistryClient and EscrowClient for contract interactions
+ * 3. Connection state properties: isConnected, hasSigningCapabilities, walletAddress
  * 4. Better TypeScript support with generated types
  * 5. Separated hooks for different concerns
  * 6. More granular loading states
- * 7. Functions now return void and use error handling instead of result checking
+ * 7. Error handling via toast notifications (provided by application)
  * 
- * COMPATIBILITY:
- * - The main API surface remains largely the same
- * - Most existing component code should work with minimal changes
- * - Better error handling and loading states
- * - Use try/catch instead of checking return values
+ * REQUIREMENTS:
+ * - The application must provide a toast function for notifications
+ * - The application must provide the chain name for Cosmos Kit integration
+ * - CosmWasm/CosmJS dependencies must be installed
  */
 
-"use client";
-
 import React from "react";
-import { HTTPaySDKProvider, useHTTPaySDK } from "@/components/sdk-v2";
+// Note: These imports should be from "httpay-sdk" when using the published package
+import { HTTPaySDKProvider, useHTTPaySDK } from "../src/providers/httpay-sdk-provider";
+
+// Example toast function - you would import this from your UI library
+const exampleToast = ({ title, description, variant }: {
+  title: string;
+  description: string;
+  variant?: "default" | "destructive";
+}) => {
+  console.log(`[${variant || "default"}] ${title}: ${description}`);
+};
 
 // Example usage in a component
 function ToolRegistrationExample() {
@@ -51,6 +54,7 @@ function ToolRegistrationExample() {
         description: "An example tool for demonstration",
         price: "1000000", // 1 NTRN in micro units
         endpoint: "https://example.com/api",
+        denom: "untrn",
       });
 
       console.log("Tool registered successfully");
@@ -94,6 +98,8 @@ function ToolRegistrationExample() {
 function App() {
   return (
     <HTTPaySDKProvider
+      chainName="neutrontestnet" // Provide the chain name for Cosmos Kit
+      toast={exampleToast} // Provide your toast function
       initialConfig={{
         // Override default config if needed
         gasPrice: "0.005untrn",

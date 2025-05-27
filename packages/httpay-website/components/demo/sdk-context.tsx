@@ -4,13 +4,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { defaultChainName } from "@/config/chain-config";
 import { ReactSDK } from "httpay-sdk";
 import { useChain } from "@cosmos-kit/react";
-import React from "react";
+import React, { ReactNode } from "react";
 
 // Re-export the hook for compatibility
 export const useSDK = ReactSDK.useHTTPaySDK;
 
 interface SDKProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const SDKProvider = ({ children }: SDKProviderProps) => {

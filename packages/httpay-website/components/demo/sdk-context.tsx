@@ -9,7 +9,7 @@ import { ReactSDK } from "httpay-sdk";
 export const useSDK = ReactSDK.useHTTPaySDK;
 
 interface SDKProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const SDKProvider = ({ children }: SDKProviderProps) => {
@@ -26,7 +26,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
 
   return (
     <ReactSDK.HTTPaySDKProvider chainName={defaultChainName} toast={toastFunction}>
-      {children as any}
+      {children}
     </ReactSDK.HTTPaySDKProvider>
   );
 };

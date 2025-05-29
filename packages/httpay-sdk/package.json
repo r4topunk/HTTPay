@@ -1,14 +1,15 @@
 {
-  "name": "httpay-sdk",
-  "version": "1.0.0",
-  "description": "TypeScript SDK for HTTPay CosmWasm contracts including Escrow and Registry contracts",
+  "name": "httpay",
+  "version": "0.2.0",
+  "description": "HTTPay SDK for interacting with HTTPay smart contracts on Neutron",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE.md"
   ],
   "scripts": {
     "build": "rollup -c",

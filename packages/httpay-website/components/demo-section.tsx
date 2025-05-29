@@ -172,14 +172,48 @@ const DemoSectionContent = () => {
 
   // Step 2: Test API
   const handleTestAPI = async () => {
-    if (!selectedTool) return;
+    if (!selectedTool || !escrowId || !authToken) {
+      toast({
+        title: "Missing required data",
+        description: "Escrow ID and auth token are required to test the API",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setTestStatus("testing_api");
     setAPITestError(null);
     setApiResponse(null);
 
     try {
-      const response = await fetch(selectedTool.endpoint, {
+      // Build the API URL with escrow credentials as query parameters
+      // Smart URL handling: use relative URLs to avoid CORS issues with tunnels
+      const currentOrigin = window.location.origin;
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      
+      // Encode the auth token as base64 since escrow stores it encoded
+      const encodedAuthToken = btoa(authToken);
+      console.log('🔐 Auth token encoding:', {
+        original: authToken,
+        encoded: encodedAuthToken
+      });
+      
+      let apiUrl: string;
+      
+      if (isLocalhost) {
+        // Use relative URL for local development
+        apiUrl = `/api/weather?escrowId=${escrowId}&authToken=${encodedAuthToken}`;
+        console.log('🏠 Using local relative URL for API testing');
+      } else {
+        // For tunnel/external access, also use relative URL (same origin)
+        apiUrl = `/api/weather?escrowId=${escrowId}&authToken=${encodedAuthToken}`;
+        console.log('🌐 Using relative URL for tunnel/external testing');
+      }
+
+      console.log('Testing API with URL:', apiUrl);
+      console.log('Current origin:', currentOrigin);
+
+      const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -187,24 +221,19 @@ const DemoSectionContent = () => {
         },
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}: ${responseData.message || response.statusText}`);
       }
 
-      const responseData = await response.json();
       setApiResponse(responseData as APIResponse);
       setTestStatus("success");
 
       toast({
         title: "API test successful",
-        description: `Tool "${selectedTool.tool_id}" responded successfully`,
+        description: `Tool "${selectedTool.tool_id}" responded successfully with weather data`,
       });
-
-      // Auto-close after success (longer timeout to let user see response)
-      setTimeout(() => {
-        setTestDialogOpen(false);
-        resetTestState();
-      }, 8000);
 
     } catch (apiError) {
       console.error("API request failed:", apiError);
@@ -230,15 +259,9 @@ const DemoSectionContent = () => {
       
       toast({
         title: "API test failed",
-        description: `The API at "${selectedTool.endpoint}" failed to respond properly`,
+        description: `The API at "${selectedTool.endpoint}" failed: ${errorDetails.message}`,
         variant: "destructive",
       });
-
-      // Auto-close after longer timeout for error
-      setTimeout(() => {
-        setTestDialogOpen(false);
-        resetTestState();
-      }, 12000);
     }
   };
 

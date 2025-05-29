@@ -31,6 +31,7 @@ This file serves as an index and guide to the implementation notes for the HTTPa
 - **readme-documentation-update-2025-05-26.md**: Comprehensive update to README.md with multi-denomination token support documentation, enhanced feature descriptions, and updated examples - **✅ COMPLETED**
 - **sdk-v2-migration.md**: Complete migration and reorganization of SDK v2 code from httpay-website to httpay-sdk package with improved architecture, dependency injection, legacy cleanup, and optimal directory structure - **✅ FULLY COMPLETED WITH PERFECT STRUCTURE**
 - **sdk-v2-migration.md**: Complete migration of SDK v2 React components from httpay-website to httpay-sdk package for improved separation of concerns and reusability - **✅ COMPLETED**
+- **sdk-abstractions-enhancement.md**: Implementation of enhanced SDK Method Abstraction Levels in httpay-sdk package, reducing API provider complexity from 320+ lines to ~15 lines with three distinct abstraction levels (Full Control, Simplified Methods, Zero-Config) - **✅ COMPLETED**
 
 _All files are now located in the `notes/` folder._
 

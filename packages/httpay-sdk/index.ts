@@ -24,3 +24,6 @@ export * as ReactSDK from './src/react';
 
 // Re-export everything under HTTPay namespace for better organization
 export * as HTTPay from './namespace';
+
+// Export high-level abstractions for simplified API usage
+export * from './src/abstractions';

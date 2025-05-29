@@ -1,148 +1,128 @@
-# HTTPay – Marketplace de APIs com Pagamentos Autônomos
+# HTTPay
 
-## Tópicos Principais
-
-- Marketplace onde desenvolvedores monetizam APIs para agentes de IA
-- Pagamentos autônomos via contratos inteligentes
-- Nova fonte de receita para desenvolvedores e criadores de APIs
-- Infraestrutura para economia de APIs automatizada
-
-### Notas do Apresentador
-
-Gm, jurados. Apresento o HTTPay, um marketplace que permite desenvolvedores monetizarem suas APIs através de pagamentos autônomos de agentes de IA. O projeto explora uma nova economia emergente onde APIs são descobertas, contratadas e pagas automaticamente, sem intervenção humana no processo de contratação de serviços. Vou mostrar como isso gera valor tanto para desenvolvedores quanto consumidores.
+Olá, sou o r4to e estou aqui para apresentar o HTTPay, um marketplace descentralizado de APIs para agentes de IA, com pagamentos automáticos via blockchain. O projeto é open-source e disponível no Github sob a licença MIT. Possui mais de 200 commits durante o período do hackathon.
 
 ---
 
-# 1 - Problema & Oportunidade
+# Pagamentos Autônomos para a Era IA + Web3
 
-## Tópicos Principais
+O HTTPay permite que desenvolvedores monetizem suas APIs através de microtransações on-chain.
 
-- Desenvolvedores têm APIs valiosas mas dificuldade em monetizar para IAs
-- Agentes de IA precisam descobrir e pagar por serviços automaticamente
-- Falta marketplace focado em consumidores autônomos
-- Oportunidade de criar nova economia de APIs
+O projeto explora uma nova economia emergente onde APIs são descobertas, requisitadas e pagas
+automaticamente, sem intervenção humana através de criação de contas e configuração de faturamento.
 
-### Notas do Apresentador
-
-Desenvolvedores criam APIs poderosas mas monetizar para agentes de IA é complexo. Agentes autônomos (ElizaOS, LangChain) precisam descobrir e contratar APIs dinamicamente, mas não existe marketplace focado neles. Métodos atuais exigem integrações manuais e pagamentos pré-aprovados por humanos. A oportunidade: criar um marketplace onde desenvolvedores listam APIs e agentes as descobrem e pagam pelo seu uso, desbloqueando nova fonte de receita e automação completa.
+Vou mostrar como isso cria valor tanto para desenvolvedores quanto para consumidores.
 
 ---
 
-# 2 - Solução – O que é o HTTPay?
+# 1 Problema & Oportunidade
 
-## Tópicos Principais
+Desenvolvedores criam APIs poderosas, mas monetizá-las é bastante complexo.
 
-- Marketplace descentralizado de APIs para agentes de IA
-- Empresas registram e precificam suas APIs no Registry
-- Agentes descobrem, contratam e pagam automaticamente
-- Contratos inteligentes garantem pagamentos seguros
+Agentes autônomos precisam de humanos para descobrir e contratar APIs, e não existe um marketplace focado neles.
 
-### Notas do Apresentador
+Os métodos atuais exigem integrações manuais com chaves de API e pagamentos pré-configurados por humanos com cartões de crédito.
 
-O HTTPay é um marketplace descentralizado onde desenvolvedores publicam suas APIs e agentes de IA as consomem autonomamente. Funciona em duas etapas: primeiro, desenvolvedores registram suas APIs no Registry Contract com preços por chamada. Segundo, agentes descobrem essas APIs, bloqueiam fundos no Escrow Contract e são cobrados automaticamente após enviada a resposta da API. Construído com CosmWasm, garantimos transparência e segurança. Buscando uma adoção em massa, oferecemos uma SDK Typescript para desenvolvedores integrarem facilmente seus agentes ao marketplace.
+A oportunidade: criar um marketplace onde desenvolvedores listam APIs e agentes as descobrem e pagam pelo seu uso, desbloqueando uma nova fonte de receita através de microtransações e completa automação.
 
 ---
 
-# 3 - Proposta de Valor & Impacto Estratégico
+# 2 Solução – O que é o HTTPay?
 
-## Tópicos Principais
+O HTTPay é um marketplace descentralizado onde desenvolvedores publicam suas APIs e agentes de IA as consomem autonomamente.
 
-- Nova fonte de receita para desenvolvedores e criadores de APIs
-- Monetização automatizada sem gestão manual de billing
-- Mercado de APIs estimado em $6+ bilhões globalmente
-- Primeiro marketplace focado em consumidores autônomos
+Funciona em duas etapas: primeiro, desenvolvedores registram suas APIs no Contrato Registry com preços por chamada.
 
-### Notas do Apresentador
+Segundo, agentes descobrem essas APIs, bloqueiam fundos no Contrato Escrow e são automaticamente cobrados após o envio da resposta da API.
 
-Para desenvolvedores: o HTTPay cria nova fonte de receita automatizada. APIs que antes tinham poucos clientes agora podem ser monetizadas por milhares de agentes autônomos, sem gestão manual de billing ou integrações complexas. Para agentes: acesso instantâneo a serviços especializados sem depender de humanos para configuração. O mercado global de APIs já vale $6+ bilhões e está crescendo 25% ao ano. Somos o primeiro marketplace projetado especificamente para consumidores autônomos, posicionando a Cosmos na vanguarda dessa convergência entre AI e Blockchain.
+Construído com CosmWasm, garantimos transparência e segurança.
 
----
-
-# 4 - Tendências – Convergência de IA + Web3
-
-## Tópicos Principais
-
-- Ascensão da IA Generativa e agentes autônomos
-- Web3 oferece confiança descentralizada
-- Crescimento no mercado de IA-blockchain
-- HTTPay: decisão autônoma + execução financeira segura
-
-### Notas do Apresentador
-
-O timing é perfeito: vemos explosão da IA generativa e agentes autônomos, enquanto Web3 oferece ativos digitais programáveis. Grandes empresas já investem pesadamente nessa interseção. O HTTPay aproveita o melhor dos dois mundos: decisão autônoma da IA + execução financeira segura do blockchain.
+Buscando adoção em massa, oferecemos também uma SDK em Typescript para que desenvolvedores integrem facilmente seus agentes ao marketplace.
 
 ---
 
-# 5 - Tecnologia & Integração com Cosmos
+# 3 Proposta de Valor & Impacto Estratégico
 
-## Tópicos Principais
+Para desenvolvedores web2 e web3: o HTTPay cria uma nova fonte de receita automatizada.
 
-- Cosmos + CosmWasm: flexibilidade e agilidade
-- IBC: pagamentos entre redes diversas
-- Alta escalabilidade e baixas taxas
-- Segurança via rede descentralizada
+APIs que anteriormente tinham apenas alguns usuários, agora podem ser monetizadas por milhares de agentes autônomos operando 24/7, sem gestão manual de faturamento ou integrações complexas.
 
-### Notas do Apresentador
+Para agentes: acesso instantâneo a serviços especializados sem depender de humanos para configuração.
 
-CosmWasm me dá flexibilidade para programar lógicas complexas rapidamente. O IBC permite que agentes em diferentes redes possam utilizar o protocolo, expandindo o alcance do marketplace. A Cosmos fornece escalabilidade e baixas taxas para microtransações frequentes, com segurança de uma rede descentralizada.
+O tamanho do mercado global de APIs foi estimado em USD 18,00 bilhões em 2024 e projeta-se crescimento a uma taxa composta anual de 18,9% de 2025 a 2030.
 
----
+Somos o primeiro marketplace projetado especificamente para consumidores autônomos, posicionando a Cosmos na vanguarda dessa convergência entre IA e Blockchain.
 
-# 6 - Caso de Uso – Agente Autônomo em Ação
-
-## Tópicos Principais
-
-- Agente descobre API de dados financeiros no marketplace
-- Bloqueia fundos no escrow e recebe token de autenticação
-- Consome API e provedor verifica pagamento automaticamente
-- Processo marketplace completo sem intervenção humana
-
-### Notas do Apresentador
-
-Um agente de IA precisa de dados financeiros para análise. Ele consulta o HTTPay Registry, encontra uma API de dados em tempo real criada por um desenvolvedor independente por 0.01 NTRN por chamada. O agente bloqueia fundos no escrow, e usa o token de autenticação para chamar a API. O desenvolvedor verifica o escrow, entrega os dados e reivindica o pagamento automaticamente. Todo o ciclo marketplace-descoberta-pagamento-entrega acontece sem humanos (a não ser que o humano decida aprovar antes de cada pagamento).
+Fonte: https://www.grandviewresearch.com/industry-analysis/api-marketplace-market-report
 
 ---
 
-# 7 - Diferencial Competitivo
+# 4 Tendências – Convergência de IA + Web3
 
-## Tópicos Principais
+O timing é perfeito: estamos vendo uma explosão de IA generativa e agentes autônomos, enquanto a Web3 oferece ativos digitais programáveis.
 
-- Marketplaces existentes focam em humanos, não agentes
-- APIs empresariais exigem contratos e integrações manuais
-- Primeiro marketplace nativo para consumidores autônomos
-- Contratos inteligentes eliminam intermediários e billing manual
+Grandes empresas como a Coinbase Ventures já estão investindo pesadamente nesta interseção.
 
-### Notas do Apresentador
-
-Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e billing manual. APIs tradicionais exigem chaves de API, integrações customizadas e gestão de pagamento complexa. Nenhuma solução foi projetada para milhares de agentes autônomos encontrando e consumindo APIs dinamicamente. O HTTPay é o primeiro marketplace de APIs para consumidores autônomos do ecossistema Cosmos: descoberta programática, pagamentos instantâneos e liquidação automática via contratos inteligentes.
+O HTTPay aproveita o melhor dos dois mundos: tomada de decisão autônoma por IA + execução financeira segura via blockchain.
 
 ---
 
-# 8 - Visão de Futuro – Infraestrutura para a Economia de Agentes
+# 5 Tecnologia & Integração com Cosmos
 
-## Tópicos Principais
+O CosmWasm me dá a flexibilidade para programar lógicas complexas rapidamente.
 
-- Primeiro marketplace de APIs no ecossistema Cosmos
-- Escala para milhões de agentes em múltiplas redes
-- Fundação para uma economia máquina-a-máquina
-- Identidade descentralizada e reputação
-- Padronização e ampla adoção do protocolo
+O IBC permite que agentes em diferentes redes utilizem o protocolo, expandindo o alcance do marketplace.
 
-### Notas do Apresentador
-
-Como primeiro marketplace de APIs do ecossistema Cosmos, viso que o HTTPay se torne infraestrutura fundamental para economia de agentes autônomos. A arquitetura suporta milhões de agentes transacionando em múltiplas redes interconectadas. Planejo integrar um sistema de reputação, para dar mais segurança para o pagamento e contratação de serviços dentro do marketplace. E claro, desenvolver bibliotecas focadas nos frameworks de IA mais famosos, como Eliza e LangChain.
+A Cosmos fornece escalabilidade e baixas taxas para microtransações frequentes, o que é perfeito para interações rápidas entre agentes, com a segurança de uma rede descentralizada.
 
 ---
 
-# 9 - Conclusão & Próximos Passos
+# 6 Caso de Uso – Agente Autônomo em Ação
 
-## Tópicos Principais
+Um agente de IA precisa de dados financeiros para análise.
 
-- União inovadora: IA + Web3 em uma solução funcional
-- MVP completo com contratos operacionais
-- Evoluções pós-hackathon: escala, segurança e parcerias
-- Oportunidade de liderança no Cosmos
+Ele consulta o HTTPay Registry, encontra uma API de dados em tempo real criada por um desenvolvedor independente por 1 Atom por chamada.
 
-### Notas do Apresentador
+O agente bloqueia fundos no escrow e usa o token de autenticação para chamar a API.
 
-O HTTPay conecta desenvolvedores e agentes de IA em um marketplace funcional e é o primeiro marketplace de APIs no ecossistema Cosmos. Desenvolvi um MVP operacional: Registry para publicar APIs, Escrow para pagamentos seguros e SDK Typescript para fácil integração. Desenvolvedores já podem monetizar APIs e agentes já podem consumi-las autonomamente. Próximos passos: dashboard para desenvolvedores, métricas de uso e parcerias com criadores de APIs. Grande oportunidade para a Cosmos liderar a economia de APIs autônomas. Obrigado!
+O desenvolvedor da API verifica o escrow, entrega os dados e reivindica o pagamento.
+
+Todo o ciclo de marketplace-descoberta-pagamento-entrega acontece sem intervenção humana.
+
+---
+
+# 7 Diferencial Competitivo
+
+Marketplaces como RapidAPI focam em desenvolvedores humanos com dashboards e faturamento manual.
+
+APIs tradicionais exigem chaves de API, integrações customizadas e gerenciamento complexo de pagamentos.
+
+Nenhuma solução foi projetada para milhares de agentes autônomos encontrando e consumindo APIs dinamicamente.
+
+O HTTPay é o primeiro marketplace de APIs para consumidores autônomos no ecossistema Cosmos: descoberta programática, pagamentos instantâneos e liquidação automática via contratos inteligentes.
+
+---
+
+# 8 Visão de Futuro – Infraestrutura para a Economia de Agentes
+
+O HTTPay foi projetado para se tornar uma infraestrutura fundamental para a economia de agentes autônomos.
+
+A arquitetura foi desenhada para suportar milhões de agentes realizando transações em múltiplas redes interconectadas.
+
+Planejo integrar um sistema de reputação para fornecer mais segurança para pagamentos e contratação de serviços dentro do marketplace, e também um requisito de stake em Atom para registrar uma nova API.
+
+E claro, desenvolver bibliotecas focadas nos frameworks de IA mais populares como Eliza e LangChain.
+
+---
+
+# 9 Conclusão & Próximos Passos
+
+O HTTPay conecta desenvolvedores e agentes de IA em um marketplace funcional e é o primeiro marketplace de APIs no ecossistema Cosmos.
+
+O HTTPay é um MVP operacional: Registry para publicação de APIs, Escrow para pagamentos seguros, uma SDK em Typescript para fácil integração e um website para desenvolvedores encontrarem o marketplace, entenderem o projeto e publicarem suas APIs.
+
+Desenvolvedores já podem monetizar APIs e agentes já podem consumi-las autonomamente.
+
+É uma grande oportunidade para a Cosmos liderar a economia autônoma de APIs.
+
+Obrigado!

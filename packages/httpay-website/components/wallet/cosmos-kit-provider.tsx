@@ -8,7 +8,6 @@ import { SignerOptions } from "@cosmos-kit/core";
 import { GasPrice } from "@cosmjs/stargate";
 
 const signerOptions: SignerOptions = {
-  // @ts-expect-error - cosmjs typing doesn't match cosmos-kit's expected signature
   signingCosmwasm: () => {
     return {
       gasPrice: GasPrice.fromString("0.0053untrn"),

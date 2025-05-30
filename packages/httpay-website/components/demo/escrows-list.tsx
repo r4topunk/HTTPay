@@ -19,7 +19,9 @@ export const EscrowsList = () => {
     hasMoreEscrows,
     loading, 
     walletAddress,
-    isWalletConnected 
+    isWalletConnected,
+    currentBlockHeight,
+    refundExpired
   } = useSDK();
 
   const [filterCaller, setFilterCaller] = useState("");
@@ -59,8 +61,38 @@ export const EscrowsList = () => {
     await resetEscrowsFilter();
   };
 
+  const handleRefund = async (escrowId: number) => {
+    if (!isWalletConnected || !walletAddress) {
+      return;
+    }
+
+    try {
+      await refundExpired(escrowId);
+      // Reload escrows to update the list after refund
+      await loadEscrows();
+    } catch (error) {
+      console.error("Failed to refund escrow:", error);
+    }
+  };
+
+  const isEscrowExpired = (expires: number) => {
+    return currentBlockHeight !== null && expires < currentBlockHeight;
+  };
+
+  const canRefundEscrow = (escrow: any) => {
+    // User can refund if they are the caller and the escrow is expired
+    return (
+      isWalletConnected &&
+      walletAddress &&
+      escrow.caller === walletAddress &&
+      isEscrowExpired(escrow.expires)
+    );
+  };
+
   const formatExpiration = (expires: number) => {
-    return `Block ${expires}`;
+    const isExpired = isEscrowExpired(expires);
+    const status = isExpired ? " (Expired)" : "";
+    return `Block ${expires}${status}`;
   };
 
   const formatAuthToken = (authToken: string) => {
@@ -143,9 +175,21 @@ export const EscrowsList = () => {
                     <div className="font-medium text-lg">
                       Escrow #{escrow.escrow_id}
                     </div>
-                    <Badge variant="outline">
-                      {escrow.max_fee} {escrow.denom}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">
+                        {escrow.max_fee} {escrow.denom}
+                      </Badge>
+                      {canRefundEscrow(escrow) && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleRefund(escrow.escrow_id)}
+                          disabled={loading.refundEscrow}
+                        >
+                          {loading.refundEscrow ? "Refunding..." : "Refund"}
+                        </Button>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
@@ -163,7 +207,7 @@ export const EscrowsList = () => {
                     </div>
                     <div>
                       <span className="font-medium">Expires:</span>{" "}
-                      <span className="text-muted-foreground">
+                      <span className={`text-muted-foreground ${isEscrowExpired(escrow.expires) ? 'text-red-600 font-medium' : ''}`}>
                         {formatExpiration(escrow.expires)}
                       </span>
                     </div>

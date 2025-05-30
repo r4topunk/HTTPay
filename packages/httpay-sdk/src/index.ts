@@ -7,6 +7,9 @@
 // Export React integration
 export * from './react';
 
+// Export high-level abstractions (for backend/API usage)
+export * from './abstractions';
+
 // Export contract clients and types
 export * as RegistryTypes from './Registry/Registry.types';
 export * from './Registry/Registry.client';

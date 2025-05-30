@@ -4,8 +4,8 @@
  * This file demonstrates how to use the HTTPay SDK v2 in your React application.
  * 
  * IMPORTS:
- * import { HTTPaySDKProvider, useHTTPaySDK } from "httpay-sdk/v2";
- * import { RegistryClient, EscrowClient } from "httpay-sdk";
+ * import { HTTPaySDKProvider, useHTTPaySDK } from "httpay/v2";
+ * import { RegistryClient, EscrowClient } from "httpay";
  * 
  * KEY FEATURES:
  * 1. The main hook is `useHTTPaySDK()` for accessing SDK functionality
@@ -23,7 +23,7 @@
  */
 
 import React from "react";
-// Note: These imports should be from "httpay-sdk" when using the published package
+// Note: These imports should be from "httpay" when using the published package
 import { HTTPaySDKProvider, useHTTPaySDK } from "../src/providers/httpay-sdk-provider";
 
 // Example toast function - you would import this from your UI library

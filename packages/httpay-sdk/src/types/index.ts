@@ -69,7 +69,7 @@ export type EscrowCreationForm = z.infer<typeof escrowCreationSchema>;
 export type EscrowVerificationForm = z.infer<typeof escrowVerificationSchema>;
 export type UsagePostingForm = z.infer<typeof usagePostingSchema>;
 
-// API types - Use the types from httpay-sdk
+// API types - Use the types from httpay
 export type Tool = RegistryTypes.ToolResponse;
 export type Escrow = EscrowTypes.EscrowResponse;
 

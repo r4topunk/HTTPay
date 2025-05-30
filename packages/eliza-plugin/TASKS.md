@@ -1,282 +1,184 @@
-# HTTPay Eliza Plugin Development Tasks
+# HTTPay Eliza Plugin Development Tasks - MVP
 
 ## Overview
-This document outlines the development plan for the HTTPay Eliza plugin, which will enable AI agents to interact with the HTTPay decentralized tool marketplace, manage escrow payments, and execute tools on behalf of users.
 
-## Core Functionality Requirements
-- List available tools from the HTTPay registry
-- Store user's tool selection in conversation state
-- Confirm tool usage with clear cost breakdown
-- Create escrow payments using HTTPAY_PRIVATE_KEY
-- Execute tools through the registry API
-- Handle payment confirmations and refunds
-- Maintain user-specific tool preferences per room/conversation
+This document outlines the simplified MVP development plan for the HTTPay Eliza plugin. The MVP focuses on the core workflow: list tools, select tool, store selection, and confirm transaction.
 
-## Architecture Overview
+## MVP Core Functionality Requirements
 
-### Plugin Components
-1. **HTTPay Service** - Core service for SDK integration
-2. **Actions** - User-facing commands (list, select, confirm, execute)
-3. **Providers** - Context providers for tool information
-4. **State Management** - Per-room tool selection and escrow tracking
-5. **Wallet Integration** - Private key management for transactions
+- **List Tools**: Display available tools from the HTTPay registry
+- **Select Tool**: Choose a tool and store selection in conversation state
+- **Show Tool Details**: Display selected tool information and pricing
+- **Confirm Transaction**: Create escrow payment for the selected tool
 
-### State Structure
+## MVP Architecture Overview
+
+### Simplified Plugin Components
+
+1. **HTTPay Service** - Basic SDK integration for tool listing and escrow creation
+2. **Actions** - Three core actions: list, select, confirm
+3. **State Management** - Simple tool selection storage per room
+
+### Simplified State Structure
+
 ```typescript
-interface HTTPayState {
+interface HTTPayMVPState {
   selectedTool?: {
-    toolId: string;
-    name: string;
-    description: string;
-    price: string;
-    endpoint: string;
-    provider: string;
-  };
-  pendingEscrow?: {
-    escrowId: string;
-    amount: string;
-    toolId: string;
-    status: 'pending' | 'confirmed' | 'executed' | 'refunded';
-  };
-  userPreferences: {
-    autoConfirm?: boolean;
-    maxAmount?: string;
-  };
+    toolId: string
+    name: string
+    description: string
+    price: string
+    provider: string
+  }
 }
 ```
 
-## Task Breakdown
+## MVP Task Breakdown
 
-### Phase 1: Project Setup and Configuration
-- [ ] **Task 1.1**: Update package.json dependencies
+### Phase 1: Basic Setup (Essential Only)
+
+- [x] **Task 1.1**: Update package.json with minimal dependencies
+
   - Add HTTPay SDK dependency
-  - Add CosmJS dependencies
-  - Add wallet utilities
-  - Update TypeScript configuration
+  - Add basic CosmJS dependencies for transactions
 
-- [ ] **Task 1.2**: Create HTTPay plugin configuration
+- [x] **Task 1.2**: Create basic plugin configuration
+
   - Define HTTPAY_PRIVATE_KEY environment variable
-  - Add Neutron RPC endpoint configuration
-  - Set up registry and escrow contract addresses
-  - Create configuration validation schema
+  - Add Neutron RPC endpoint
+  - Set up contract addresses
 
-- [ ] **Task 1.3**: Set up TypeScript types
-  - Create HTTPay-specific type definitions
-  - Define plugin state interfaces
-  - Create action parameter types
-  - Set up error handling types
+- [x] **Task 1.3**: Create minimal TypeScript types
+  - HTTPay tool interface
+  - Plugin state interface
+  - Action parameter types
 
-### Phase 2: Core Service Implementation
-- [ ] **Task 2.1**: Create HTTPayService class
-  - Implement service initialization with private key
-  - Set up wallet connection and signing client
-  - Initialize registry and escrow query clients
-  - Implement connection health checks
+### Phase 2: Core Service (Minimal Implementation)
 
-- [ ] **Task 2.2**: Implement tool fetching functionality
-  - Create method to fetch all available tools
-  - Add tool filtering and search capabilities
-  - Implement caching for tool information
-  - Add error handling for network issues
+- [x] **Task 2.1**: Create basic HTTPayService
 
-- [ ] **Task 2.3**: Implement escrow management
-  - Create escrow creation functionality
-  - Add escrow status checking
-  - Implement payment confirmation
-  - Add refund handling
+  - Initialize service with private key
+  - Set up wallet for transactions
+  - Basic error handling
 
-### Phase 3: State Management
-- [ ] **Task 3.1**: Implement state persistence
-  - Create room-specific state storage
-  - Implement state serialization/deserialization
-  - Add state cleanup for expired sessions
-  - Create state migration utilities
+- [x] **Task 2.2**: Implement tool listing
 
-- [ ] **Task 3.2**: Tool selection management
-  - Store selected tool information
-  - Track tool usage history
-  - Implement tool preference learning
-  - Add tool recommendation logic
+  - Fetch tools from registry
+  - Basic formatting for display
+  - Simple error handling
 
-- [ ] **Task 3.3**: Escrow tracking
-  - Track pending escrows per user/room
-  - Monitor escrow status changes
-  - Handle escrow timeouts
-  - Implement payment history
+- [x] **Task 2.3**: Implement escrow creation
+  - Create escrow payment
+  - Return transaction hash
+  - Basic error handling
 
-### Phase 4: Action Implementation
-- [ ] **Task 4.1**: LIST_TOOLS action
-  - Create action to list available tools
-  - Add filtering by category/price
-  - Implement search functionality
-  - Format tool information for display
+### Phase 3: Essential Actions Only
 
-- [ ] **Task 4.2**: SELECT_TOOL action
-  - Create tool selection action
-  - Validate tool availability
-  - Store selection in state
-  - Provide tool details and pricing
+- [x] **Task 3.1**: LIST_HTTPAY_TOOLS action
 
-- [ ] **Task 4.3**: CONFIRM_PAYMENT action
-  - Create payment confirmation action
-  - Display clear cost breakdown
-  - Require explicit user confirmation
+  - Display available tools with basic info
+  - Simple formatting
+  - No filtering or search
+
+- [x] **Task 3.2**: SELECT_HTTPAY_TOOL action
+
+  - Store tool selection in state
+  - Display tool details and price
+  - Basic validation
+
+- [x] **Task 3.3**: CONFIRM_HTTPAY_PAYMENT action
+  - Show cost breakdown
   - Create escrow transaction
+  - Return transaction confirmation
 
-- [ ] **Task 4.4**: EXECUTE_TOOL action
-  - Execute selected tool with parameters
-  - Handle API authentication
-  - Process tool responses
-  - Update escrow status
+### Phase 4: Basic State Management
 
-### Phase 5: Provider Implementation
-- [ ] **Task 5.1**: Tool information provider
-  - Provide context about available tools
-  - Include pricing and provider information
-  - Add tool usage statistics
-  - Create tool recommendation context
+- [x] **Task 4.1**: Simple state storage
+  - Store selected tool per room
+  - Basic state persistence
+  - Clear state after transaction
 
-- [ ] **Task 5.2**: Payment status provider
-  - Provide current escrow status
-  - Include payment history
-  - Add balance information
-  - Create transaction summaries
+## MVP File Structure (Simplified)
 
-### Phase 6: Error Handling and Validation
-- [ ] **Task 6.1**: Input validation
-  - Validate tool selection inputs
-  - Check payment amount limits
-  - Verify user permissions
-  - Validate API parameters
-
-- [ ] **Task 6.2**: Error recovery
-  - Handle network failures gracefully
-  - Implement retry mechanisms
-  - Add fallback for service unavailability
-  - Create user-friendly error messages
-
-- [ ] **Task 6.3**: Security measures
-  - Secure private key handling
-  - Validate transaction amounts
-  - Prevent double-spending
-  - Add rate limiting
-
-### Phase 7: Testing and Documentation
-- [ ] **Task 7.1**: Unit tests
-  - Test service initialization
-  - Test action handlers
-  - Test state management
-  - Test error scenarios
-
-- [ ] **Task 7.2**: Integration tests
-  - Test full workflow scenarios
-  - Test wallet integration
-  - Test escrow lifecycle
-  - Test tool execution
-
-- [ ] **Task 7.3**: Documentation
-  - Create plugin usage guide
-  - Document configuration options
-  - Add troubleshooting guide
-  - Create development setup guide
-
-## Implementation Order
-
-### Sprint 1: Foundation (Tasks 1.1 - 2.1)
-1. Set up project dependencies and configuration
-2. Create basic HTTPay service structure
-3. Establish wallet connection
-
-### Sprint 2: Core Functionality (Tasks 2.2 - 3.3)
-1. Implement tool fetching and caching
-2. Build escrow management system
-3. Create state management infrastructure
-
-### Sprint 3: User Actions (Tasks 4.1 - 4.4)
-1. Implement all user-facing actions
-2. Create action validation and error handling
-3. Test action workflows
-
-### Sprint 4: Context and Polish (Tasks 5.1 - 7.3)
-1. Implement context providers
-2. Add comprehensive error handling
-3. Create tests and documentation
-
-## File Structure
 ```
 packages/eliza-plugin/
 ├── src/
 │   ├── index.ts                 # Main plugin export
-│   ├── services/
-│   │   └── httPayService.ts     # Core HTTPay service
+│   ├── service.ts               # HTTPay service (single file)
 │   ├── actions/
-│   │   ├── listTools.ts         # LIST_TOOLS action
-│   │   ├── selectTool.ts        # SELECT_TOOL action
-│   │   ├── confirmPayment.ts    # CONFIRM_PAYMENT action
-│   │   └── executeTool.ts       # EXECUTE_TOOL action
-│   ├── providers/
-│   │   ├── toolProvider.ts      # Tool information provider
-│   │   └── paymentProvider.ts   # Payment status provider
-│   ├── types/
-│   │   └── httpay.ts           # HTTPay-specific types
-│   └── utils/
-│       ├── wallet.ts           # Wallet utilities
-│       ├── validation.ts       # Input validation
-│       └── formatting.ts       # Response formatting
-├── __tests__/
-│   ├── services/
-│   ├── actions/
-│   └── providers/
-└── TASKS.md                    # This file
+│   │   ├── listTools.ts         # LIST_HTTPAY_TOOLS action
+│   │   ├── selectTool.ts        # SELECT_HTTPAY_TOOL action
+│   │   └── confirmPayment.ts    # CONFIRM_HTTPAY_PAYMENT action
+│   ├── types.ts                 # All types in one file
+│   └── utils.ts                 # Basic utilities
+└── TASKS.md                     # This file
 ```
 
-## Dependencies to Add
+## MVP Dependencies (Minimal)
+
 ```json
 {
   "dependencies": {
     "httpay": "workspace:*",
     "@cosmjs/cosmwasm-stargate": "^0.32.0",
-    "@cosmjs/proto-signing": "^0.32.0",
-    "@cosmjs/stargate": "^0.32.0",
-    "bip39": "^3.0.4"
+    "@cosmjs/proto-signing": "^0.32.0"
   }
 }
 ```
 
-## Environment Variables
+## MVP Environment Variables
+
 ```bash
-# HTTPay Configuration
+# Essential Configuration Only
 HTTPAY_PRIVATE_KEY=your_private_key_here
 HTTPAY_RPC_ENDPOINT=https://rpc.neutron.org
 HTTPAY_REGISTRY_CONTRACT=neutron1...
 HTTPAY_ESCROW_CONTRACT=neutron1...
-
-# Optional Configuration
-HTTPAY_MAX_ESCROW_AMOUNT=1000000
-HTTPAY_DEFAULT_GAS_PRICE=0.025
 ```
 
-## Success Criteria
-- [ ] Plugin can successfully list tools from HTTPay registry
-- [ ] Users can select tools and see clear pricing information
-- [ ] Payment confirmation requires explicit user consent
-- [ ] Escrow transactions are created successfully
-- [ ] Tools can be executed with proper authentication
-- [ ] State is properly maintained per user/room
-- [ ] Error handling provides clear user feedback
-- [ ] All tests pass with >90% coverage
-- [ ] Documentation is complete and accurate
+## MVP Success Criteria (Simplified)
 
-## Risk Mitigation
-- **Private Key Security**: Use secure key storage and validation
-- **Network Failures**: Implement robust retry and fallback mechanisms
-- **State Corruption**: Add state validation and recovery
-- **Double Spending**: Implement transaction deduplication
-- **API Rate Limits**: Add request throttling and queuing
+- [x] Plugin can list tools from HTTPay registry
+- [x] Users can select a tool and see its details
+- [x] Tool selection is stored in conversation state
+- [x] Users can confirm payment and create escrow transaction
+- [x] Basic error handling provides user feedback
 
-## Next Steps
-1. Start with Task 1.1 - Update package.json dependencies
-2. Set up development environment with test network
-3. Create basic plugin structure following Eliza patterns
-4. Implement core service with wallet integration
-5. Build actions incrementally with thorough testing
+## MVP Workflow
+
+1. **User**: "List available tools"
+2. **Plugin**: Shows tools with basic info (name, price, description)
+3. **User**: "Select tool X"
+4. **Plugin**: Stores selection, shows tool details and pricing
+5. **User**: "Confirm payment"
+6. **Plugin**: Creates escrow transaction, shows confirmation
+
+## Implementation Priority
+
+1. **Phase 1**: Setup and configuration (Tasks 1.1-1.3)
+2. **Phase 2**: Core service with tool listing and escrow creation (Tasks 2.1-2.3)
+3. **Phase 3**: Three essential actions (Tasks 3.1-3.3)
+4. **Phase 4**: Basic state management (Task 4.1)
+
+## Out of Scope for MVP
+
+- Tool execution functionality
+- Complex state tracking
+- Payment history
+- Tool recommendations
+- Advanced error recovery
+- Comprehensive testing
+- Detailed documentation
+- User preferences
+- Caching mechanisms
+- Rate limiting
+- Advanced validation
+
+## Next Steps for MVP
+
+1. **Start with Task 1.1** - Set up basic dependencies
+2. **Task 1.2** - Create minimal configuration
+3. **Task 2.1** - Build basic HTTPay service
+4. **Task 3.1** - Implement LIST_HTTPAY_TOOLS action
+
+This MVP approach will deliver a working plugin with the core workflow in minimal time, which can then be extended with additional features as needed.

@@ -1,6 +1,6 @@
 {
-  "name": "@npm-username/plugin-name",
-  "description": "${PLUGINDESCRIPTION}",
+  "name": "@r4topunk/plugin-httpay",
+  "description": "Eliza plugin for HTTPay - enables AI agents to discover, select, and pay for blockchain tools",
   "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
@@ -35,6 +35,13 @@
     "dist"
   ],
   "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.32.2",
+    "@cosmjs/proto-signing": "^0.32.2",
+    "@cosmjs/stargate": "^0.32.2",
+    "@elizaos/plugin-knowledge": "^1.0.0-beta.77",
+    "@elizaos/plugin-openai": "^1.0.0-beta.73",
+    "@r4topunk/plugin-httpay": "file:.",
+    "httpay": "latest",
     "zod": "3.24.2"
   },
   "peerDependencies": {
@@ -69,9 +76,22 @@
   "agentConfig": {
     "pluginType": "elizaos:plugin:1.0.0",
     "pluginParameters": {
-      "API_KEY": {
+      "HTTPAY_PRIVATE_KEY": {
         "type": "string",
-        "description": "API key for the service"
+        "description": "Private key for HTTPay wallet transactions"
+      },
+      "HTTPAY_RPC_ENDPOINT": {
+        "type": "string",
+        "description": "Neutron RPC endpoint",
+        "default": "https://rpc.neutron.org"
+      },
+      "HTTPAY_REGISTRY_CONTRACT": {
+        "type": "string",
+        "description": "HTTPay registry contract address"
+      },
+      "HTTPAY_ESCROW_CONTRACT": {
+        "type": "string",
+        "description": "HTTPay escrow contract address"
       }
     }
   },

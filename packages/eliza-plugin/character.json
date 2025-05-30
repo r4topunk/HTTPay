@@ -67,7 +67,7 @@
         "user": "HttpayAgent",
         "content": {
           "text": "Payment Confirmation\n\nYou have confirmed the payment of 1000000 untrn tokens for the weather-api tool. Processing your request now...\n\nPlease wait while I execute the tool and provide you with the weather information.",
-          "action": "CONFIRM_PAYMENT"
+          "action": "CONFIRM_HTTPAY_PAYMENT"
         }
       }
     ],
@@ -95,7 +95,7 @@
         "user": "HttpayAgent",
         "content": {
           "text": "✅ Payment successful! Tool executed.\n\nWeather information: Current temperature is 22°C with partly cloudy skies.\n\nTransaction completed. Thank you for using HTTPay!",
-          "action": "CONFIRM_PAYMENT"
+          "action": "CONFIRM_HTTPAY_PAYMENT"
         }
       }
     ]

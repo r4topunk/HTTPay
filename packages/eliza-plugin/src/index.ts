@@ -1,250 +1,163 @@
-import type { Plugin } from '@elizaos/core';
+import type { Plugin } from "@elizaos/core"
 import {
   type Action,
-  type Content,
-  type GenerateTextParams,
-  type HandlerCallback,
   type IAgentRuntime,
   type Memory,
-  ModelType,
-  type Provider,
-  type ProviderResult,
   Service,
   type State,
   logger,
-} from '@elizaos/core';
-import { z } from 'zod';
+} from "@elizaos/core"
+import { z } from "zod"
+
+// Import HTTPay components
+import { HTTPayService } from "./service.js"
+import { validateEnvironment } from "./utils.js"
+import type { HTTPayMVPState } from "./types.js"
+
+// Import actions
+import { listToolsAction } from "./actions/listTools.js"
+import { selectToolAction } from "./actions/selectTool.js"
+import { confirmPaymentAction } from "./actions/confirmPayment.js"
 
 /**
- * Defines the configuration schema for a plugin, including the validation rules for the plugin name.
- *
- * @type {import('zod').ZodObject<{ EXAMPLE_PLUGIN_VARIABLE: import('zod').ZodString }>}
+ * HTTPay configuration schema
  */
-const configSchema = z.object({
-  EXAMPLE_PLUGIN_VARIABLE: z
+const httpayConfigSchema = z.object({
+  HTTPAY_PRIVATE_KEY: z
     .string()
-    .min(1, 'Example plugin variable is not provided')
-    .optional()
-    .transform((val) => {
-      if (!val) {
-        logger.warn('Example plugin variable is not provided (this is expected)');
-      }
-      return val;
-    }),
-});
+    .min(64, "Private key must be 64 characters (32 bytes in hex)")
+    .max(64, "Private key must be 64 characters (32 bytes in hex)"),
+  HTTPAY_RPC_ENDPOINT: z
+    .string()
+    .url("Must be a valid RPC endpoint URL")
+    .default("https://rpc.neutron.org"),
+  HTTPAY_REGISTRY_CONTRACT: z
+    .string()
+    .min(1, "Registry contract address is required"),
+  HTTPAY_ESCROW_CONTRACT: z
+    .string()
+    .min(1, "Escrow contract address is required"),
+})
 
 /**
- * Example HelloWorld action
- * This demonstrates the simplest possible action structure
+ * HTTPay Service for Eliza
+ * Integrates HTTPay SDK with Eliza runtime
  */
-/**
- * Action representing a hello world message.
- * @typedef {Object} Action
- * @property {string} name - The name of the action.
- * @property {string[]} similes - An array of related actions.
- * @property {string} description - A brief description of the action.
- * @property {Function} validate - Asynchronous function to validate the action.
- * @property {Function} handler - Asynchronous function to handle the action and generate a response.
- * @property {Object[]} examples - An array of example inputs and expected outputs for the action.
- */
-const helloWorldAction: Action = {
-  name: 'HELLO_WORLD',
-  similes: ['GREET', 'SAY_HELLO'],
-  description: 'Responds with a simple hello world message',
+class HTTPayElizaService extends Service {
+  private httpayService?: HTTPayService
 
-  validate: async (_runtime: IAgentRuntime, _message: Memory, _state: State): Promise<boolean> => {
-    // Always valid
-    return true;
-  },
+  static serviceType = "httpay"
 
-  handler: async (
-    _runtime: IAgentRuntime,
-    message: Memory,
-    _state: State,
-    _options: any,
-    callback: HandlerCallback,
-    _responses: Memory[]
-  ) => {
-    try {
-      logger.info('Handling HELLO_WORLD action');
-
-      // Simple response content
-      const responseContent: Content = {
-        text: 'hello world!',
-        actions: ['HELLO_WORLD'],
-        source: message.content.source,
-      };
-
-      // Call back with the hello world message
-      await callback(responseContent);
-
-      return responseContent;
-    } catch (error) {
-      logger.error('Error in HELLO_WORLD action:', error);
-      throw error;
-    }
-  },
-
-  examples: [
-    [
-      {
-        name: '{{name1}}',
-        content: {
-          text: 'Can you say hello?',
-        },
-      },
-      {
-        name: '{{name2}}',
-        content: {
-          text: 'hello world!',
-          actions: ['HELLO_WORLD'],
-        },
-      },
-    ],
-  ],
-};
-
-/**
- * Example Hello World Provider
- * This demonstrates the simplest possible provider implementation
- */
-const helloWorldProvider: Provider = {
-  name: 'HELLO_WORLD_PROVIDER',
-  description: 'A simple example provider',
-
-  get: async (
-    _runtime: IAgentRuntime,
-    _message: Memory,
-    _state: State
-  ): Promise<ProviderResult> => {
-    return {
-      text: 'I am a provider',
-      values: {},
-      data: {},
-    };
-  },
-};
-
-export class StarterService extends Service {
-  static serviceType = 'starter';
   capabilityDescription =
-    'This is a starter service which is attached to the agent through the starter plugin.';
-  constructor(protected runtime: IAgentRuntime) {
-    super(runtime);
+    "HTTPay integration service for blockchain tool payments"
+
+  constructor(runtime: IAgentRuntime) {
+    super(runtime)
   }
 
   static async start(runtime: IAgentRuntime) {
-    logger.info(`*** Starting starter service - MODIFIED: ${new Date().toISOString()} ***`);
-    const service = new StarterService(runtime);
-    return service;
+    logger.info("Starting HTTPay service...")
+    const service = new HTTPayElizaService(runtime)
+    await service.initialize(runtime)
+    return service
   }
 
   static async stop(runtime: IAgentRuntime) {
-    logger.info('*** TESTING DEV MODE - STOP MESSAGE CHANGED! ***');
-    // get the service from the runtime
-    const service = runtime.getService(StarterService.serviceType);
-    if (!service) {
-      throw new Error('Starter service not found');
-    }
-    service.stop();
+    logger.info("Stopping HTTPay service...")
+    // Cleanup if needed
   }
 
   async stop() {
-    logger.info('*** THIRD CHANGE - TESTING FILE WATCHING! ***');
+    logger.info("HTTPay service stopped")
+    // Cleanup if needed
+  }
+
+  async initialize(runtime: IAgentRuntime): Promise<void> {
+    try {
+      logger.info("Initializing HTTPay Eliza service...")
+
+      // Validate environment configuration
+      const config = validateEnvironment()
+
+      // Create and initialize HTTPay service
+      this.httpayService = new HTTPayService({
+        privateKey: config.HTTPAY_PRIVATE_KEY,
+        rpcEndpoint: config.HTTPAY_RPC_ENDPOINT,
+        registryAddress: config.HTTPAY_REGISTRY_CONTRACT,
+        escrowAddress: config.HTTPAY_ESCROW_CONTRACT,
+      })
+
+      await this.httpayService.initialize()
+
+      logger.info("HTTPay Eliza service initialized successfully")
+    } catch (error) {
+      logger.error("Failed to initialize HTTPay Eliza service:", error)
+      throw error
+    }
+  }
+
+  // Expose HTTPay service methods
+  async listTools() {
+    return this.httpayService?.listTools() || []
+  }
+
+  async getTool(toolId: string) {
+    return this.httpayService?.getTool(toolId) || null
+  }
+
+  async createEscrow(toolId: string, maxFee?: string) {
+    if (!this.httpayService) {
+      throw new Error("HTTPay service not initialized")
+    }
+    return this.httpayService.createEscrow(toolId, maxFee)
+  }
+
+  getWalletAddress() {
+    return this.httpayService?.getWalletAddress()
+  }
+
+  isInitialized() {
+    return this.httpayService?.isInitialized() || false
   }
 }
 
-export const starterPlugin: Plugin = {
-  name: 'plugin-starter',
-  description: 'Plugin starter for elizaOS',
-  config: {
-    EXAMPLE_PLUGIN_VARIABLE: process.env.EXAMPLE_PLUGIN_VARIABLE,
-  },
-  async init(config: Record<string, string>) {
-    logger.info('*** TESTING DEV MODE - PLUGIN MODIFIED AND RELOADED! ***');
-    try {
-      const validatedConfig = await configSchema.parseAsync(config);
+/**
+ * State initialization for HTTPay
+ */
+async function initializeState(
+  runtime: IAgentRuntime,
+  message: Memory
+): Promise<State> {
+  const state = await runtime.composeState(message)
 
-      // Set all environment variables at once
-      for (const [key, value] of Object.entries(validatedConfig)) {
-        if (value) process.env[key] = value;
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error(
-          `Invalid plugin configuration: ${error.errors.map((e) => e.message).join(', ')}`
-        );
-      }
-      throw error;
-    }
-  },
-  models: {
-    [ModelType.TEXT_SMALL]: async (
-      _runtime,
-      { prompt, stopSequences = [] }: GenerateTextParams
-    ) => {
-      return 'Never gonna give you up, never gonna let you down, never gonna run around and desert you...';
-    },
-    [ModelType.TEXT_LARGE]: async (
-      _runtime,
-      {
-        prompt,
-        stopSequences = [],
-        maxTokens = 8192,
-        temperature = 0.7,
-        frequencyPenalty = 0.7,
-        presencePenalty = 0.7,
-      }: GenerateTextParams
-    ) => {
-      return 'Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you...';
-    },
-  },
-  routes: [
-    {
-      name: 'hello-world-route',
-      path: '/helloworld',
-      type: 'GET',
-      handler: async (_req: any, res: any) => {
-        // send a response
-        res.json({
-          message: 'Hello World!',
-        });
-      },
-    },
-  ],
-  events: {
-    MESSAGE_RECEIVED: [
-      async (params) => {
-        logger.debug('MESSAGE_RECEIVED event received');
-        // print the keys
-        logger.debug(Object.keys(params));
-      },
-    ],
-    VOICE_MESSAGE_RECEIVED: [
-      async (params) => {
-        logger.debug('VOICE_MESSAGE_RECEIVED event received');
-        // print the keys
-        logger.debug(Object.keys(params));
-      },
-    ],
-    WORLD_CONNECTED: [
-      async (params) => {
-        logger.debug('WORLD_CONNECTED event received');
-        // print the keys
-        logger.debug(Object.keys(params));
-      },
-    ],
-    WORLD_JOINED: [
-      async (params) => {
-        logger.debug('WORLD_JOINED event received');
-        // print the keys
-        logger.debug(Object.keys(params));
-      },
-    ],
-  },
-  services: [StarterService],
-  actions: [helloWorldAction],
-  providers: [helloWorldProvider],
-};
+  // Initialize HTTPay state if not present
+  if (!state.httpay) {
+    state.httpay = {} as HTTPayMVPState
+  }
 
-export default starterPlugin;
+  return state
+}
+
+/**
+ * HTTPay Plugin for Eliza
+ * Enables AI agents to discover, select, and pay for blockchain tools
+ */
+export const httpayPlugin: Plugin = {
+  name: "httpay",
+  description:
+    "HTTPay integration plugin - enables AI agents to discover, select, and pay for blockchain tools using escrow payments",
+
+  actions: [listToolsAction, selectToolAction, confirmPaymentAction],
+
+  evaluators: [],
+  providers: [],
+
+  services: [HTTPayElizaService],
+}
+
+// Export everything for use
+export default httpayPlugin
+export * from "./types.js"
+export * from "./service.js"
+export * from "./utils.js"
+export { listToolsAction, selectToolAction, confirmPaymentAction }

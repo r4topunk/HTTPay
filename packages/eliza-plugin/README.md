@@ -1,132 +1,220 @@
-# ElizaOS Plugin
+# HTTPay Eliza Plugin
 
-This is an ElizaOS plugin built with the official plugin starter template.
+An Eliza plugin that enables AI agents to discover, select, and pay for blockchain tools using the HTTPay protocol.
 
-## Development
+## Features
+
+- 🔍 **Tool Discovery**: List all available tools from HTTPay registry
+- 🎯 **Tool Selection**: Select specific tools and store them in conversation state
+- 💰 **Secure Payments**: Create escrow transactions for selected tools
+- 🤖 **AI Integration**: Natural language interaction for payment workflows
+
+## Quick Start
+
+### 1. Installation
 
 ```bash
-# Start development with hot-reloading
-npm run dev
-
-# Build the plugin
-npm run build
-
-# Test the plugin
-npm run test
+cd packages/eliza-plugin
+pnpm install
 ```
 
-## Testing
+### 2. Configuration
 
-ElizaOS provides a comprehensive testing structure for plugins:
+Copy the example environment file and configure it:
 
-### Test Structure
+```bash
+cp .env.example .env
+```
 
-- **Component Tests** (`__tests__/` directory):
+Edit `.env` with your actual values:
 
-  - **Unit Tests**: Test individual functions/classes in isolation
-  - **Integration Tests**: Test how components work together
-  - Run with: `npm run test:component`
+```bash
+# Your wallet private key (64 hex characters)
+HTTPAY_PRIVATE_KEY=your_private_key_here
 
-- **End-to-End Tests** (`e2e/` directory):
+# Neutron RPC endpoint
+HTTPAY_RPC_ENDPOINT=https://rpc.neutron.org
 
-  - Test the plugin within a full ElizaOS runtime
-  - Run with: `npm run test:e2e`
+# HTTPay contract addresses
+HTTPAY_REGISTRY_CONTRACT=neutron1...
+HTTPAY_ESCROW_CONTRACT=neutron1...
+```
 
-- **Running All Tests**:
-  - `npm run test` runs both component and e2e tests
+### 3. Build
 
-### Writing Tests
+```bash
+pnpm build
+```
 
-Component tests use Vitest:
+### 4. Use in Eliza
+
+Add the plugin to your Eliza configuration:
 
 ```typescript
-// Unit test example (__tests__/plugin.test.ts)
-describe('Plugin Configuration', () => {
-  it('should have correct plugin metadata', () => {
-    expect(starterPlugin.name).toBe('plugin-starter');
-  });
-});
+import { httpayPlugin } from "@httpay/eliza-plugin"
 
-// Integration test example (__tests__/integration.test.ts)
-describe('Integration: HelloWorld Action with StarterService', () => {
-  it('should handle HelloWorld action with StarterService', async () => {
-    // Test interactions between components
-  });
-});
+// Add to your plugins array
+const plugins = [
+  httpayPlugin,
+  // ... other plugins
+]
 ```
 
-E2E tests use ElizaOS test interface:
+## Usage Examples
+
+### List Available Tools
+
+```
+User: "List available tools"
+Agent: "🛠️ Available HTTPay Tools (3 total)
+
+1. weather-api - 1.000000 NTRN
+   📄 Get weather data for any location
+   🆔 Tool ID: weather-api
+   👤 Provider: neutron1abc...
+
+💡 Use "Select tool [tool-id]" to choose a tool for payment."
+```
+
+### Select a Tool
+
+```
+User: "Select tool weather-api"
+Agent: "✅ Tool Selected Successfully!
+
+🔧 weather-api (ID: weather-api)
+📄 Get weather data for any location
+💰 Price: 1.000000 NTRN
+👤 Provider: neutron1abc...
+
+💡 You can now use "confirm payment" to create an escrow transaction for this tool."
+```
+
+### Confirm Payment
+
+```
+User: "Confirm payment"
+Agent: "💰 Payment Confirmation
+
+🔧 Tool: weather-api (weather-api)
+💵 Amount: 1.000000 NTRN
+👤 Provider: neutron1abc...
+🏦 From Wallet: neutron1xyz...
+
+🔄 Creating escrow transaction...
+
+✅ Payment Escrow Created Successfully!
+🔗 Transaction Hash: ABC123...
+🆔 Escrow ID: 42
+💡 Your payment is now secured in escrow and will be released when the service is provided."
+```
+
+## Plugin Actions
+
+### LIST_HTTPAY_TOOLS
+
+- **Triggers**: "list tools", "show tools", "what tools are available"
+- **Function**: Displays all tools from HTTPay registry
+- **Output**: Formatted list with tool details and pricing
+
+### SELECT_HTTPAY_TOOL
+
+- **Triggers**: "select tool [id]", "choose [id]", "pick tool [id]"
+- **Function**: Selects a tool and stores it in conversation state
+- **Output**: Tool details and confirmation
+
+### CONFIRM_HTTPAY_PAYMENT
+
+- **Triggers**: "confirm payment", "pay", "create escrow"
+- **Function**: Creates escrow transaction for selected tool
+- **Output**: Transaction confirmation with escrow ID
+
+## Architecture
+
+```
+src/
+├── index.ts              # Main plugin export and service
+├── service.ts            # HTTPay service integration
+├── types.ts              # TypeScript interfaces
+├── utils.ts              # Utility functions
+└── actions/
+    ├── listTools.ts      # LIST_HTTPAY_TOOLS action
+    ├── selectTool.ts     # SELECT_HTTPAY_TOOL action
+    └── confirmPayment.ts # CONFIRM_HTTPAY_PAYMENT action
+```
+
+## State Management
+
+The plugin maintains simple conversation state:
 
 ```typescript
-// E2E test example (e2e/starter-plugin.test.ts)
-export class StarterPluginTestSuite implements TestSuite {
-  name = 'plugin_starter_test_suite';
-  tests = [
-    {
-      name: 'example_test',
-      fn: async (runtime) => {
-        // Test plugin in a real runtime
-      },
-    },
-  ];
-}
-
-export default new StarterPluginTestSuite();
-```
-
-The test utilities in `__tests__/test-utils.ts` provide mock objects and setup functions to simplify writing tests.
-
-## Publishing
-
-Before publishing your plugin to the ElizaOS registry, ensure you meet these requirements:
-
-1. **GitHub Repository**
-
-   - Create a public GitHub repository for this plugin
-   - Add the 'elizaos-plugins' topic to the repository
-   - Use 'main' as the default branch
-
-2. **Required Assets**
-
-   - Add images to the `images/` directory:
-     - `logo.jpg` (400x400px square, <500KB)
-     - `banner.jpg` (1280x640px, <1MB)
-
-3. **Publishing Process**
-
-   ```bash
-   # Check if your plugin meets all registry requirements
-   npx elizaos publish --test
-
-   # Publish to the registry
-   npx elizaos publish
-   ```
-
-After publishing, your plugin will be submitted as a pull request to the ElizaOS registry for review.
-
-## Configuration
-
-The `agentConfig` section in `package.json` defines the parameters your plugin requires:
-
-```json
-"agentConfig": {
-  "pluginType": "elizaos:plugin:1.0.0",
-  "pluginParameters": {
-    "API_KEY": {
-      "type": "string",
-      "description": "API key for the service"
-    }
+interface HTTPayMVPState {
+  selectedTool?: {
+    toolId: string
+    name: string
+    description: string
+    price: string
+    provider: string
   }
 }
 ```
 
-Customize this section to match your plugin's requirements.
+## Error Handling
 
-## Documentation
+- **Configuration errors**: Clear messages about missing environment variables
+- **Network errors**: Friendly messages with retry suggestions
+- **Tool not found**: Suggestions to list available tools
+- **Payment failures**: Balance and network troubleshooting hints
 
-Provide clear documentation about:
+## Development
 
-- What your plugin does
-- How to use it
-- Required API keys or credentials
-- Example usage
+### Run Tests
+
+```bash
+pnpm test
+```
+
+### Format Code
+
+```bash
+pnpm format
+```
+
+### Development Mode
+
+```bash
+pnpm dev
+```
+
+## Security Notes
+
+- **Private Key**: Never commit your private key to version control
+- **Environment Variables**: Use `.env` file for local development
+- **Production**: Use secure environment variable management
+
+## Dependencies
+
+- `httpay`: HTTPay SDK for blockchain interactions
+- `@cosmjs/cosmwasm-stargate`: CosmWasm client
+- `@cosmjs/proto-signing`: Transaction signing
+- `@elizaos/core`: Eliza framework core
+
+## License
+
+MIT License - see LICENSE file for details.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## Support
+
+For questions and support:
+
+- Create an issue in the repository
+- Check the HTTPay documentation
+- Review the Eliza plugin development guide

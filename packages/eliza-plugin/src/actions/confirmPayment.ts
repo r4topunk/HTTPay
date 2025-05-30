@@ -1,0 +1,201 @@
+import type {
+  Action,
+  IAgentRuntime,
+  Memory,
+  State,
+  HandlerCallback,
+} from "@elizaos/core"
+import { logger } from "@elizaos/core"
+import { z } from "zod"
+import type { HTTPayService } from "../service.js"
+import type { HTTPayMVPState } from "../types.js"
+import { formatTransactionResult, formatPrice } from "../utils.js"
+
+/**
+ * CONFIRM_HTTPAY_PAYMENT Action - Create escrow transaction for the selected tool
+ */
+export const confirmPaymentAction: Action = {
+  name: "CONFIRM_HTTPAY_PAYMENT",
+  description:
+    "Confirm payment and create an escrow transaction for the selected tool",
+
+  validate: async (
+    runtime: IAgentRuntime,
+    message: Memory,
+    state: State
+  ): Promise<boolean> => {
+    try {
+      // Check if there's a selected tool in state
+      const httpayState: HTTPayMVPState = state?.httpay || {}
+      return !!httpayState.selectedTool
+    } catch (error) {
+      logger.error("CONFIRM_HTTPAY_PAYMENT validation failed:", error)
+      return false
+    }
+  },
+
+  handler: async (
+    runtime: IAgentRuntime,
+    message: Memory,
+    state: State,
+    options: any,
+    callback?: HandlerCallback
+  ): Promise<boolean> => {
+    try {
+      logger.info("Executing CONFIRM_HTTPAY_PAYMENT action")
+
+      // Get the selected tool from state
+      const httpayState: HTTPayMVPState = state?.httpay || {}
+      const selectedTool = httpayState.selectedTool
+
+      if (!selectedTool) {
+        const errorMsg = `❌ **No tool selected**
+💡 *Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.*`
+
+        if (callback) {
+          callback({
+            text: errorMsg,
+            content: { type: "error", error: "No tool selected" },
+          })
+        }
+        return false
+      }
+
+      // Get the HTTPay service
+      const httpayService = runtime.getService(
+        "httpay"
+      ) as unknown as HTTPayService
+
+      if (!httpayService?.isInitialized()) {
+        const errorMsg =
+          "❌ HTTPay service not available. Please check configuration."
+        if (callback) {
+          callback({
+            text: errorMsg,
+            content: { type: "error", error: "Service not available" },
+          })
+        }
+        return false
+      }
+
+      // Show confirmation details before proceeding
+      const walletAddress = httpayService.getWalletAddress()
+      const formattedPrice = formatPrice(selectedTool.price)
+
+      const confirmationText = `💰 **Payment Confirmation**
+
+🔧 **Tool**: ${selectedTool.name} (${selectedTool.toolId})
+💵 **Amount**: ${formattedPrice}
+👤 **Provider**: ${selectedTool.provider}
+🏦 **From Wallet**: ${walletAddress}
+
+🔄 Creating escrow transaction...`
+
+      // Send confirmation message
+      if (callback) {
+        callback({
+          text: confirmationText,
+          content: {
+            type: "payment_confirmation",
+            tool: selectedTool,
+            walletAddress,
+          },
+        })
+      }
+
+      // Create the escrow transaction
+      const result = await httpayService.createEscrow(
+        selectedTool.toolId,
+        selectedTool.price
+      )
+
+      // Format and send the result
+      const resultText = formatTransactionResult(result)
+
+      if (callback) {
+        callback({
+          text: resultText,
+          content: {
+            type: "transaction_result",
+            success: result.success,
+            txHash: result.txHash,
+            escrowId: result.escrowId,
+            error: result.error,
+          },
+        })
+      }
+
+      if (result.success) {
+        // Clear the selected tool from state after successful payment
+        httpayState.selectedTool = undefined
+        state.httpay = httpayState
+
+        logger.info(
+          `Payment confirmed for tool ${selectedTool.toolId}, TX: ${result.txHash}`
+        )
+      } else {
+        logger.error(
+          `Payment failed for tool ${selectedTool.toolId}: ${result.error}`
+        )
+      }
+
+      return result.success
+    } catch (error) {
+      logger.error("CONFIRM_HTTPAY_PAYMENT action failed:", error)
+
+      const errorMsg = `❌ **Payment Failed**
+🚫 Error: ${error.message}
+💡 *Please check your wallet balance and network connection, then try again.*`
+
+      if (callback) {
+        callback({
+          text: errorMsg,
+          content: { type: "error", error: error.message },
+        })
+      }
+      return false
+    }
+  },
+
+  examples: [
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "Confirm payment" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          text: "✅ **Payment Escrow Created Successfully!**\n🔗 Transaction Hash: `ABC123...`\n🆔 Escrow ID: 42\n💡 *Your payment is now secured in escrow and will be released when the service is provided.*",
+          action: "CONFIRM_HTTPAY_PAYMENT",
+        },
+      },
+    ],
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "Pay for it" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          text: "💰 **Payment Confirmation**\n\n🔧 **Tool**: weather-api (weather-api)\n💵 **Amount**: 1.000000 NTRN\n👤 **Provider**: neutron1abc...\n🏦 **From Wallet**: neutron1xyz...\n\n🔄 Creating escrow transaction...",
+          action: "CONFIRM_HTTPAY_PAYMENT",
+        },
+      },
+    ],
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "Make payment" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          text: '❌ **No tool selected**\n💡 *Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.*',
+          action: "CONFIRM_HTTPAY_PAYMENT",
+        },
+      },
+    ],
+  ],
+}

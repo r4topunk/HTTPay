@@ -11,7 +11,7 @@ This directory contains examples and migration guides for using the HTTPay SDK.
 The HTTPay SDK v2 provides React components and hooks for easy integration with the HTTPay protocol. Here's a basic example:
 
 ```tsx
-import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay-sdk/v2';
+import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay/v2';
 
 function MyApp() {
   return (

@@ -1,7 +1,7 @@
 # SDK Method Abstraction Levels Enhancement
 
 **Date**: 2025-01-28  
-**Objective**: Enhance the httpay-sdk package with multiple abstraction levels to dramatically simplify API provider implementation  
+**Objective**: Enhance the httpay package with multiple abstraction levels to dramatically simplify API provider implementation  
 **Status**: ✅ COMPLETED
 
 ## Problem Statement
@@ -24,14 +24,14 @@ We implemented three distinct abstraction levels to cater to different developer
 ### Level 1: Full Control (Existing)
 Direct contract client usage for maximum flexibility:
 ```typescript
-import { EscrowQueryClient, EscrowClient } from 'httpay-sdk';
+import { EscrowQueryClient, EscrowClient } from 'httpay';
 // 320+ lines of complex implementation
 ```
 
 ### Level 2: Simplified Methods  
 `HTTPayProvider` class for easier payment handling:
 ```typescript
-import { HTTPayProvider } from 'httpay-sdk';
+import { HTTPayProvider } from 'httpay';
 
 const provider = new HTTPayProvider(config, tool);
 await provider.initialize();
@@ -41,7 +41,7 @@ const result = await provider.handlePayment({ escrowId, authToken });
 ### Level 3: Zero-Config
 Route handlers with automatic configuration:
 ```typescript
-import { withHTTPay, HTTPayConfigBuilder } from 'httpay-sdk';
+import { withHTTPay, HTTPayConfigBuilder } from 'httpay';
 
 const { config, tool } = HTTPayConfigBuilder
   .fromEnvironment()
@@ -147,7 +147,7 @@ Comprehensive TypeScript types for all abstractions:
 
 **After (Level 3 Zero-Config - 15 lines):**
 ```typescript
-import { withHTTPay, HTTPayConfigBuilder } from 'httpay-sdk';
+import { withHTTPay, HTTPayConfigBuilder } from 'httpay';
 
 const { config, tool } = HTTPayConfigBuilder
   .fromEnvironment()

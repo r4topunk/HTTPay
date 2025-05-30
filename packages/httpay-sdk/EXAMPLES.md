@@ -5,14 +5,14 @@ Here are some examples of how to use the HTTPay SDK in your project:
 ## Installation
 
 ```bash
-npm install httpay-sdk @cosmjs/cosmwasm-stargate @cosmjs/stargate @cosmjs/proto-signing @tanstack/react-query react
+npm install httpay @cosmjs/cosmwasm-stargate @cosmjs/stargate @cosmjs/proto-signing @tanstack/react-query react
 ```
 
 ## Basic Usage
 
 ```typescript
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { EscrowQueryClient, RegistryQueryClient } from 'httpay-sdk';
+import { EscrowQueryClient, RegistryQueryClient } from 'httpay';
 
 // Connect to blockchain
 const client = await CosmWasmClient.connect('https://rpc.cosmos.network');
@@ -33,7 +33,7 @@ console.log('Tools:', tools);
 ## React Query Usage
 
 ```typescript
-import { useEscrowGetEscrowQuery, useRegistryGetToolsQuery } from 'httpay-sdk';
+import { useEscrowGetEscrowQuery, useRegistryGetToolsQuery } from 'httpay';
 
 function MyComponent() {
   const { data: escrow, isLoading } = useEscrowGetEscrowQuery({
@@ -63,7 +63,7 @@ function MyComponent() {
 ## Namespace Usage (Alternative)
 
 ```typescript
-import { HTTPay } from 'httpay-sdk';
+import { HTTPay } from 'httpay';
 
 const escrowClient = new HTTPay.Escrow.EscrowQueryClient(client, address);
 const registryClient = new HTTPay.Registry.RegistryQueryClient(client, address);

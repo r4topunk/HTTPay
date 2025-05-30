@@ -5,11 +5,11 @@
 
 ## Overview
 
-Successfully refactored the HTTPay website's SDK context from a monolithic 588-line file to a well-organized, TypeScript-first implementation using React best practices and httpay-sdk v2.
+Successfully refactored the HTTPay website's SDK context from a monolithic 588-line file to a well-organized, TypeScript-first implementation using React best practices and httpay v2.
 
 ## 🎯 Goals Achieved
 
-1. **Replaced SDK v1 with SDK v2**: Migrated from `HTTPaySDK` class (provider-sdk) to individual `RegistryClient` and `EscrowClient` classes (httpay-sdk)
+1. **Replaced SDK v1 with SDK v2**: Migrated from `HTTPaySDK` class (provider-sdk) to individual `RegistryClient` and `EscrowClient` classes (httpay)
 2. **Applied React Best Practices**: Split monolithic context into focused, single-responsibility hooks
 3. **Improved File Organization**: Created proper folder structure with `/components/sdk-v2/` organization
 4. **Enhanced TypeScript Support**: Used generated TypeScript clients with comprehensive type safety
@@ -26,7 +26,7 @@ Successfully refactored the HTTPay website's SDK context from a monolithic 588-l
 │   ├── use-wallet-integration.ts # Wallet connection hook
 │   └── use-block-height.ts  # Block height tracking hook
 ├── providers/
-│   └── httpay-sdk-provider.tsx # Main provider component
+│   └── httpay-provider.tsx # Main provider component
 ├── index.ts                 # Clean exports
 └── migration-example.tsx    # Migration guide and examples
 ```
@@ -40,7 +40,7 @@ Successfully refactored the HTTPay website's SDK context from a monolithic 588-l
 - **Block Height Hook**: Tracks blockchain state with automatic updates
 
 ### 2. **Enhanced Type Safety**
-- Comprehensive type definitions using httpay-sdk generated types
+- Comprehensive type definitions using httpay generated types
 - Zod schema validation for all forms
 - Proper error types and result types
 - Full TypeScript inference for better DX
@@ -81,7 +81,7 @@ export function createSigningClients(signingClient, walletAddress, config)
 export function handleSDKError(error: unknown, operation: string)
 ```
 
-### 3. **Main Provider (`providers/httpay-sdk-provider.tsx`)**
+### 3. **Main Provider (`providers/httpay-provider.tsx`)**
 ```typescript
 // Combines all hooks with dependency injection
 export function HTTPaySDKProvider({ children, initialConfig })
@@ -103,7 +103,7 @@ if (result) { /* success */ }
 ### New Usage (SDK v2):
 ```typescript
 import { useHTTPaySDK } from "@/components/sdk-v2";
-import { RegistryClient, EscrowClient } from "httpay-sdk";
+import { RegistryClient, EscrowClient } from "httpay";
 
 const { clients, registerTool, isConnected, walletAddress } = useHTTPaySDK();
 try {

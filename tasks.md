@@ -373,11 +373,11 @@ We will implement HTTPay in 3 distinct phases:
   - [x] `use-escrow.ts`: Escrow operations (lockFunds, verifyEscrow, postUsage, etc.)
   - [x] `use-wallet-integration.ts`: Wallet connection and CosmosKit integration
   - [x] `use-block-height.ts`: Block height tracking with automatic updates
-- [x] Create main provider component (`providers/httpay-sdk-provider.tsx`):
+- [x] Create main provider component (`providers/httpay-provider.tsx`):
   - [x] Combines all specialized hooks using dependency injection
   - [x] Maintains same API surface for backward compatibility
   - [x] Better error handling and loading states
-  - [x] Uses httpay-sdk v2 instead of provider-sdk v1
+  - [x] Uses httpay v2 instead of provider-sdk v1
 - [x] Create index file for clean exports and migration example
 - [x] Update existing demo components to use new SDK v2 context:
   - [x] Fixed imports in `sdk-context.tsx` to use the new SDK v2 from correct path
@@ -391,17 +391,17 @@ We will implement HTTPay in 3 distinct phases:
   - [x] Fixed implicit 'any' type errors by adding explicit type annotations to form setters
   - [x] Fixed ReactNode type compatibility between React 19 (website) and React 18 (SDK)
   - [x] Updated SDK to support React 19 in peerDependencies
-- [x] Successfully migrated from old `httpay` library to new `httpay-sdk` v2
+- [x] Successfully migrated from old `httpay` library to new `httpay` v2
 - [x] Create backward compatibility layer for gradual migration:
   - [x] Re-exported the SDK v2 hook as `useSDK` for backward compatibility
   - [x] Maintained same API surface for minimal disruption
 - [x] Update import statements throughout the application:
-  - [x] Changed imports from "httpay-sdk" to relative paths "../../../httpay-sdk/src/react"
-  - [x] Updated type imports from "httpay-sdk/src/types" to relative paths
+  - [x] Changed imports from "httpay" to relative paths "../../../httpay/src/react"
+  - [x] Updated type imports from "httpay/src/types" to relative paths
 
 ### 10.2 Benefits of SDK v2 Refactoring
 - [x] **Better React practices**: Split monolithic context into focused, single-responsibility hooks
-- [x] **Improved TypeScript support**: Uses generated TypeScript clients from httpay-sdk v2
+- [x] **Improved TypeScript support**: Uses generated TypeScript clients from httpay v2
 - [x] **Better maintainability**: Organized folder structure with clear separation of concerns
 - [x] **Enhanced error handling**: Normalized error messages and better error reporting
 - [x] **Better testing**: Dependency injection allows for easier mocking and testing

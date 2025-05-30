@@ -1,10 +1,10 @@
 # HTTPay SDK v2 Migration - Complete Code Transfer
 
 ## Task Description
-Move all SDK-related code from the httpay-website Next.js project to the httpay-sdk package to improve separation of concerns, make the SDK truly reusable across projects, and keep the website focused on UI/presentation logic only.
+Move all SDK-related code from the httpay-website Next.js project to the httpay package to improve separation of concerns, make the SDK truly reusable across projects, and keep the website focused on UI/presentation logic only.
 
 ## Migration Summary
-**Status**: ✅ **COMPLETED** - Successfully migrated all SDK v2 React components from httpay-website to httpay-sdk package
+**Status**: ✅ **COMPLETED** - Successfully migrated all SDK v2 React components from httpay-website to httpay package
 
 ## Architecture Improvements
 
@@ -16,7 +16,7 @@ Move all SDK-related code from the httpay-website Next.js project to the httpay-
 - Limited reusability across different projects
 
 ### After Migration
-- SDK v2 code now in `/packages/httpay-sdk/src/v2/`
+- SDK v2 code now in `/packages/httpay/src/v2/`
 - Clean separation: website handles UI, SDK handles blockchain logic
 - Dependency injection for toast notifications and chain configuration
 - Fully reusable across any React application
@@ -26,13 +26,13 @@ Move all SDK-related code from the httpay-website Next.js project to the httpay-
 
 ### 1. Types System (`/src/v2/types/index.ts`)
 - **Source**: `/packages/httpay-website/components/sdk-v2/types/index.ts`
-- **Destination**: `/packages/httpay-sdk/src/v2/types/index.ts`
-- **Changes**: Updated import paths from `"httpay-sdk"` to `"../../index"`
+- **Destination**: `/packages/httpay/src/v2/types/index.ts`
+- **Changes**: Updated import paths from `"httpay"` to `"../../index"`
 - **Content**: Complete type system with interfaces, Zod schemas, and result types
 
 ### 2. Utility Functions (`/src/v2/utils/client-utils.ts`)
 - **Source**: `/packages/httpay-website/components/sdk-v2/utils/client-utils.ts`
-- **Destination**: `/packages/httpay-sdk/src/v2/utils/client-utils.ts`
+- **Destination**: `/packages/httpay/src/v2/utils/client-utils.ts`
 - **Changes**: Updated import paths to reference SDK's own exports
 - **Content**: Client creation, error handling, token formatting, address validation
 
@@ -66,8 +66,8 @@ Move all SDK-related code from the httpay-website Next.js project to the httpay-
 - **Changes**: None (already well-isolated)
 - **Content**: Block height tracking with automatic updates
 
-### 4. Provider Component (`/src/v2/providers/httpay-sdk-provider.tsx`)
-- **Source**: `/packages/httpay-website/components/sdk-v2/providers/httpay-sdk-provider.tsx`
+### 4. Provider Component (`/src/v2/providers/httpay-provider.tsx`)
+- **Source**: `/packages/httpay-website/components/sdk-v2/providers/httpay-provider.tsx`
 - **Changes**: 
   - Removed hardcoded chain name import
   - Removed hardcoded toast import
@@ -76,14 +76,14 @@ Move all SDK-related code from the httpay-website Next.js project to the httpay-
 - **Content**: Main provider component with context and state management
 
 ### 5. Examples and Documentation
-- **Created**: `/packages/httpay-sdk/examples/migration-example.tsx`
-- **Created**: `/packages/httpay-sdk/examples/README.md`
+- **Created**: `/packages/httpay/examples/migration-example.tsx`
+- **Created**: `/packages/httpay/examples/README.md`
 - **Content**: Comprehensive usage examples and integration guide
 
 ### 6. Export Structure
-- **Created**: `/packages/httpay-sdk/src/v2/index.ts` - Main v2 exports
-- **Created**: `/packages/httpay-sdk/src/index.ts` - Source-level exports
-- **Updated**: `/packages/httpay-sdk/index.ts` - Added ReactSDK namespace export
+- **Created**: `/packages/httpay/src/v2/index.ts` - Main v2 exports
+- **Created**: `/packages/httpay/src/index.ts` - Source-level exports
+- **Updated**: `/packages/httpay/index.ts` - Added ReactSDK namespace export
 
 ## Key Architectural Changes
 
@@ -121,10 +121,10 @@ export interface ToastFunction {
 ### 3. Clean Import Structure
 ```typescript
 // Application can now import cleanly:
-import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay-sdk/v2';
+import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay/v2';
 
 // Or access via namespace:
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 const { HTTPaySDKProvider } = ReactSDK;
 ```
 
@@ -162,7 +162,7 @@ function MyComponent() {
 
 ### After Migration (Reusable)
 ```typescript
-import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay-sdk/v2';
+import { HTTPaySDKProvider, useHTTPaySDK } from 'httpay/v2';
 
 function App() {
   const toast = ({ title, description, variant }) => {
@@ -189,7 +189,7 @@ function MyComponent() {
 ## Directory Structure Created
 
 ```
-packages/httpay-sdk/
+packages/httpay/
 ├── src/v2/
 │   ├── hooks/
 │   │   ├── use-registry.ts
@@ -197,7 +197,7 @@ packages/httpay-sdk/
 │   │   ├── use-wallet-integration.ts
 │   │   └── use-block-height.ts
 │   ├── providers/
-│   │   └── httpay-sdk-provider.tsx
+│   │   └── httpay-provider.tsx
 │   ├── utils/
 │   │   └── client-utils.ts
 │   ├── types/
@@ -223,14 +223,14 @@ packages/httpay-sdk/
 
 The SDK code migration is complete. The remaining steps are:
 
-1. **Website Integration**: Update httpay-website to import from httpay-sdk package
+1. **Website Integration**: Update httpay-website to import from httpay package
 2. **Remove Duplicates**: Delete old SDK v2 components from website after successful integration
 3. **Testing**: Ensure all functionality works with new import structure
 4. **Documentation**: Update website documentation to reference new import paths
 
 ## Completion Status
 
-✅ **MIGRATION COMPLETED** - All SDK v2 React components successfully moved to httpay-sdk package with improved architecture, dependency injection, and full reusability across projects.
+✅ **MIGRATION COMPLETED** - All SDK v2 React components successfully moved to httpay package with improved architecture, dependency injection, and full reusability across projects.
 
 ---
 
@@ -241,9 +241,9 @@ The SDK code migration is complete. The remaining steps are:
 **Summary**: The SDK v2 migration has been **FULLY COMPLETED** with the following achievements:
 
 ### Final Results:
-1. **Complete Code Transfer**: All SDK v2 code successfully moved from `/packages/httpay-website/components/sdk-v2/` to `/packages/httpay-sdk/src/v2/`
+1. **Complete Code Transfer**: All SDK v2 code successfully moved from `/packages/httpay-website/components/sdk-v2/` to `/packages/httpay/src/v2/`
 2. **Architecture Improvement**: Implemented dependency injection for toast notifications and chain configuration
-3. **Package Independence**: httpay-sdk is now truly reusable across any React project
+3. **Package Independence**: httpay is now truly reusable across any React project
 4. **Website Integration**: httpay-website successfully uses SDK via existing v2-demo components
 5. **Legacy Cleanup**: Old SDK v2 components removed from website without breaking functionality
 6. **Build Verification**: Website builds successfully with clean separation of concerns
@@ -258,7 +258,7 @@ The SDK code migration is complete. The remaining steps are:
 ### Next Steps:
 - SDK migration is complete
 - Ready to proceed with next development priorities
-- httpay-sdk package is production-ready for external projects
+- httpay package is production-ready for external projects
 
 **Migration Status**: 🎉 **COMPLETE SUCCESS**
 
@@ -289,7 +289,7 @@ Following the successful migration, the SDK structure was further optimized:
 
 #### Final SDK Structure:
 ```
-httpay-sdk/
+httpay/
 ├── src/
 │   ├── Escrow/           # Escrow contract client & types
 │   ├── Registry/         # Registry contract client & types

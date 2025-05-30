@@ -15,11 +15,11 @@ TypeScript SDK for HTTPay CosmWasm contracts, providing type-safe interfaces, Re
 ## Installation
 
 ```bash
-npm install httpay-sdk
+npm install httpay
 # or
-yarn add httpay-sdk
+yarn add httpay
 # or
-pnpm add httpay-sdk
+pnpm add httpay
 ```
 
 ## Peer Dependencies
@@ -35,7 +35,7 @@ pnpm add @cosmjs/cosmwasm-stargate @cosmjs/proto-signing @cosmjs/stargate @cosmo
 ### Basic Contract Client Usage
 
 ```typescript
-import { EscrowQueryClient, RegistryQueryClient } from 'httpay-sdk';
+import { EscrowQueryClient, RegistryQueryClient } from 'httpay';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 const client = await CosmWasmClient.connect('https://rpc.cosmos.network');
@@ -51,7 +51,7 @@ const tools = await registryClient.getTools();
 ### React Provider Setup
 
 ```typescript
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 import { ChainProvider } from '@cosmos-kit/react';
 
 function App() {
@@ -80,7 +80,7 @@ function App() {
 ### Using React Hooks
 
 ```typescript
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 
 function MyComponent() {
   const { 
@@ -127,7 +127,7 @@ function MyComponent() {
 ### Using Individual Hooks
 
 ```typescript
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 
 function ToolsComponent() {
   const { tools, refreshTools, loading } = ReactSDK.useRegistry({
@@ -156,7 +156,7 @@ function ToolsComponent() {
 ### Using React Query Hooks
 
 ```typescript
-import { useEscrowQuery, useRegistryQuery } from 'httpay-sdk';
+import { useEscrowQuery, useRegistryQuery } from 'httpay';
 
 function QueryExample() {
   const { data: escrow, isLoading } = useEscrowQuery({
@@ -180,7 +180,7 @@ function QueryExample() {
 ### Namespace Import (Alternative)
 
 ```typescript
-import { HTTPay } from 'httpay-sdk';
+import { HTTPay } from 'httpay';
 
 // Access contract clients through namespace
 const escrowClient = new HTTPay.Escrow.EscrowQueryClient(client, address);
@@ -273,7 +273,7 @@ import type {
   EscrowsResponse,
   CollectedFeesResponse,
   EscrowTypes 
-} from 'httpay-sdk';
+} from 'httpay';
 ```
 
 ### Registry Contract
@@ -294,7 +294,7 @@ import type {
   ToolResponse, 
   ToolsResponse,
   RegistryTypes 
-} from 'httpay-sdk';
+} from 'httpay';
 ```
 
 ## Form Validation
@@ -302,7 +302,7 @@ import type {
 The SDK includes Zod schemas for form validation:
 
 ```typescript
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 
 // Available schemas
 const { 
@@ -336,16 +336,16 @@ import {
   RegistryClient,
   EscrowTypes,
   RegistryTypes 
-} from 'httpay-sdk';
+} from 'httpay';
 
 // React Query hooks
-import { useEscrowQuery, useRegistryQuery } from 'httpay-sdk';
+import { useEscrowQuery, useRegistryQuery } from 'httpay';
 ```
 
 ### React Integration
 ```typescript
 // Complete React integration
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 
 // Individual exports
 const { 
@@ -361,7 +361,7 @@ const {
 ### Organized Namespace
 ```typescript
 // Access everything through HTTPay namespace
-import { HTTPay } from 'httpay-sdk';
+import { HTTPay } from 'httpay';
 
 const escrowClient = new HTTPay.Escrow.EscrowQueryClient(client, address);
 const registryClient = new HTTPay.Registry.RegistryQueryClient(client, address);
@@ -399,7 +399,7 @@ import type {
   // All contract types
   EscrowTypes,
   RegistryTypes
-} from 'httpay-sdk';
+} from 'httpay';
 ```
 
 ## Error Handling
@@ -407,7 +407,7 @@ import type {
 The SDK includes comprehensive error handling utilities:
 
 ```typescript
-import { ReactSDK } from 'httpay-sdk';
+import { ReactSDK } from 'httpay';
 
 // Error handling is built into all hooks
 const { registry } = ReactSDK.useHTTPaySDK();

@@ -1,4 +1,4 @@
-// Import types from the new SDK
+// Import types from the HTTPay SDK
 import type { 
   Tool, 
   Escrow, 
@@ -10,7 +10,7 @@ import type {
   LockFundsResult,
   HTTPaySDKContextType,
   HTTPaySDKConfig 
-} from "../../../httpay-sdk/src/types";
+} from "httpay/react"; // React entry point for React-specific types
 import * as z from "zod";
 
 // Re-export for backward compatibility
@@ -45,8 +45,8 @@ export const registerToolSchema = z.object({
 
 export type RegisterToolFormData = z.infer<typeof registerToolSchema>;
 
-// Use the Tool from the provider SDK directly
-export type { Tool as ToolType } from "../../../httpay-sdk/src/types";
+// Use the Tool from the HTTPay SDK directly
+export type { Tool as ToolType } from "httpay/react";
 
 // API Response types for tool endpoint testing
 export interface APISuccessResponse {
@@ -61,8 +61,8 @@ export interface APIErrorResponse {
 
 export type APIResponse = APISuccessResponse | APIErrorResponse;
 
-// Use the Escrow from the provider SDK directly
-export type { Escrow as EscrowType } from "../../../httpay-sdk/src/types";
+// Use the Escrow from the HTTPay SDK directly
+export type { Escrow as EscrowType } from "httpay/react";
 
 // Enhanced status types for 2-step tool testing
 export type TestToolStatus = 
@@ -102,5 +102,5 @@ export interface TestToolData {
   authToken: string;
 }
 
-// Use the SDKContextType from the new SDK directly
-export type { HTTPaySDKContextType as SDKContextType } from "../../../httpay-sdk/src/types";
+// Use the SDKContextType from the HTTPay SDK directly
+export type { HTTPaySDKContextType as SDKContextType } from "httpay/react";

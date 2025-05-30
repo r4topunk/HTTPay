@@ -2,12 +2,12 @@
 
 import { useToast } from "@/components/ui/use-toast";
 import { defaultChainName } from "@/config/chain-config";
-import { ReactSDK } from "httpay-sdk";
+import { HTTPaySDKProvider, useHTTPaySDK } from "httpay/react";
 import { useChain } from "@cosmos-kit/react";
 import React, { ReactNode } from "react";
 
 // Re-export the hook for compatibility
-export const useSDK = ReactSDK.useHTTPaySDK;
+export const useSDK = useHTTPaySDK;
 
 interface SDKProviderProps {
   children: ReactNode;
@@ -38,7 +38,7 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
   };
 
   return (
-    <ReactSDK.HTTPaySDKProvider 
+    <HTTPaySDKProvider 
       chainName={defaultChainName} 
       toast={toastFunction}
       walletAddress={walletAddress}
@@ -46,6 +46,6 @@ export const SDKProvider = ({ children }: SDKProviderProps) => {
       getSigningCosmWasmClient={getSigningCosmWasmClient}
     >
       {children}
-    </ReactSDK.HTTPaySDKProvider>
+    </HTTPaySDKProvider>
   );
 };

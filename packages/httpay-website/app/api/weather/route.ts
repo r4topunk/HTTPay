@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HTTPayProvider } from 'httpay-sdk/src/abstractions/HTTPayProvider';
-import type { HTTPayConfig, ToolConfig, PaymentRequest } from 'httpay-sdk/src/abstractions/types';
+import { HTTPayProvider } from 'httpay';
+import type { HTTPayConfig, ToolConfig, PaymentRequest } from 'httpay';
 
 // HTTPay configuration for Neutron testnet
 const httppayConfig: HTTPayConfig = {

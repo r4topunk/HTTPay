@@ -8,7 +8,7 @@ import {
   RegistryQueryClient,
   RegistryClient,
   RegistryTypes,
-} from "httpay-sdk";
+} from "httpay"; // Core clients - safe for React components
 
 // Default chain configuration
 const defaultChainName = "neutrontestnet";

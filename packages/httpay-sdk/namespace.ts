@@ -1,15 +1,24 @@
 /**
- * Organized namespace exports for HTTPay SDK
+ * Organized namespace exports for HTTPay SDK (Core only - no React dependencies)
  */
 
-import { contracts as EscrowContracts } from './src/Escrow';
-import { contracts as RegistryContracts } from './src/Registry';
+import * as EscrowTypes from './src/Escrow/Escrow.types';
+import * as EscrowClient from './src/Escrow/Escrow.client';
+import * as RegistryTypes from './src/Registry/Registry.types';
+import * as RegistryClient from './src/Registry/Registry.client';
 
-export const Escrow = EscrowContracts.Escrow;
-export const Registry = RegistryContracts.Registry;
+export const Escrow = {
+  ...EscrowTypes,
+  ...EscrowClient,
+};
+
+export const Registry = {
+  ...RegistryTypes,
+  ...RegistryClient,
+};
 
 // Default export with all contracts
 export default {
-  Escrow: EscrowContracts.Escrow,
-  Registry: RegistryContracts.Registry,
+  Escrow,
+  Registry,
 };

@@ -4,8 +4,9 @@ TypeScript SDK for HTTPay CosmWasm contracts, providing type-safe interfaces, Re
 
 ## Features
 
+- ✅ **Universal compatibility** - Works in any JavaScript environment (browser, Node.js, serverless)
 - ✅ **Type-safe contract clients** - Auto-generated TypeScript bindings
-- ✅ **React integration** - Complete React Provider with hooks
+- ✅ **Separate React entry point** - Clean separation prevents backend dependency issues
 - ✅ **React Query hooks** - Built-in query hooks for efficient data fetching
 - ✅ **Wallet integration** - Seamless integration with Cosmos Kit
 - ✅ **Form validation** - Zod schemas for form validation
@@ -22,20 +23,27 @@ yarn add httpay
 pnpm add httpay
 ```
 
-## Peer Dependencies
+## Dependencies
 
-This package requires the following peer dependencies:
-
+### Core Dependencies (always required)
 ```bash
-pnpm add @cosmjs/cosmwasm-stargate @cosmjs/proto-signing @cosmjs/stargate @cosmos-kit/react @tanstack/react-query react zod
+pnpm add @cosmjs/cosmwasm-stargate @cosmjs/proto-signing @cosmjs/stargate zod
+```
+
+### React Dependencies (only for React apps)
+```bash
+pnpm add @cosmos-kit/react @tanstack/react-query react
 ```
 
 ## Quick Start
 
-### Basic Contract Client Usage
+### Backend / Node.js / Serverless Usage
+
+For backend applications, Node.js scripts, or any non-React environment:
 
 ```typescript
-import { EscrowQueryClient, RegistryQueryClient } from 'httpay';
+// ✅ Safe for backend - no React dependencies
+import { EscrowQueryClient, RegistryQueryClient, HTTPay } from 'httpay';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 const client = await CosmWasmClient.connect('https://rpc.cosmos.network');
@@ -46,18 +54,33 @@ const registryClient = new RegistryQueryClient(client, 'registry_contract_addres
 // Query escrows
 const escrows = await escrowClient.getEscrows({ limit: 10 });
 const tools = await registryClient.getTools();
+
+// Using namespace import
+const escrowClient2 = new HTTPay.Escrow.EscrowQueryClient(client, 'address');
 ```
 
-### React Provider Setup
+### React Applications
+
+For React applications that need hooks and UI components:
 
 ```typescript
-import { ReactSDK } from 'httpay';
+// ✅ Import React features from '/react' entry point
+import { 
+  HTTPaySDKProvider,
+  useHTTPaySDK,
+  useEscrow,
+  useRegistry 
+} from 'httpay/react';
+
+// You can still import core clients from main entry
+import { EscrowClient } from 'httpay';
+
 import { ChainProvider } from '@cosmos-kit/react';
 
 function App() {
   return (
     <ChainProvider>
-      <ReactSDK.HTTPaySDKProvider
+      <HTTPaySDKProvider
         config={{
           rpcEndpoint: "https://rpc.cosmos.network",
           chainId: "cosmoshub-4",
@@ -71,7 +94,7 @@ function App() {
         }}
       >
         <YourApp />
-      </ReactSDK.HTTPaySDKProvider>
+      </HTTPaySDKProvider>
     </ChainProvider>
   );
 }
@@ -80,7 +103,7 @@ function App() {
 ### Using React Hooks
 
 ```typescript
-import { ReactSDK } from 'httpay';
+import { useHTTPaySDK } from 'httpay/react';
 
 function MyComponent() {
   const { 
@@ -90,7 +113,7 @@ function MyComponent() {
     loading,
     tools,
     escrows 
-  } = ReactSDK.useHTTPaySDK();
+  } = useHTTPaySDK();
 
   // Register a new tool
   const handleRegisterTool = async () => {
@@ -127,10 +150,10 @@ function MyComponent() {
 ### Using Individual Hooks
 
 ```typescript
-import { ReactSDK } from 'httpay';
+import { useRegistry } from 'httpay/react';
 
 function ToolsComponent() {
-  const { tools, refreshTools, loading } = ReactSDK.useRegistry({
+  const { tools, refreshTools, loading } = useRegistry({
     clients,
     walletAddress,
     isWalletConnected,
@@ -156,15 +179,18 @@ function ToolsComponent() {
 ### Using React Query Hooks
 
 ```typescript
-import { useEscrowQuery, useRegistryQuery } from 'httpay';
+import { 
+  useEscrowGetEscrowQuery, 
+  useRegistryGetToolsQuery 
+} from 'httpay/react';
 
 function QueryExample() {
-  const { data: escrow, isLoading } = useEscrowQuery({
+  const { data: escrow, isLoading } = useEscrowGetEscrowQuery({
     client: escrowQueryClient,
     args: { escrowId: 123 }
   });
 
-  const { data: tools } = useRegistryQuery({
+  const { data: tools } = useRegistryGetToolsQuery({
     client: registryQueryClient,
     args: {}
   });
@@ -177,15 +203,199 @@ function QueryExample() {
 }
 ```
 
-### Namespace Import (Alternative)
+## Entry Points
+
+The HTTPay SDK provides **two separate entry points** to avoid dependency conflicts:
+
+### Main Entry Point (`httpay`)
+
+- **✅ Safe for any environment** (browser, Node.js, serverless, etc.)
+- **✅ No React dependencies** - won't break backend applications
+- Contains core clients and types only
 
 ```typescript
-import { HTTPay } from 'httpay';
-
-// Access contract clients through namespace
-const escrowClient = new HTTPay.Escrow.EscrowQueryClient(client, address);
-const registryClient = new HTTPay.Registry.RegistryQueryClient(client, address);
+import { 
+  EscrowClient, 
+  EscrowQueryClient,
+  RegistryClient, 
+  RegistryQueryClient,
+  EscrowTypes,
+  RegistryTypes,
+  HTTPay 
+} from 'httpay';
 ```
+
+### React Entry Point (`httpay/react`)
+
+- **⚛️ Only for React applications**
+- Contains React hooks, components, and React Query integration
+- Requires React as a peer dependency
+
+```typescript
+import { 
+  // React hooks and providers
+  HTTPaySDKProvider,
+  useHTTPaySDK,
+  useEscrow,
+  useRegistry,
+  useWalletIntegration,
+  
+  // React Query hooks
+  useEscrowGetEscrowQuery,
+  useRegistryGetToolsQuery,
+  
+  // Re-exported for convenience
+  EscrowClient,
+  RegistryClient
+} from 'httpay/react';
+```
+
+## Migration from Old Versions
+
+If you were previously importing React features from the main entry point:
+
+```typescript
+// ❌ Old way (causes backend issues)
+import { ReactSDK, useEscrow } from 'httpay';
+
+// ✅ New way (React apps)
+import { useEscrow, HTTPaySDKProvider } from 'httpay/react';
+import { EscrowClient } from 'httpay'; // Core client
+
+// ✅ New way (backend/Node.js)
+import { EscrowClient } from 'httpay'; // No React imports needed
+```
+
+## High-Level Abstractions
+
+### HTTPayProvider - Simplified Payment Processing
+
+For backend applications and API routes, the SDK provides `HTTPayProvider` - a high-level abstraction that simplifies the entire payment flow:
+
+```typescript
+import { HTTPayProvider } from 'httpay';
+
+// Configure your HTTPay setup
+const httppayConfig = {
+  rpcEndpoint: "https://neutron-rpc.your-node.com",
+  registryAddress: "neutron1registry...",
+  escrowAddress: "neutron1escrow...", 
+  gasPrice: "0.025untrn"
+};
+
+// Configure your tool
+const toolConfig = {
+  toolId: "weather-api",
+  provider: {
+    privateKey: "your-64-char-hex-private-key" // For signing transactions
+  }
+};
+
+// Initialize the provider
+const provider = new HTTPayProvider(httppayConfig, toolConfig);
+await provider.initialize();
+```
+
+#### Complete Payment Flow
+
+```typescript
+// Handle payment in your API route
+async function handlePayment(escrowId: string, authToken: string) {
+  const payment = { escrowId, authToken };
+  
+  // Complete flow: validate + get price + process
+  const result = await provider.handlePayment(payment);
+  
+  if (!result.validation.isValid) {
+    return { error: result.validation.error };
+  }
+  
+  if (!result.processing?.success) {
+    return { error: result.processing?.error };
+  }
+  
+  return {
+    success: true,
+    txHash: result.processing.txHash,
+    fee: result.price
+  };
+}
+```
+
+#### Individual Methods
+
+```typescript
+// 1. Validate payment credentials
+const validation = await provider.validatePayment({
+  escrowId: "123",
+  authToken: "user-provided-token"
+});
+
+if (validation.isValid) {
+  console.log('Escrow details:', validation.escrow);
+}
+
+// 2. Get tool pricing
+const { price, error } = await provider.getToolPrice();
+
+// 3. Process payment (release escrow)
+const result = await provider.processPayment(123, "1000000");
+if (result.success) {
+  console.log('Payment processed:', result.txHash);
+}
+```
+
+#### API Integration Example
+
+```typescript
+// Next.js API route example
+import { HTTPayProvider } from 'httpay';
+
+const provider = new HTTPayProvider(config, toolConfig);
+await provider.initialize();
+
+export async function POST(request: Request) {
+  const { escrowId, authToken, ...serviceParams } = await request.json();
+  
+  // Validate payment first
+  const validation = await provider.validatePayment({ escrowId, authToken });
+  if (!validation.isValid) {
+    return Response.json({ error: validation.error }, { status: 401 });
+  }
+  
+  try {
+    // Provide your service
+    const serviceResult = await yourServiceLogic(serviceParams);
+    
+    // Process payment after successful service delivery
+    const { price } = await provider.getToolPrice();
+    const payment = await provider.processPayment(
+      parseInt(escrowId), 
+      price!
+    );
+    
+    return Response.json({
+      result: serviceResult,
+      payment: payment.success ? {
+        txHash: payment.txHash,
+        fee: payment.fee
+      } : { error: payment.error }
+    });
+    
+  } catch (error) {
+    return Response.json({ error: 'Service failed' }, { status: 500 });
+  }
+}
+```
+
+#### HTTPayProvider Benefits
+
+- **🔄 Complete Flow Management**: Handles validation → pricing → payment in one call
+- **🔐 Built-in Validation**: Verifies escrow ID and auth tokens automatically  
+- **💰 Automatic Pricing**: Fetches tool prices from registry
+- **🔑 Wallet Management**: Handles signing client setup internally
+- **⚡ Optimized for APIs**: Perfect for backend payment processing
+- **🛡️ Error Handling**: Comprehensive error handling with clear messages
 
 ## API Reference
 
@@ -299,19 +509,16 @@ import type {
 
 ## Form Validation
 
-The SDK includes Zod schemas for form validation:
+The SDK includes Zod schemas for form validation (available in React entry point):
 
 ```typescript
-import { ReactSDK } from 'httpay';
-
-// Available schemas
-const { 
+import { 
   toolRegistrationSchema,
   escrowCreationSchema,
   escrowVerificationSchema,
   usagePostingSchema,
   escrowsFilterSchema 
-} = ReactSDK;
+} from 'httpay/react';
 
 // Example usage
 const result = toolRegistrationSchema.safeParse({
@@ -324,47 +531,50 @@ const result = toolRegistrationSchema.safeParse({
 
 ## Export Structure
 
-The SDK provides multiple ways to import functionality:
-
-### Main Exports (Recommended)
+### Core Exports (Backend Safe)
 ```typescript
-// Contract clients and types
+// ✅ Works everywhere - no React dependencies
 import { 
+  // Contract clients
   EscrowQueryClient, 
   EscrowClient,
   RegistryQueryClient, 
   RegistryClient,
+  
+  // Types
   EscrowTypes,
-  RegistryTypes 
+  RegistryTypes,
+  
+  // Namespace
+  HTTPay
 } from 'httpay';
-
-// React Query hooks
-import { useEscrowQuery, useRegistryQuery } from 'httpay';
 ```
 
 ### React Integration
 ```typescript
-// Complete React integration
-import { ReactSDK } from 'httpay';
-
-// Individual exports
-const { 
+// ⚛️ React apps only
+import { 
+  // Complete React integration
   HTTPaySDKProvider,
   useHTTPaySDK,
   useRegistry,
   useEscrow,
   useWalletIntegration,
-  useBlockHeight
-} = ReactSDK;
-```
-
-### Organized Namespace
-```typescript
-// Access everything through HTTPay namespace
-import { HTTPay } from 'httpay';
-
-const escrowClient = new HTTPay.Escrow.EscrowQueryClient(client, address);
-const registryClient = new HTTPay.Registry.RegistryQueryClient(client, address);
+  useBlockHeight,
+  
+  // React Query hooks
+  useEscrowGetEscrowQuery,
+  useRegistryGetToolsQuery,
+  // ... other generated hooks
+  
+  // Contracts with React Query (for backward compatibility)
+  EscrowContracts,
+  RegistryContracts,
+  
+  // Re-exported core types
+  EscrowClient,
+  RegistryClient
+} from 'httpay/react';
 ```
 
 ## TypeScript Support
@@ -372,7 +582,15 @@ const registryClient = new HTTPay.Registry.RegistryQueryClient(client, address);
 This package is written in TypeScript and provides full type safety:
 
 ```typescript
+// Core types (from main entry point)
 import type { 
+  // Contract types  
+  EscrowTypes,
+  RegistryTypes
+} from 'httpay';
+
+// React types (from React entry point)  
+import type {
   // Configuration types
   HTTPaySDKConfig,
   HTTPayClients,
@@ -392,14 +610,10 @@ import type {
   ReleaseResult,
   RegistrationResult,
   
-  // Contract types
+  // Domain types
   Tool,
-  Escrow,
-  
-  // All contract types
-  EscrowTypes,
-  RegistryTypes
-} from 'httpay';
+  EscrowType, // Note: exported as EscrowType to avoid conflicts
+} from 'httpay/react';
 ```
 
 ## Error Handling
@@ -407,18 +621,30 @@ import type {
 The SDK includes comprehensive error handling utilities:
 
 ```typescript
-import { ReactSDK } from 'httpay';
+import { useHTTPaySDK } from 'httpay/react';
 
 // Error handling is built into all hooks
-const { registry } = ReactSDK.useHTTPaySDK();
+function MyComponent() {
+  const { registry } = useHTTPaySDK();
 
-try {
-  await registry.registerTool(formData);
-} catch (error) {
-  // Errors are automatically handled and formatted
-  console.error('Registration failed:', error);
+  const handleRegister = async () => {
+    try {
+      await registry.registerTool(formData);
+    } catch (error) {
+      // Errors are automatically handled and formatted
+      console.error('Registration failed:', error);
+    }
+  };
 }
 ```
+
+## Benefits of Dual Entry Points
+
+1. **🔧 Backend Safety**: Backend applications won't accidentally import React dependencies
+2. **📦 Bundle Optimization**: Frontend apps can still tree-shake unused React features  
+3. **🎯 Cleaner Dependencies**: Optional peer dependencies for React-related packages
+4. **👩‍💻 Better DevX**: Clear separation between core functionality and React integration
+5. **🌍 Universal Compatibility**: Use the same SDK across different environments
 
 ## Development
 
@@ -428,6 +654,10 @@ To build the package locally:
 pnpm install
 pnpm build
 ```
+
+This will generate both entry points:
+- `dist/index.js` - Core SDK (no React dependencies)
+- `dist/react.js` - React integration
 
 ## License
 

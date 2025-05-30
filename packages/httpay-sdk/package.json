@@ -1,11 +1,23 @@
 {
   "name": "httpay",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "HTTPay SDK for interacting with HTTPay smart contracts on Neutron",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.esm.js",
+      "require": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
   "files": [
     "dist",
     "README.md",
@@ -49,6 +61,17 @@
     "@cosmos-kit/react": "^2.22.0",
     "@tanstack/react-query": "^4.0.0",
     "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@cosmos-kit/react": {
+      "optional": true
+    },
+    "@tanstack/react-query": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react-dom": "^19.1.5",

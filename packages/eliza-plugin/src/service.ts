@@ -2,9 +2,9 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
 } from "@cosmjs/cosmwasm-stargate"
-import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from "@cosmjs/proto-signing"
+import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing"
 import { GasPrice } from "@cosmjs/stargate"
-import { RegistryQueryClient, EscrowClient } from "httpay"
+import { RegistryQueryClient, EscrowClient, EscrowQueryClient } from "httpay"
 import { logger } from "@elizaos/core"
 import type { HTTPayConfig, HTTPayTool, TransactionResult } from "./types.js"
 
@@ -19,6 +19,7 @@ export class HTTPayService {
   private wallet?: DirectSecp256k1Wallet
   private registryClient?: RegistryQueryClient
   private escrowClient?: EscrowClient
+  private escrowQueryClient?: EscrowQueryClient
   private walletAddress?: string
   private selectedTool?: HTTPayTool // Store selected tool for state persistence
 
@@ -37,17 +38,10 @@ export class HTTPayService {
     try {
       logger.info("Initializing HTTPay service...")
 
-      // Create wallet from private key
-      const privateKeyBytes = new Uint8Array(
-        this.config.privateKey.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
-      );
-      this.wallet = await DirectSecp256k1Wallet.fromKey(
-        privateKeyBytes,
-        "neutron"
-      )
-
-      const accounts = await this.wallet.getAccounts()
-      this.walletAddress = accounts[0].address
+      // Create wallet from private key using helper
+      const { wallet, address } = await this.createWalletFromPrivateKey(this.config.privateKey)
+      this.wallet = wallet
+      this.walletAddress = address
       logger.info(`Wallet address: ${this.walletAddress}`)
 
       // Initialize CosmWasm clients
@@ -72,6 +66,11 @@ export class HTTPayService {
       this.escrowClient = new EscrowClient(
         this.signingClient,
         this.walletAddress,
+        this.config.escrowAddress
+      )
+
+      this.escrowQueryClient = new EscrowQueryClient(
+        this.cosmWasmClient,
         this.config.escrowAddress
       )
 
@@ -164,6 +163,11 @@ export class HTTPayService {
       const fee = maxFee || tool.price
       logger.info(`Creating escrow for tool ${toolId} with fee ${fee}`)
 
+      // Validate fee format (basic validation)
+      if (!fee || isNaN(parseFloat(fee)) || parseFloat(fee) <= 0) {
+        throw new Error('Invalid fee amount')
+      }
+
       // Calculate expires (50 blocks from now for MVP)
       const expires = 50 // Simple approach for MVP
       const authToken = `auth_${Date.now()}_${Math.random().toString(36).substring(2)}`
@@ -181,20 +185,179 @@ export class HTTPayService {
       )
 
       logger.info(`Escrow created successfully. TX: ${result.transactionHash}`)
+      // Log only safe transaction details (avoid BigInt serialization issues)
+      logger.info(`Transaction height: ${result.height}`)
+      logger.info(`Gas used: ${result.gasUsed}/${result.gasWanted}`)
 
-      // Extract escrow ID from events (simplified for MVP)
-      const escrowId = Date.now() // Placeholder for MVP
+      // Extract escrow ID from transaction events
+      let escrowId: number | undefined
+
+      if (result.events) {
+        // Look for the wasm-toolpay.locked event
+        for (const event of result.events) {
+          if (event.type === 'wasm-toolpay.locked' || event.type === 'wasm') {
+            for (const attr of event.attributes) {
+              if (attr.key === 'escrow_id' && attr.value) {
+                const parsedId = parseInt(attr.value)
+                if (!isNaN(parsedId)) {
+                  escrowId = parsedId
+                  logger.info(`Extracted escrow ID: ${escrowId}`)
+                  break
+                }
+              }
+            }
+          }
+          if (escrowId) break // Exit outer loop if found
+        }
+      }
+
+      // If we couldn't extract escrow ID from events, try to parse logs
+      if (!escrowId && result.logs) {
+        for (const log of result.logs) {
+          for (const event of log.events) {
+            if (event.type === 'wasm' || event.type.includes('toolpay')) {
+              for (const attr of event.attributes) {
+                if (attr.key === 'escrow_id' && attr.value) {
+                  const parsedId = parseInt(attr.value)
+                  if (!isNaN(parsedId)) {
+                    escrowId = parsedId
+                    logger.info(`Extracted escrow ID from logs: ${escrowId}`)
+                    break
+                  }
+                }
+              }
+            }
+          }
+          if (escrowId) break // Exit outer loop if found
+        }
+      }
+
+      if (!escrowId) {
+        logger.warn("Could not extract escrow ID from transaction events")
+        // For now, we'll still return success but without escrow ID
+      }
 
       return {
         success: true,
         txHash: result.transactionHash,
         escrowId,
+        // Add additional useful information
+        authToken,
+        tool: {
+          toolId: tool.toolId,
+          name: tool.name,
+          endpoint: tool.endpoint,
+          provider: tool.provider,
+          price: tool.price,
+        }
       }
     } catch (error) {
-      logger.error(`Failed to create escrow for ${toolId}:`, error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      logger.error(`Failed to create escrow for ${toolId}:`, errorMessage)
       return {
         success: false,
-        error: error.message,
+        error: errorMessage,
+      }
+    }
+  }
+
+  /**
+   * Get escrow details by ID
+   */
+  async getEscrow(escrowId: number): Promise<any> {
+    try {
+      if (!this.escrowQueryClient) {
+        throw new Error("HTTPay service not initialized")
+      }
+
+      logger.info(`Fetching escrow details: ${escrowId}`)
+      const escrowResponse = await this.escrowQueryClient.getEscrow({ escrowId })
+      
+      return escrowResponse
+    } catch (error) {
+      logger.error(`Failed to get escrow ${escrowId}:`, error)
+      throw new Error(`Failed to fetch escrow: ${error.message}`)
+    }
+  }
+
+  /**
+   * List escrows for the current wallet
+   */
+  async getMyEscrows(limit?: number): Promise<any> {
+    try {
+      if (!this.escrowQueryClient || !this.walletAddress) {
+        throw new Error("HTTPay service not initialized")
+      }
+
+      logger.info(`Fetching escrows for caller: ${this.walletAddress}`)
+      const escrowsResponse = await this.escrowQueryClient.getEscrows({
+        caller: this.walletAddress,
+        limit: limit || 50
+      })
+      
+      return escrowsResponse
+    } catch (error) {
+      logger.error("Failed to get user escrows:", error)
+      throw new Error(`Failed to fetch escrows: ${error.message}`)
+    }
+  }
+
+  /**
+   * List escrows for a specific provider
+   */
+  async getProviderEscrows(provider: string, limit?: number): Promise<any> {
+    try {
+      if (!this.escrowQueryClient) {
+        throw new Error("HTTPay service not initialized")
+      }
+
+      logger.info(`Fetching escrows for provider: ${provider}`)
+      const escrowsResponse = await this.escrowQueryClient.getEscrows({
+        provider,
+        limit: limit || 50
+      })
+      
+      return escrowsResponse
+    } catch (error) {
+      logger.error(`Failed to get provider escrows for ${provider}:`, error)
+      throw new Error(`Failed to fetch provider escrows: ${error.message}`)
+    }
+  }
+
+  /**
+   * Validate escrow credentials (similar to HTTPayProvider but for consumers)
+   */
+  async validateEscrowAccess(escrowId: number, authToken: string): Promise<{
+    isValid: boolean;
+    error?: string;
+    escrow?: any;
+  }> {
+    try {
+      if (!this.escrowQueryClient) {
+        throw new Error("HTTPay service not initialized")
+      }
+
+      const escrowResponse = await this.escrowQueryClient.getEscrow({ escrowId })
+
+      // Validate auth token
+      if (escrowResponse.auth_token !== authToken) {
+        return {
+          isValid: false,
+          error: 'Invalid authentication token'
+        }
+      }
+
+      // Check if escrow is still active (not expired)
+      // Note: In a real implementation, you'd want to check block height
+      return {
+        isValid: true,
+        escrow: escrowResponse
+      }
+
+    } catch (error) {
+      return {
+        isValid: false,
+        error: error instanceof Error ? error.message : 'Unknown validation error'
       }
     }
   }
@@ -234,5 +397,40 @@ export class HTTPayService {
    */
   isInitialized(): boolean {
     return !!(this.cosmWasmClient && this.signingClient && this.walletAddress)
+  }
+
+  /**
+   * Create wallet helper (extracted from initialize for reusability)
+   */
+  private async createWalletFromPrivateKey(privateKey: string, prefix: string = "neutron"): Promise<{
+    wallet: DirectSecp256k1Wallet;
+    address: string;
+  }> {
+    // Validate private key format
+    if (!privateKey || !/^[0-9a-fA-F]{64}$/.test(privateKey)) {
+      throw new Error('Invalid private key. Must be a 64-character hex string.')
+    }
+
+    const privateKeyBytes = new Uint8Array(
+      privateKey.match(/.{1,2}/g)?.map((byte) => parseInt(byte, 16)) || []
+    )
+    
+    const wallet = await DirectSecp256k1Wallet.fromKey(privateKeyBytes, prefix)
+    const [account] = await wallet.getAccounts()
+    
+    return { wallet, address: account.address }
+  }
+
+  /**
+   * Safe JSON stringify that handles BigInt values
+   */
+  private safeStringify(obj: any): string {
+    return JSON.stringify(obj, (key, value) => {
+      // Convert BigInt to string for serialization
+      if (typeof value === 'bigint') {
+        return value.toString()
+      }
+      return value
+    }, 2)
   }
 }

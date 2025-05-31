@@ -128,16 +128,58 @@ export function formatTransactionResult(result: {
   txHash?: string
   error?: string
   escrowId?: number
+  authToken?: string
+  tool?: {
+    toolId: string
+    name: string
+    endpoint?: string
+    provider: string
+    price: string
+  }
 }): string {
   if (!result.success) {
     return `❌ Transaction Failed
 🚫 Error: ${result.error || "Unknown error occurred"}`
   }
 
-  return `✅ Payment Escrow Created Successfully!
+  const tool = result.tool
+  const escrowInfo = result.escrowId ? `🆔 Escrow ID: ${result.escrowId}` : "🆔 Escrow ID: (extracting...)"
+
+  let responseText = `✅ Payment Escrow Created Successfully!
+
 🔗 Transaction Hash: ${result.txHash}
-🆔 Escrow ID: ${result.escrowId}
+${escrowInfo}
 💡 Your payment is now secured in escrow and will be released when the service is provided.`
+
+  if (tool) {
+    responseText += `
+
+📋 **Service Details:**
+🔧 Tool: ${tool.name} (${tool.toolId})
+💰 Locked Amount: ${formatPrice(tool.price)}
+👤 Provider: ${tool.provider}`
+
+    if (tool.endpoint) {
+      responseText += `
+🌐 API Endpoint: ${tool.endpoint}`
+    }
+
+    if (result.authToken) {
+      responseText += `
+
+🔑 **Authentication Token:** \`${result.authToken}\`
+💡 Use this token when calling the API endpoint to authorize your payment.`
+    }
+
+    responseText += `
+
+🚀 **Next Steps:**
+1. Call the API endpoint with your auth token
+2. The provider will verify your payment and provide the service
+3. Payment will be automatically released upon service completion`
+  }
+
+  return responseText
 }
 
 /**

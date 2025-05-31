@@ -64,6 +64,14 @@ export interface TransactionResult {
   txHash?: string
   error?: string
   escrowId?: number
+  authToken?: string
+  tool?: {
+    toolId: string
+    name: string
+    endpoint?: string
+    provider: string
+    price: string
+  }
 }
 
 /**

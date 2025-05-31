@@ -119,6 +119,18 @@ class HTTPayElizaService extends Service {
   isInitialized() {
     return this.httpayService?.isInitialized() || false
   }
+
+  setSelectedTool(tool: any) {
+    return this.httpayService?.setSelectedTool(tool)
+  }
+
+  getSelectedTool() {
+    return this.httpayService?.getSelectedTool()
+  }
+
+  clearSelectedTool() {
+    return this.httpayService?.clearSelectedTool()
+  }
 }
 
 /**

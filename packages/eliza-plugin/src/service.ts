@@ -20,6 +20,7 @@ export class HTTPayService {
   private registryClient?: RegistryQueryClient
   private escrowClient?: EscrowClient
   private walletAddress?: string
+  private selectedTool?: HTTPayTool // Store selected tool for state persistence
 
   constructor(config: HTTPayConfig) {
     this.config = {
@@ -196,6 +197,29 @@ export class HTTPayService {
         error: error.message,
       }
     }
+  }
+
+  /**
+   * Set the selected tool (for persistence across message cycles)
+   */
+  setSelectedTool(tool: HTTPayTool): void {
+    this.selectedTool = tool
+    logger.info(`HTTPay Service: Selected tool stored: ${tool.toolId}`)
+  }
+
+  /**
+   * Get the selected tool
+   */
+  getSelectedTool(): HTTPayTool | undefined {
+    return this.selectedTool
+  }
+
+  /**
+   * Clear the selected tool
+   */
+  clearSelectedTool(): void {
+    this.selectedTool = undefined
+    logger.info("HTTPay Service: Selected tool cleared")
   }
 
   /**

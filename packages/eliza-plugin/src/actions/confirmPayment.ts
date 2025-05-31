@@ -17,7 +17,7 @@ import { formatTransactionResult, formatPrice } from "../utils.js"
 export const confirmPaymentAction: Action = {
   name: "CONFIRM_HTTPAY_PAYMENT",
   description:
-    "Confirm payment and create an escrow transaction for the selected tool",
+    "Confirm payment and create an escrow transaction for the selected tool. Run only after the user write 'confirm'.",
 
   validate: async (
     runtime: IAgentRuntime,
@@ -61,10 +61,32 @@ export const confirmPaymentAction: Action = {
   ): Promise<boolean> => {
     try {
       logger.info("Executing CONFIRM_HTTPAY_PAYMENT action")
+      logger.info("CONFIRM_HTTPAY_PAYMENT: Current state:", JSON.stringify(state?.httpay || {}, null, 2))
 
       // Get the selected tool from state
       const httpayState: HTTPayMVPState = state?.httpay || {}
-      const selectedTool = httpayState.selectedTool
+      let selectedTool = httpayState.selectedTool
+
+      // If not found in state, try to get from service (fallback for persistence)
+      if (!selectedTool) {
+        logger.info("CONFIRM_HTTPAY_PAYMENT: No tool in state, checking service...")
+        const httpayElizaService = runtime.getService("httpay") as any
+        if (httpayElizaService?.getSelectedTool) {
+          const serviceTool = httpayElizaService.getSelectedTool()
+          if (serviceTool) {
+            selectedTool = {
+              toolId: serviceTool.toolId,
+              name: serviceTool.name,
+              description: serviceTool.description,
+              price: serviceTool.price,
+              provider: serviceTool.provider,
+            }
+            logger.info("CONFIRM_HTTPAY_PAYMENT: Found tool in service:", selectedTool)
+          }
+        }
+      } else {
+        logger.info("CONFIRM_HTTPAY_PAYMENT: Found tool in state:", selectedTool)
+      }
 
       if (!selectedTool) {
         const errorMsg = `❌ No tool selected
@@ -147,6 +169,13 @@ export const confirmPaymentAction: Action = {
         // Clear the selected tool from state after successful payment
         httpayState.selectedTool = undefined
         state.httpay = httpayState
+
+        // Also clear from service
+        const httpayElizaService = runtime.getService("httpay") as any
+        if (httpayElizaService?.clearSelectedTool) {
+          httpayElizaService.clearSelectedTool()
+          logger.info("CONFIRM_HTTPAY_PAYMENT: Cleared tool from service after successful payment")
+        }
 
         logger.info(
           `Payment confirmed for tool ${selectedTool.toolId}, TX: ${result.txHash}`

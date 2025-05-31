@@ -11,10 +11,10 @@ import type { HTTPayService } from "../service.js"
 import { formatToolsList } from "../utils.js"
 
 /**
- * LIST_HTTPAY Action - Display available tools from HTTPay registry
+ * LIST_HTTPAY_TOOLS Action - Display available tools from HTTPay registry
  */
 export const listToolsAction: Action = {
-  name: "LIST_HTTPAY",
+  name: "LIST_HTTPAY_TOOLS",
   description:
     "List all available tools from the HTTPay registry with their prices and descriptions",
 
@@ -24,9 +24,9 @@ export const listToolsAction: Action = {
     state: State
   ): Promise<boolean> => {
     try {
-      logger.debug("LIST_HTTPAY: Starting validation")
+      logger.debug("LIST_HTTPAY_TOOLS: Starting validation")
       const text = message.content.text.toLowerCase().trim()
-      logger.debug(`LIST_HTTPAY: Validating text: "${text}"`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Validating text: "${text}"`)
       
       // Only validate for messages that clearly ask for listing tools
       // Make patterns more specific to avoid conflicts
@@ -41,24 +41,24 @@ export const listToolsAction: Action = {
       ]
       
       const matches = listPatterns.some(pattern => pattern.test(text))
-      logger.debug(`LIST_HTTPAY: Pattern matches: ${matches}`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Pattern matches: ${matches}`)
       
       // Additional check: don't trigger if this looks like a tool selection
       const selectPattern = /(?:select|choose|pick|use)\s+(?:tool\s+)?[a-zA-Z0-9\-_]+/
       const isSelection = selectPattern.test(text)
-      logger.debug(`LIST_HTTPAY: Is selection pattern: ${isSelection}`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Is selection pattern: ${isSelection}`)
       
       // Additional check: don't trigger if this looks like a confirmation
       const confirmPattern = /(?:confirm|yes|pay|proceed)/
       const isConfirmation = confirmPattern.test(text)
-      logger.debug(`LIST_HTTPAY: Is confirmation pattern: ${isConfirmation}`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Is confirmation pattern: ${isConfirmation}`)
       
       const shouldValidate = matches && !isSelection && !isConfirmation
-      logger.info(`LIST_HTTPAY: Validation result: ${shouldValidate}`)
+      logger.info(`LIST_HTTPAY_TOOLS: Validation result: ${shouldValidate}`)
       
       return shouldValidate
     } catch (error) {
-      logger.error("LIST_HTTPAY: Validation failed:", error)
+      logger.error("LIST_HTTPAY_TOOLS: Validation failed:", error)
       return false
     }
   },
@@ -71,18 +71,18 @@ export const listToolsAction: Action = {
     callback?: HandlerCallback
   ): Promise<boolean> => {
     try {
-      logger.info("LIST_HTTPAY: Starting action execution")
-      logger.debug(`LIST_HTTPAY: Message content: ${message.content.text}`)
-      logger.debug(`LIST_HTTPAY: Options: ${JSON.stringify(options)}`)
+      logger.info("LIST_HTTPAY_TOOLS: Starting action execution")
+      logger.debug(`LIST_HTTPAY_TOOLS: Message content: ${message.content.text}`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Options: ${JSON.stringify(options)}`)
 
       // Get the HTTPay service from runtime
-      logger.debug("LIST_HTTPAY: Attempting to get HTTPay service from runtime")
+      logger.debug("LIST_HTTPAY_TOOLS: Attempting to get HTTPay service from runtime")
       const httpayService = runtime.getService(
         "httpay"
       ) as unknown as HTTPayService
 
       if (!httpayService) {
-        logger.error("LIST_HTTPAY: HTTPay service not found in runtime")
+        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not found in runtime")
         const errorMsg =
           "❌ HTTPay service not available. Please check configuration."
         if (callback) {
@@ -94,9 +94,9 @@ export const listToolsAction: Action = {
         return false
       }
 
-      logger.info("LIST_HTTPAY: HTTPay service found, checking initialization")
+      logger.info("LIST_HTTPAY_TOOLS: HTTPay service found, checking initialization")
       if (!httpayService.isInitialized()) {
-        logger.error("LIST_HTTPAY: HTTPay service not initialized")
+        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not initialized")
         const errorMsg =
           "❌ HTTPay service not initialized. Please check your configuration."
         if (callback) {
@@ -109,25 +109,25 @@ export const listToolsAction: Action = {
       }
 
       // Fetch tools from the registry
-      logger.info("LIST_HTTPAY: Fetching tools from registry")
+      logger.info("LIST_HTTPAY_TOOLS: Fetching tools from registry")
       const startTime = Date.now()
       const tools = await httpayService.listTools()
       const fetchTime = Date.now() - startTime
-      logger.info(`LIST_HTTPAY: Successfully fetched ${tools.length} tools in ${fetchTime}ms`)
+      logger.info(`LIST_HTTPAY_TOOLS: Successfully fetched ${tools.length} tools in ${fetchTime}ms`)
       
       if (tools.length === 0) {
-        logger.warn("LIST_HTTPAY: No tools found in registry")
+        logger.warn("LIST_HTTPAY_TOOLS: No tools found in registry")
       } else {
-        logger.debug(`LIST_HTTPAY: Tools found: ${tools.map(t => t.name).join(', ')}`)
+        logger.debug(`LIST_HTTPAY_TOOLS: Tools found: ${tools.map(t => t.name).join(', ')}`)
       }
 
       // Format the tools list for display
-      logger.debug("LIST_HTTPAY: Formatting tools list for display")
+      logger.debug("LIST_HTTPAY_TOOLS: Formatting tools list for display")
       const formattedList = formatToolsList(tools)
-      logger.debug(`LIST_HTTPAY: Formatted list length: ${formattedList.length} characters`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Formatted list length: ${formattedList.length} characters`)
 
       // Send the response
-      logger.debug("LIST_HTTPAY: Sending response via callback")
+      logger.debug("LIST_HTTPAY_TOOLS: Sending response via callback")
       if (callback) {
         callback({
           text: formattedList,
@@ -135,36 +135,36 @@ export const listToolsAction: Action = {
             type: "tools_list",
           }
         })
-        logger.info("LIST_HTTPAY: Response sent successfully")
+        logger.info("LIST_HTTPAY_TOOLS: Response sent successfully")
       } else {
-        logger.warn("LIST_HTTPAY: No callback provided, response not sent")
+        logger.warn("LIST_HTTPAY_TOOLS: No callback provided, response not sent")
       }
 
-      logger.info(`LIST_HTTPAY: Action completed successfully - listed ${tools.length} tools`)
+      logger.info(`LIST_HTTPAY_TOOLS: Action completed successfully - listed ${tools.length} tools`)
       return true
     } catch (error) {
-      logger.error("LIST_HTTPAY: Action execution failed:", error)
-      logger.error(`LIST_HTTPAY: Error details - Type: ${error.constructor.name}, Message: ${error.message}`)
+      logger.error("LIST_HTTPAY_TOOLS: Action execution failed:", error)
+      logger.error(`LIST_HTTPAY_TOOLS: Error details - Type: ${error.constructor.name}, Message: ${error.message}`)
       if (error.stack) {
-        logger.debug(`LIST_HTTPAY: Error stack trace: ${error.stack}`)
+        logger.debug(`LIST_HTTPAY_TOOLS: Error stack trace: ${error.stack}`)
       }
 
       const errorMsg = `❌ Failed to list tools
 🚫 Error: ${error.message}
 💡 Please check your HTTPay configuration and network connection.`
 
-      logger.debug(`LIST_HTTPAY: Sending error response via callback`)
+      logger.debug(`LIST_HTTPAY_TOOLS: Sending error response via callback`)
       if (callback) {
         callback({
           text: errorMsg,
           content: { type: "error", error: error.message },
         })
-        logger.debug("LIST_HTTPAY: Error response sent")
+        logger.debug("LIST_HTTPAY_TOOLS: Error response sent")
       } else {
-        logger.warn("LIST_HTTPAY: No callback provided for error response")
+        logger.warn("LIST_HTTPAY_TOOLS: No callback provided for error response")
       }
       
-      logger.error("LIST_HTTPAY: Action execution failed and returned false")
+      logger.error("LIST_HTTPAY_TOOLS: Action execution failed and returned false")
       return false
     }
   },
@@ -178,7 +178,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          actions: ["LIST_HTTPAY"],
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -190,7 +190,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          actions: ["LIST_HTTPAY"],
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -202,7 +202,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          actions: ["LIST_HTTPAY"],
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -214,7 +214,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          actions: ["LIST_HTTPAY"],
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -226,7 +226,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          actions: ["LIST_HTTPAY"],
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],

@@ -20,7 +20,7 @@
       {
         "user": "HttpayAgent",
         "content": {
-          "action": "LIST_HTTPAY_TOOLS"
+          "actions": ["LIST_HTTPAY_TOOLS"]
         }
       },
       {
@@ -32,7 +32,7 @@
       {
         "user": "HttpayAgent",
         "content": {
-          "action": "SELECT_HTTPAY_TOOL"
+          "actions": ["SELECT_HTTPAY_TOOL"]
         }
       },
       {
@@ -44,7 +44,7 @@
       {
         "user": "HttpayAgent",
         "content": {
-          "action": "CONFIRM_HTTPAY_PAYMENT"
+          "actions": ["CONFIRM_HTTPAY_PAYMENT"]
         }
       }
     ]

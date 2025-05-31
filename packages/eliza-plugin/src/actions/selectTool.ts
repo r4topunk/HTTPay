@@ -12,26 +12,19 @@ import type { HTTPayMVPState } from "../types.js"
 import { formatToolInfo, isValidToolId } from "../utils.js"
 
 /**
- * Parameter validation schema for SELECT_HTTPAY_TOOL action
- */
-const selectToolSchema = z.object({
-  toolId: z.string().min(1, "Tool ID is required"),
-})
-
-/**
  * SELECT_HTTPAY_TOOL Action - Select a tool and store it in conversation state
  */
 export const selectToolAction: Action = {
   name: "SELECT_HTTPAY_TOOL",
-  similes: ["CHOOSE_TOOL", "PICK_TOOL", "USE_TOOL"],
   description:
-    "Select a specific tool from the HTTPay registry and store it for payment",
+    "Select a specific tool from the HTTPay registry and store it on state for later payment",
 
   validate: async (
     runtime: IAgentRuntime,
     message: Memory
   ): Promise<boolean> => {
     try {
+      logger.info("Validating SELECT_HTTPAY_TOOL action")
       // Extract tool ID from the message
       const text = message.content.text.toLowerCase()
 
@@ -39,6 +32,8 @@ export const selectToolAction: Action = {
       const toolIdMatch = text.match(
         /(?:select|choose|pick|use)\s+(?:tool\s+)?([a-zA-Z0-9\-_]+)/
       )
+
+      logger.info("SELECT_HTTPAY_TOOL: Tool ID match", toolIdMatch)
 
       if (!toolIdMatch) {
         return false
@@ -167,13 +162,13 @@ ${formatToolInfo(tool)}
     [
       {
         name: "{{user1}}",
-        content: { text: "Select tool weather-api" },
+        content: { text: "select tool weather-api" },
       },
       {
         name: "{{agent}}",
         content: {
-          text: '✅ **Tool Selected Successfully!**\n\n🔧 **weather-api** (ID: weather-api)\n📄 Get weather data for any location\n💰 Price: 1.000000 NTRN\n👤 Provider: neutron1abc...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
-          action: "SELECT_HTTPAY_TOOL",
+          // text: '✅ **Tool Selected Successfully!**\n\n🔧 **weather-api** (ID: weather-api)\n📄 Get weather data for any location\n💰 Price: 1.000000 NTRN\n👤 Provider: neutron1abc...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
+          actions: ["SELECT_HTTPAY_TOOL"]
         },
       },
     ],
@@ -185,8 +180,8 @@ ${formatToolInfo(tool)}
       {
         name: "{{agent}}",
         content: {
-          text: '✅ **Tool Selected Successfully!**\n\n🔧 **data-analyzer** (ID: data-analyzer)\n📄 Advanced data analysis service\n💰 Price: 0.500000 NTRN\n👤 Provider: neutron1def...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
-          action: "SELECT_HTTPAY_TOOL",
+          // text: '✅ **Tool Selected Successfully!**\n\n🔧 **data-analyzer** (ID: data-analyzer)\n📄 Advanced data analysis service\n💰 Price: 0.500000 NTRN\n👤 Provider: neutron1def...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
+          actions: ["SELECT_HTTPAY_TOOL"],
         },
       },
     ],
@@ -198,8 +193,8 @@ ${formatToolInfo(tool)}
       {
         name: "{{agent}}",
         content: {
-          text: '❌ Tool "invalid-tool" not found in the registry.\n💡 *Use "list tools" to see available tools.*',
-          action: "SELECT_HTTPAY_TOOL",
+          // text: '❌ Tool "invalid-tool" not found in the registry.\n💡 *Use "list tools" to see available tools.*',
+          actions: ["SELECT_HTTPAY_TOOL"],
         },
       },
     ],

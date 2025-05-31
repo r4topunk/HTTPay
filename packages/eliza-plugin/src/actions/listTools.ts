@@ -76,7 +76,7 @@ export const listToolsAction: Action = {
     try {
       logger.info("LIST_HTTPAY_TOOLS: Starting action execution");
       logger.info(
-        `LIST_HTTPAY_TOOLS: Message content: ${message.content.text}`
+        `LIST_HTTPAY_TOOLS: Message response: ${message.content.text}`
       );
       logger.info(`LIST_HTTPAY_TOOLS: Options: ${JSON.stringify(options)}`);
 
@@ -94,11 +94,9 @@ export const listToolsAction: Action = {
           "❌ HTTPay service not available. Please check configuration.";
         if (callback) {
           callback({
-            content: {
-              text: errorMsg,
-              type: "error",
-              error: "Service not available",
-            },
+            text: errorMsg,
+            type: "error",
+            error: "Service not available",
           });
         }
         return false;
@@ -113,11 +111,9 @@ export const listToolsAction: Action = {
           "❌ HTTPay service not initialized. Please check your configuration.";
         if (callback) {
           callback({
-            content: {
-              text: errorMsg,
-              type: "error",
-              error: "Service not initialized",
-            },
+            text: errorMsg,
+            type: "error",
+            error: "Service not initialized",
           });
         }
         return false;
@@ -147,25 +143,15 @@ export const listToolsAction: Action = {
         `LIST_HTTPAY_TOOLS: Formatted list length: ${formattedList.length} characters`
       );
       logger.info(
-        `LIST_HTTPAY_TOOLS: Formatted list content: ${formattedList}`
+        `LIST_HTTPAY_TOOLS: Formatted list response: ${formattedList}`
       );
 
       // Send the response
       logger.info("LIST_HTTPAY_TOOLS: Sending response via callback");
       if (callback) {
-        callback({
-          content: {
-            text: formattedList,
-            type: "tools_list",
-            tools: tools.map((tool) => ({
-              toolId: tool.toolId,
-              name: tool.name,
-              description: tool.description,
-              price: tool.price,
-              provider: tool.provider,
-              denom: tool.denom,
-            })),
-          },
+        await callback({
+          thought: formattedList,
+          actions: ["LIST_HTTPAY_TOOLS"],
         });
         logger.info("LIST_HTTPAY_TOOLS: Response sent successfully");
       } else {
@@ -194,7 +180,9 @@ export const listToolsAction: Action = {
       logger.info(`LIST_HTTPAY_TOOLS: Sending error response via callback`);
       if (callback) {
         callback({
-          content: { text: errorMsg, type: "error", error: error.message },
+          text: errorMsg,
+          type: "error",
+          error: error.message,
         });
         logger.info("LIST_HTTPAY_TOOLS: Error response sent");
       } else {

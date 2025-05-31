@@ -168,9 +168,12 @@ export class HTTPayService {
         throw new Error('Invalid fee amount')
       }
 
-      // Calculate expires (50 blocks from now for MVP)
-      const expires = 50 // Simple approach for MVP
-      const authToken = `auth_${Date.now()}_${Math.random().toString(36).substring(2)}`
+      // Get current block height and calculate expires (50 blocks from now)
+      const currentHeight = await this.cosmWasmClient.getHeight()
+      const expires = currentHeight + 50 // 50 blocks from current height
+      const authToken = `auth_${Math.random().toString(36).substring(2)}`
+      
+      logger.info(`Current block height: ${currentHeight}, expires at: ${expires}`)
 
       const result = await this.escrowClient.lockFunds(
         {

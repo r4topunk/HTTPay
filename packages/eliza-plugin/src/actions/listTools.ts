@@ -4,11 +4,11 @@ import type {
   Memory,
   State,
   HandlerCallback,
-} from "@elizaos/core"
-import { logger } from "@elizaos/core"
-import { z } from "zod"
-import type { HTTPayService } from "../service.js"
-import { formatToolsList } from "../utils.js"
+} from "@elizaos/core";
+import { logger } from "@elizaos/core";
+import { z } from "zod";
+import type { HTTPayService } from "../service.js";
+import { formatToolsList } from "../utils.js";
 
 /**
  * LIST_HTTPAY_TOOLS Action - Display available tools from HTTPay registry
@@ -24,10 +24,10 @@ export const listToolsAction: Action = {
     state: State
   ): Promise<boolean> => {
     try {
-      logger.debug("LIST_HTTPAY_TOOLS: Starting validation")
-      const text = message.content.text.toLowerCase().trim()
-      logger.debug(`LIST_HTTPAY_TOOLS: Validating text: "${text}"`)
-      
+      logger.info("LIST_HTTPAY_TOOLS: Starting validation");
+      const text = message.content.text.toLowerCase().trim();
+      logger.info(`LIST_HTTPAY_TOOLS: Validating text: "${text}"`);
+
       // Only validate for messages that clearly ask for listing tools
       // Make patterns more specific to avoid conflicts
       const listPatterns = [
@@ -36,30 +36,33 @@ export const listToolsAction: Action = {
         /^show\s+me\s+(?:the\s+)?tools?$/,
         /^(?:available|existing)\s+tools?\??$/,
         /^tools?\s+(?:list|available)$/,
-        /^list$/,  // Just "list" in context
-        /^tools?$/  // Just "tools" in context
-      ]
-      
-      const matches = listPatterns.some(pattern => pattern.test(text))
-      logger.debug(`LIST_HTTPAY_TOOLS: Pattern matches: ${matches}`)
-      
+        /^list$/, // Just "list" in context
+        /^tools?$/, // Just "tools" in context
+      ];
+
+      const matches = listPatterns.some((pattern) => pattern.test(text));
+      logger.info(`LIST_HTTPAY_TOOLS: Pattern matches: ${matches}`);
+
       // Additional check: don't trigger if this looks like a tool selection
-      const selectPattern = /(?:select|choose|pick|use)\s+(?:tool\s+)?[a-zA-Z0-9\-_]+/
-      const isSelection = selectPattern.test(text)
-      logger.debug(`LIST_HTTPAY_TOOLS: Is selection pattern: ${isSelection}`)
-      
+      const selectPattern =
+        /(?:select|choose|pick|use)\s+(?:tool\s+)?[a-zA-Z0-9\-_]+/;
+      const isSelection = selectPattern.test(text);
+      logger.info(`LIST_HTTPAY_TOOLS: Is selection pattern: ${isSelection}`);
+
       // Additional check: don't trigger if this looks like a confirmation
-      const confirmPattern = /(?:confirm|yes|pay|proceed)/
-      const isConfirmation = confirmPattern.test(text)
-      logger.debug(`LIST_HTTPAY_TOOLS: Is confirmation pattern: ${isConfirmation}`)
-      
-      const shouldValidate = matches && !isSelection && !isConfirmation
-      logger.info(`LIST_HTTPAY_TOOLS: Validation result: ${shouldValidate}`)
-      
-      return shouldValidate
+      const confirmPattern = /(?:confirm|yes|pay|proceed)/;
+      const isConfirmation = confirmPattern.test(text);
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Is confirmation pattern: ${isConfirmation}`
+      );
+
+      const shouldValidate = matches && !isSelection && !isConfirmation;
+      logger.info(`LIST_HTTPAY_TOOLS: Validation result: ${shouldValidate}`);
+
+      return shouldValidate;
     } catch (error) {
-      logger.error("LIST_HTTPAY_TOOLS: Validation failed:", error)
-      return false
+      logger.error("LIST_HTTPAY_TOOLS: Validation failed:", error);
+      return false;
     }
   },
 
@@ -71,101 +74,139 @@ export const listToolsAction: Action = {
     callback?: HandlerCallback
   ): Promise<boolean> => {
     try {
-      logger.info("LIST_HTTPAY_TOOLS: Starting action execution")
-      logger.debug(`LIST_HTTPAY_TOOLS: Message content: ${message.content.text}`)
-      logger.debug(`LIST_HTTPAY_TOOLS: Options: ${JSON.stringify(options)}`)
+      logger.info("LIST_HTTPAY_TOOLS: Starting action execution");
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Message content: ${message.content.text}`
+      );
+      logger.info(`LIST_HTTPAY_TOOLS: Options: ${JSON.stringify(options)}`);
 
       // Get the HTTPay service from runtime
-      logger.debug("LIST_HTTPAY_TOOLS: Attempting to get HTTPay service from runtime")
+      logger.info(
+        "LIST_HTTPAY_TOOLS: Attempting to get HTTPay service from runtime"
+      );
       const httpayService = runtime.getService(
         "httpay"
-      ) as unknown as HTTPayService
+      ) as unknown as HTTPayService;
 
       if (!httpayService) {
-        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not found in runtime")
+        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not found in runtime");
         const errorMsg =
-          "❌ HTTPay service not available. Please check configuration."
+          "❌ HTTPay service not available. Please check configuration.";
         if (callback) {
           callback({
-            text: errorMsg,
-            content: { type: "error", error: "Service not available" },
-          })
+            content: {
+              text: errorMsg,
+              type: "error",
+              error: "Service not available",
+            },
+          });
         }
-        return false
+        return false;
       }
 
-      logger.info("LIST_HTTPAY_TOOLS: HTTPay service found, checking initialization")
+      logger.info(
+        "LIST_HTTPAY_TOOLS: HTTPay service found, checking initialization"
+      );
       if (!httpayService.isInitialized()) {
-        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not initialized")
+        logger.error("LIST_HTTPAY_TOOLS: HTTPay service not initialized");
         const errorMsg =
-          "❌ HTTPay service not initialized. Please check your configuration."
+          "❌ HTTPay service not initialized. Please check your configuration.";
         if (callback) {
           callback({
-            text: errorMsg,
-            content: { type: "error", error: "Service not initialized" },
-          })
+            content: {
+              text: errorMsg,
+              type: "error",
+              error: "Service not initialized",
+            },
+          });
         }
-        return false
+        return false;
       }
 
       // Fetch tools from the registry
-      logger.info("LIST_HTTPAY_TOOLS: Fetching tools from registry")
-      const startTime = Date.now()
-      const tools = await httpayService.listTools()
-      const fetchTime = Date.now() - startTime
-      logger.info(`LIST_HTTPAY_TOOLS: Successfully fetched ${tools.length} tools in ${fetchTime}ms`)
-      
+      logger.info("LIST_HTTPAY_TOOLS: Fetching tools from registry");
+      const startTime = Date.now();
+      const tools = await httpayService.listTools();
+      const fetchTime = Date.now() - startTime;
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Successfully fetched ${tools.length} tools in ${fetchTime}ms`
+      );
+
       if (tools.length === 0) {
-        logger.warn("LIST_HTTPAY_TOOLS: No tools found in registry")
+        logger.warn("LIST_HTTPAY_TOOLS: No tools found in registry");
       } else {
-        logger.debug(`LIST_HTTPAY_TOOLS: Tools found: ${tools.map(t => t.name).join(', ')}`)
+        logger.info(
+          `LIST_HTTPAY_TOOLS: Tools found: ${tools.map((t) => t.name).join(", ")}`
+        );
       }
 
       // Format the tools list for display
-      logger.debug("LIST_HTTPAY_TOOLS: Formatting tools list for display")
-      const formattedList = formatToolsList(tools)
-      logger.debug(`LIST_HTTPAY_TOOLS: Formatted list length: ${formattedList.length} characters`)
+      logger.info("LIST_HTTPAY_TOOLS: Formatting tools list for display");
+      const formattedList = formatToolsList(tools);
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Formatted list length: ${formattedList.length} characters`
+      );
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Formatted list content: ${formattedList}`
+      );
 
       // Send the response
-      logger.debug("LIST_HTTPAY_TOOLS: Sending response via callback")
+      logger.info("LIST_HTTPAY_TOOLS: Sending response via callback");
       if (callback) {
         callback({
-          text: formattedList,
           content: {
+            text: formattedList,
             type: "tools_list",
-          }
-        })
-        logger.info("LIST_HTTPAY_TOOLS: Response sent successfully")
+            tools: tools.map((tool) => ({
+              toolId: tool.toolId,
+              name: tool.name,
+              description: tool.description,
+              price: tool.price,
+              provider: tool.provider,
+              denom: tool.denom,
+            })),
+          },
+        });
+        logger.info("LIST_HTTPAY_TOOLS: Response sent successfully");
       } else {
-        logger.warn("LIST_HTTPAY_TOOLS: No callback provided, response not sent")
+        logger.warn(
+          "LIST_HTTPAY_TOOLS: No callback provided, response not sent"
+        );
       }
 
-      logger.info(`LIST_HTTPAY_TOOLS: Action completed successfully - listed ${tools.length} tools`)
-      return true
+      logger.info(
+        `LIST_HTTPAY_TOOLS: Action completed successfully - listed ${tools.length} tools`
+      );
+      return true;
     } catch (error) {
-      logger.error("LIST_HTTPAY_TOOLS: Action execution failed:", error)
-      logger.error(`LIST_HTTPAY_TOOLS: Error details - Type: ${error.constructor.name}, Message: ${error.message}`)
+      logger.error("LIST_HTTPAY_TOOLS: Action execution failed:", error);
+      logger.error(
+        `LIST_HTTPAY_TOOLS: Error details - Type: ${error.constructor.name}, Message: ${error.message}`
+      );
       if (error.stack) {
-        logger.debug(`LIST_HTTPAY_TOOLS: Error stack trace: ${error.stack}`)
+        logger.info(`LIST_HTTPAY_TOOLS: Error stack trace: ${error.stack}`);
       }
 
       const errorMsg = `❌ Failed to list tools
 🚫 Error: ${error.message}
-💡 Please check your HTTPay configuration and network connection.`
+💡 Please check your HTTPay configuration and network connection.`;
 
-      logger.debug(`LIST_HTTPAY_TOOLS: Sending error response via callback`)
+      logger.info(`LIST_HTTPAY_TOOLS: Sending error response via callback`);
       if (callback) {
         callback({
-          text: errorMsg,
-          content: { type: "error", error: error.message },
-        })
-        logger.debug("LIST_HTTPAY_TOOLS: Error response sent")
+          content: { text: errorMsg, type: "error", error: error.message },
+        });
+        logger.info("LIST_HTTPAY_TOOLS: Error response sent");
       } else {
-        logger.warn("LIST_HTTPAY_TOOLS: No callback provided for error response")
+        logger.warn(
+          "LIST_HTTPAY_TOOLS: No callback provided for error response"
+        );
       }
-      
-      logger.error("LIST_HTTPAY_TOOLS: Action execution failed and returned false")
-      return false
+
+      logger.error(
+        "LIST_HTTPAY_TOOLS: Action execution failed and returned false"
+      );
+      return false;
     }
   },
 
@@ -231,4 +272,4 @@ export const listToolsAction: Action = {
       },
     ],
   ],
-}
+};

@@ -236,20 +236,20 @@ HTTPay contracts are deployed on Neutron testnet (pion-1) with the following add
 
 | Contract  | Address                                                             |
 |-----------|---------------------------------------------------------------------|
-| Registry  | neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn |
-| Escrow    | neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs |
+| Registry  | neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu |
+| Escrow    | neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a |
 
 ### Interacting with Deployed Contracts
 
 ```fish
 # Query a registered tool
-neutrond query wasm contract-state smart neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn '{"get_tool":{"tool_id":"example-tool"}}'
+neutrond query wasm contract-state smart neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu '{"get_tool":{"tool_id":"example-tool"}}'
 
 # Query an escrow by ID
-neutrond query wasm contract-state smart neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs '{"get_escrow":{"escrow_id":1}}'
+neutrond query wasm contract-state smart neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a '{"get_escrow":{"escrow_id":1}}'
 
 # Query multiple escrows with filtering
-neutrond query wasm contract-state smart neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs '{"get_escrows":{"caller":"neutron1...","limit":10}}'
+neutrond query wasm contract-state smart neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a '{"get_escrows":{"caller":"neutron1...","limit":10}}'
 ```
 
 ---

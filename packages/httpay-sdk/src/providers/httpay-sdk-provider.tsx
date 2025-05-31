@@ -25,8 +25,8 @@ const HTTPaySDKContext = createContext<HTTPaySDKContextType | undefined>(undefin
 const defaultConfig: HTTPaySDKConfig = {
   rpcEndpoint: "https://rpc-falcron.pion-1.ntrn.tech",
   chainId: "pion-1",
-  registryAddress: "neutron1jnxjn7097hqa3snqgwch2vpssnhel3wftfcgw6pjk34mzk4dfjhq243xxn",
-  escrowAddress: "neutron196v7vyr6dw0xglzgrnsaxwn8hcy2hrmttgu65q5z5fyvfg3jeadswrhahs",
+  registryAddress: "neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu",
+  escrowAddress: "neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a",
   gasPrice: "0.0053untrn",
   gasAdjustment: 1.3,
 };

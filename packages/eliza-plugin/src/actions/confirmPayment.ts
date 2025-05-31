@@ -16,6 +16,7 @@ import { formatTransactionResult, formatPrice } from "../utils.js"
  */
 export const confirmPaymentAction: Action = {
   name: "CONFIRM_HTTPAY_PAYMENT",
+  similes: ["PAY_FOR_TOOL", "MAKE_PAYMENT", "PROCEED_PAYMENT"],
   description:
     "Confirm payment and create an escrow transaction for the selected tool",
 
@@ -25,9 +26,27 @@ export const confirmPaymentAction: Action = {
     state: State
   ): Promise<boolean> => {
     try {
-      // Check if there's a selected tool in state
+      // First check if there's a selected tool in state
       const httpayState: HTTPayMVPState = state?.httpay || {}
-      return !!httpayState.selectedTool
+      if (!httpayState.selectedTool) {
+        return false
+      }
+
+      // Then check if the message contains confirmation patterns
+      const text = message.content.text.toLowerCase()
+      const confirmPatterns = [
+        /^(?:yes|y)$/,
+        /^confirm(?:\s+payment)?$/,
+        /^(?:proceed|go\s+ahead)$/,
+        /^(?:pay|make\s+payment)$/,
+        /^(?:pay\s+for\s+it)$/,
+        /^(?:do\s+it)$/,
+        /confirm.*payment/,
+        /make.*payment/,
+        /pay.*(?:for|it)/
+      ]
+
+      return confirmPatterns.some(pattern => pattern.test(text))
     } catch (error) {
       logger.error("CONFIRM_HTTPAY_PAYMENT validation failed:", error)
       return false

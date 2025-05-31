@@ -15,6 +15,7 @@ import { formatToolsList } from "../utils.js"
  */
 export const listToolsAction: Action = {
   name: "LIST_HTTPAY_TOOLS",
+  similes: ["SHOW_TOOLS", "GET_TOOLS", "DISPLAY_TOOLS"],
   description:
     "List all available tools from the HTTPay registry with their prices and descriptions",
 
@@ -22,8 +23,23 @@ export const listToolsAction: Action = {
     runtime: IAgentRuntime,
     message: Memory
   ): Promise<boolean> => {
-    // This action can always be called - no specific validation needed
-    return true
+    try {
+      const text = message.content.text.toLowerCase()
+      
+      // Only validate for messages that clearly ask for listing tools
+      const listPatterns = [
+        /(?:list|show|display|get|see|view)\s+(?:available\s+)?tools?/,
+        /what\s+tools?\s+(?:are\s+)?(?:available|exist)/,
+        /show\s+me\s+(?:the\s+)?tools?/,
+        /(?:available|existing)\s+tools?/,
+        /tools?\s+(?:list|available)/
+      ]
+      
+      return listPatterns.some(pattern => pattern.test(text))
+    } catch (error) {
+      logger.error("LIST_HTTPAY_TOOLS validation failed:", error)
+      return false
+    }
   },
 
   handler: async (

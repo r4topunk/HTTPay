@@ -122,23 +122,6 @@ class HTTPayElizaService extends Service {
 }
 
 /**
- * State initialization for HTTPay
- */
-async function initializeState(
-  runtime: IAgentRuntime,
-  message: Memory
-): Promise<State> {
-  const state = await runtime.composeState(message)
-
-  // Initialize HTTPay state if not present
-  if (!state.httpay) {
-    state.httpay = {} as HTTPayMVPState
-  }
-
-  return state
-}
-
-/**
  * HTTPay Plugin for Eliza
  * Enables AI agents to discover, select, and pay for blockchain tools
  */

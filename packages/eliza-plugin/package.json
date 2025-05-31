@@ -40,7 +40,7 @@
     "@cosmjs/stargate": "^0.32.2",
     "@elizaos/plugin-knowledge": "^1.0.0-beta.77",
     "@elizaos/plugin-openai": "^1.0.0-beta.73",
-    "@r4topunk/plugin-httpay": "file:.",
+    "@r4topunk/plugin-httpay": "file:./src/index.ts",
     "httpay": "latest",
     "zod": "3.24.2"
   },
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@elizaos/cli": "beta",
+    "@jest/globals": "^30.0.0-beta.3",
     "dotenv": "16.4.5",
     "prettier": "3.5.3",
     "tsup": "8.4.0",

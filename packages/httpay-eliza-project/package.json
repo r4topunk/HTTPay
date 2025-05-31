@@ -31,7 +31,12 @@
     "@elizaos/core": "latest",
     "@elizaos/plugin-bootstrap": "1.0.0-beta.76",
     "@elizaos/plugin-sql": "latest",
-    "zod": "3.24.2"
+    "zod": "3.24.2",
+    "@cosmjs/cosmwasm-stargate": "^0.32.4",
+    "@cosmjs/proto-signing": "^0.32.4",
+    "@cosmjs/stargate": "^0.32.4",
+    "@cosmjs/amino": "^0.32.4",
+    "httpay": "latest"
   },
   "devDependencies": {
     "tsup": "8.4.0",

@@ -6,6 +6,7 @@ import {
   type ProjectAgent,
 } from '@elizaos/core';
 import starterPlugin from './plugin.ts';
+import httpayPlugin from './httpay-plugin/src/index.ts';
 
 /**
  * Represents the HttpayAgent character with specialized focus on HTTPay tool execution.
@@ -123,7 +124,7 @@ const initCharacter = ({ runtime }: { runtime: IAgentRuntime }) => {
 export const projectAgent: ProjectAgent = {
   character,
   init: async (runtime: IAgentRuntime) => await initCharacter({ runtime }),
-  plugins: [starterPlugin],
+  plugins: [starterPlugin, httpayPlugin],
 };
 const project: Project = {
   agents: [projectAgent],

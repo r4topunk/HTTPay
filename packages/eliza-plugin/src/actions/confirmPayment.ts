@@ -16,7 +16,6 @@ import { formatTransactionResult, formatPrice } from "../utils.js"
  */
 export const confirmPaymentAction: Action = {
   name: "CONFIRM_HTTPAY_PAYMENT",
-  similes: ["PAY_FOR_TOOL", "MAKE_PAYMENT", "PROCEED_PAYMENT"],
   description:
     "Confirm payment and create an escrow transaction for the selected tool",
 
@@ -68,8 +67,8 @@ export const confirmPaymentAction: Action = {
       const selectedTool = httpayState.selectedTool
 
       if (!selectedTool) {
-        const errorMsg = `❌ **No tool selected**
-💡 *Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.*`
+        const errorMsg = `❌ No tool selected
+💡 Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.`
 
         if (callback) {
           callback({
@@ -101,12 +100,12 @@ export const confirmPaymentAction: Action = {
       const walletAddress = httpayService.getWalletAddress()
       const formattedPrice = formatPrice(selectedTool.price)
 
-      const confirmationText = `💰 **Payment Confirmation**
+      const confirmationText = `💰 Payment Confirmation
 
-🔧 **Tool**: ${selectedTool.name} (${selectedTool.toolId})
-💵 **Amount**: ${formattedPrice}
-👤 **Provider**: ${selectedTool.provider}
-🏦 **From Wallet**: ${walletAddress}
+🔧 Tool: ${selectedTool.name} (${selectedTool.toolId})
+💵 Amount: ${formattedPrice}
+👤 Provider: ${selectedTool.provider}
+🏦 From Wallet: ${walletAddress}
 
 🔄 Creating escrow transaction...`
 
@@ -162,9 +161,9 @@ export const confirmPaymentAction: Action = {
     } catch (error) {
       logger.error("CONFIRM_HTTPAY_PAYMENT action failed:", error)
 
-      const errorMsg = `❌ **Payment Failed**
+      const errorMsg = `❌ Payment Failed
 🚫 Error: ${error.message}
-💡 *Please check your wallet balance and network connection, then try again.*`
+💡 Please check your wallet balance and network connection, then try again.`
 
       if (callback) {
         callback({
@@ -185,7 +184,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: "✅ **Payment Escrow Created Successfully!**\n🔗 Transaction Hash: `ABC123...`\n🆔 Escrow ID: 42\n💡 *Your payment is now secured in escrow and will be released when the service is provided.*",
+          text: "✅ Payment Escrow Created Successfully!\n🔗 Transaction Hash: ABC123...\n🆔 Escrow ID: 42\n💡 Your payment is now secured in escrow and will be released when the service is provided.",
           action: "CONFIRM_HTTPAY_PAYMENT",
         },
       },
@@ -198,7 +197,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: "💰 **Payment Confirmation**\n\n🔧 **Tool**: weather-api (weather-api)\n💵 **Amount**: 1.000000 NTRN\n👤 **Provider**: neutron1abc...\n🏦 **From Wallet**: neutron1xyz...\n\n🔄 Creating escrow transaction...",
+          text: "💰 Payment Confirmation\n\n🔧 Tool: weather-api (weather-api)\n💵 Amount: 1.000000 NTRN\n👤 Provider: neutron1abc...\n🏦 From Wallet: neutron1xyz...\n\n🔄 Creating escrow transaction...",
           action: "CONFIRM_HTTPAY_PAYMENT",
         },
       },
@@ -211,7 +210,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: '❌ **No tool selected**\n💡 *Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.*',
+          text: '❌ No tool selected\n💡 Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.',
           action: "CONFIRM_HTTPAY_PAYMENT",
         },
       },

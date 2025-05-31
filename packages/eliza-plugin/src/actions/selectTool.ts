@@ -99,7 +99,7 @@ export const selectToolAction: Action = {
 
       if (!tool) {
         const errorMsg = `❌ Tool "${toolId}" not found in the registry.
-💡 *Use "list tools" to see available tools.*`
+💡 Use "list tools" to see available tools.`
         if (callback) {
           callback({
             text: errorMsg,
@@ -123,11 +123,11 @@ export const selectToolAction: Action = {
       state.httpay = httpayState
 
       // Format the response
-      const responseText = `✅ **Tool Selected Successfully!**
+      const responseText = `✅ Tool Selected Successfully!
 
 ${formatToolInfo(tool)}
 
-💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*`
+💡 You can now use "confirm payment" to create an escrow transaction for this tool.`
 
       if (callback) {
         callback({
@@ -144,9 +144,9 @@ ${formatToolInfo(tool)}
     } catch (error) {
       logger.error("SELECT_HTTPAY_TOOL action failed:", error)
 
-      const errorMsg = `❌ **Failed to select tool**
+      const errorMsg = `❌ Failed to select tool
 🚫 Error: ${error.message}
-💡 *Please try again or check if the tool ID is correct.*`
+💡 Please try again or check if the tool ID is correct.`
 
       if (callback) {
         callback({
@@ -167,7 +167,6 @@ ${formatToolInfo(tool)}
       {
         name: "{{agent}}",
         content: {
-          // text: '✅ **Tool Selected Successfully!**\n\n🔧 **weather-api** (ID: weather-api)\n📄 Get weather data for any location\n💰 Price: 1.000000 NTRN\n👤 Provider: neutron1abc...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
           actions: ["SELECT_HTTPAY_TOOL"]
         },
       },
@@ -180,7 +179,6 @@ ${formatToolInfo(tool)}
       {
         name: "{{agent}}",
         content: {
-          // text: '✅ **Tool Selected Successfully!**\n\n🔧 **data-analyzer** (ID: data-analyzer)\n📄 Advanced data analysis service\n💰 Price: 0.500000 NTRN\n👤 Provider: neutron1def...\n\n💡 *You can now use "confirm payment" to create an escrow transaction for this tool.*',
           actions: ["SELECT_HTTPAY_TOOL"],
         },
       },
@@ -193,7 +191,6 @@ ${formatToolInfo(tool)}
       {
         name: "{{agent}}",
         content: {
-          // text: '❌ Tool "invalid-tool" not found in the registry.\n💡 *Use "list tools" to see available tools.*',
           actions: ["SELECT_HTTPAY_TOOL"],
         },
       },

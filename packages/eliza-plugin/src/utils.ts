@@ -78,7 +78,7 @@ export function formatToolInfo(tool: {
 }): string {
   const formattedPrice = formatPrice(tool.price, tool.denom)
 
-  return `🔧 **${tool.name}** (ID: ${tool.toolId})
+  return `🔧 ${tool.name} (ID: ${tool.toolId})
 📄 ${tool.description}
 💰 Price: ${formattedPrice}
 👤 Provider: ${tool.provider}`
@@ -101,14 +101,14 @@ export function formatToolsList(
     return "❌ No tools available in the registry."
   }
 
-  const header = `🛠️ **Available HTTPay Tools** (${tools.length} total)\n\n`
+  const header = `🛠️ Available HTTPay Tools (${tools.length} total)\n\n`
 
   const toolsList = tools
     .map((tool, index) => {
       const formattedPrice = formatPrice(tool.price, tool.denom)
-      return `${index + 1}. **${tool.name}** - ${formattedPrice}
+      return `${index + 1}. ${tool.name} - ${formattedPrice}
    📄 ${tool.description}
-   🆔 Tool ID: \`${tool.toolId}\`
+   🆔 Tool ID: ${tool.toolId}
    👤 Provider: ${tool.provider}`
     })
     .join("\n\n")
@@ -116,7 +116,7 @@ export function formatToolsList(
   return (
     header +
     toolsList +
-    '\n\n💡 *Use "Select tool [tool-id]" to choose a tool for payment.*'
+    '\n\n💡 Use "Select tool [tool-id]" to choose a tool for payment.'
   )
 }
 
@@ -130,14 +130,14 @@ export function formatTransactionResult(result: {
   escrowId?: number
 }): string {
   if (!result.success) {
-    return `❌ **Transaction Failed**
+    return `❌ Transaction Failed
 🚫 Error: ${result.error || "Unknown error occurred"}`
   }
 
-  return `✅ **Payment Escrow Created Successfully!**
-🔗 Transaction Hash: \`${result.txHash}\`
+  return `✅ Payment Escrow Created Successfully!
+🔗 Transaction Hash: ${result.txHash}
 🆔 Escrow ID: ${result.escrowId}
-💡 *Your payment is now secured in escrow and will be released when the service is provided.*`
+💡 Your payment is now secured in escrow and will be released when the service is provided.`
 }
 
 /**

@@ -181,11 +181,8 @@ export const confirmPaymentAction: Action = {
         }
 
         try {
-          // Encode the auth token as base64 (similar to demo-section.tsx)
-          const encodedAuthToken = btoa(result.authToken)
-          
           // Build the API URL with escrow credentials
-          const apiUrl = `${result.tool.endpoint}?escrowId=${result.escrowId}&authToken=${encodedAuthToken}`
+          const apiUrl = `${result.tool.endpoint}?escrowId=${result.escrowId}&authToken=${result.authToken}`
           
           logger.info(`Making API request to: ${apiUrl}`)
 

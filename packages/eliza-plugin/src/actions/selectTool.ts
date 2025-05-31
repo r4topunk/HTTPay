@@ -60,16 +60,22 @@ export const selectToolAction: Action = {
     callback?: HandlerCallback
   ): Promise<boolean> => {
     try {
+      logger.info("=== SELECT_HTTPAY_TOOL HANDLER STARTED ===")
       logger.info("Executing SELECT_HTTPAY_TOOL action")
       logger.info(`SELECT_HTTPAY_TOOL handler: Processing message: "${message.content.text}"`)
+      logger.info("SELECT_HTTPAY_TOOL handler: Current state:", JSON.stringify(state?.httpay || {}, null, 2))
 
       // Extract tool ID from the message
       const text = message.content.text.toLowerCase()
+      logger.info("SELECT_HTTPAY_TOOL handler: Parsed text:", text)
+      
       const toolIdMatch = text.match(
         /(?:select|choose|pick|use)\s+(?:tool\s+)?([a-zA-Z0-9\-_]+)/
       )
+      logger.info("SELECT_HTTPAY_TOOL handler: Tool ID match result:", toolIdMatch)
 
       if (!toolIdMatch) {
+        logger.error("SELECT_HTTPAY_TOOL handler: No tool ID match found in text")
         const errorMsg =
           '❌ Please specify a tool ID. Example: "select tool weather-api"'
         if (callback) {
@@ -82,13 +88,16 @@ export const selectToolAction: Action = {
       }
 
       const toolId = toolIdMatch[1]
+      logger.info("SELECT_HTTPAY_TOOL handler: Extracted tool ID:", toolId)
 
       // Get the HTTPay service
-      const httpayService = runtime.getService(
-        "httpay"
-      ) as unknown as HTTPayService
+      logger.info("SELECT_HTTPAY_TOOL handler: Getting HTTPay service from runtime")
+      const httpayService = runtime.getService("httpay") as any
+      logger.info("SELECT_HTTPAY_TOOL handler: HTTPay service obtained:", !!httpayService)
+      logger.info("SELECT_HTTPAY_TOOL handler: Service initialized:", httpayService?.isInitialized())
 
       if (!httpayService?.isInitialized()) {
+        logger.error("SELECT_HTTPAY_TOOL handler: Service not available or not initialized")
         const errorMsg =
           "❌ HTTPay service not available. Please check configuration."
         if (callback) {
@@ -101,7 +110,9 @@ export const selectToolAction: Action = {
       }
 
       // Fetch the tool details
+      logger.info("SELECT_HTTPAY_TOOL handler: Fetching tool details for:", toolId)
       const tool = await httpayService.getTool(toolId)
+      logger.info("SELECT_HTTPAY_TOOL handler: Tool fetch result:", !!tool)
 
       if (!tool) {
         const errorMsg = `❌ Tool "${toolId}" not found in the registry.

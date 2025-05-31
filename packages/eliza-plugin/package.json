@@ -38,18 +38,17 @@
     "@cosmjs/cosmwasm-stargate": "^0.32.2",
     "@cosmjs/proto-signing": "^0.32.2",
     "@cosmjs/stargate": "^0.32.2",
+    "@elizaos/core": "latest",
+    "@elizaos/plugin-bootstrap": "1.0.1",
     "@elizaos/plugin-knowledge": "^1.0.0-beta.77",
     "@elizaos/plugin-openai": "^1.0.0-beta.73",
-    "@r4topunk/plugin-httpay": "file:./src/index.ts",
+    "@r4topunk/plugin-httpay": "file:.",
     "httpay": "latest",
     "zod": "3.24.2"
   },
-  "peerDependencies": {
-    "@elizaos/core": "beta"
-  },
+  "peerDependencies": {},
   "devDependencies": {
-    "@elizaos/cli": "beta",
-    "@jest/globals": "^30.0.0-beta.3",
+    "@elizaos/cli": "latest",
     "dotenv": "16.4.5",
     "prettier": "3.5.3",
     "tsup": "8.4.0",

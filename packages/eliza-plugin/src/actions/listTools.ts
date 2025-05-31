@@ -133,8 +133,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: '🛠️ Available HTTPay Tools (3 total)\n\n1. weather-api - 1.000000 NTRN\n   📄 Get weather data for any location\n   🆔 Tool ID: weather-api\n   👤 Provider: neutron1abc...\n\n💡 Use "Select tool [tool-id]" to choose a tool for payment.',
-          action: "LIST_HTTPAY_TOOLS",
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -146,8 +145,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: '🛠️ Available HTTPay Tools (2 total)\n\n1. data-analyzer - 0.500000 NTRN\n   📄 Advanced data analysis service\n   🆔 Tool ID: data-analyzer\n   👤 Provider: neutron1def...\n\n💡 Use "Select tool [tool-id]" to choose a tool for payment.',
-          action: "LIST_HTTPAY_TOOLS",
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],
@@ -159,8 +157,7 @@ export const listToolsAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: '🛠️ Available HTTPay Tools (1 total)\n\n1. ai-assistant - 2.000000 NTRN\n   📄 AI-powered assistant for various tasks\n   🆔 Tool ID: ai-assistant\n   👤 Provider: neutron1ghi...\n\n💡 Use "Select tool [tool-id]" to choose a tool for payment.',
-          action: "LIST_HTTPAY_TOOLS",
+          actions: ["LIST_HTTPAY_TOOLS"],
         },
       },
     ],

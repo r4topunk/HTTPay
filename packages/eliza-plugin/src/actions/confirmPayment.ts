@@ -184,8 +184,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: "✅ Payment Escrow Created Successfully!\n🔗 Transaction Hash: ABC123...\n🆔 Escrow ID: 42\n💡 Your payment is now secured in escrow and will be released when the service is provided.",
-          action: "CONFIRM_HTTPAY_PAYMENT",
+          actions: ["CONFIRM_HTTPAY_PAYMENT"],
         },
       },
     ],
@@ -197,8 +196,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: "💰 Payment Confirmation\n\n🔧 Tool: weather-api (weather-api)\n💵 Amount: 1.000000 NTRN\n👤 Provider: neutron1abc...\n🏦 From Wallet: neutron1xyz...\n\n🔄 Creating escrow transaction...",
-          action: "CONFIRM_HTTPAY_PAYMENT",
+          actions: ["CONFIRM_HTTPAY_PAYMENT"],
         },
       },
     ],
@@ -210,8 +208,7 @@ export const confirmPaymentAction: Action = {
       {
         name: "{{agent}}",
         content: {
-          text: '❌ No tool selected\n💡 Please select a tool first using "select tool [tool-id]" or "list tools" to see available options.',
-          action: "CONFIRM_HTTPAY_PAYMENT",
+          actions: ["CONFIRM_HTTPAY_PAYMENT"],
         },
       },
     ],

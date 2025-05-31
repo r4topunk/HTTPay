@@ -12,37 +12,37 @@
   "messageExamples": [
     [
       {
-        "user": "user",
+        "user": "{{user}}",
         "content": {
           "text": "what tools are available?"
         }
       },
       {
-        "user": "HttpayAgent",
+        "user": "{{agent}}",
         "content": {
           "actions": ["LIST_HTTPAY_TOOLS"]
         }
       },
       {
-        "user": "user",
+        "user": "{{user}}",
         "content": {
           "text": "select tool weather"
         }
       },
       {
-        "user": "HttpayAgent",
+        "user": "{{agent}}",
         "content": {
           "actions": ["SELECT_HTTPAY_TOOL"]
         }
       },
       {
-        "user": "user",
+        "user": "{{user}}",
         "content": {
           "text": "confirm"
         }
       },
       {
-        "user": "HttpayAgent",
+        "user": "{{agent}}",
         "content": {
           "actions": ["CONFIRM_HTTPAY_PAYMENT"]
         }

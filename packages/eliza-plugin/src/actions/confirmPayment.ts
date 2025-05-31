@@ -12,12 +12,12 @@ import type { HTTPayMVPState } from "../types.js"
 import { formatTransactionResult, formatPrice } from "../utils.js"
 
 /**
- * CONFIRM_HTTPAY_PAYMENT Action - Create escrow transaction for the selected tool
+ * CONFIRM_HTTPAY_PAYMENT Action - Create escrow transaction for the selected tool and test the API
  */
 export const confirmPaymentAction: Action = {
   name: "CONFIRM_HTTPAY_PAYMENT",
   description:
-    "Confirm payment and create an escrow transaction for the selected tool. Run only after the user write 'confirm'.",
+    "Confirm payment, create an escrow transaction for the selected tool, and test the tool's API with the escrow credentials. Run only after the user writes 'confirm'.",
 
   validate: async (
     runtime: IAgentRuntime,
@@ -165,8 +165,104 @@ export const confirmPaymentAction: Action = {
         })
       }
 
-      if (result.success) {
-        // Clear the selected tool from state after successful payment
+      if (result.success && result.escrowId && result.authToken && result.tool?.endpoint) {
+        // Test the API after successful escrow creation
+        logger.info("Testing API after successful escrow creation...")
+        
+        if (callback) {
+          callback({
+            text: "🧪 Testing API with escrow credentials...",
+            content: {
+              type: "api_testing",
+              escrowId: result.escrowId,
+              authToken: result.authToken,
+            },
+          })
+        }
+
+        try {
+          // Encode the auth token as base64 (similar to demo-section.tsx)
+          const encodedAuthToken = Buffer.from(result.authToken).toString('base64')
+          
+          // Build the API URL with escrow credentials
+          const apiUrl = `${result.tool.endpoint}?escrowId=${result.escrowId}&authToken=${encodedAuthToken}`
+          
+          logger.info(`Making API request to: ${apiUrl}`)
+
+          // Make the API request
+          const apiResponse = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          })
+
+          const responseData = await apiResponse.json()
+
+          if (!apiResponse.ok) {
+            const errorMessage = (responseData as any)?.message || apiResponse.statusText
+            throw new Error(`HTTP ${apiResponse.status}: ${errorMessage}`)
+          }
+
+          // Present the raw API response to the user
+          const apiResultText = `✅ API Test Successful!
+
+🔧 Tool: ${selectedTool.name} (${selectedTool.toolId})
+🔗 Endpoint: ${result.tool.endpoint}
+📊 Raw API Response:
+
+\`\`\`json
+${JSON.stringify(responseData, null, 2)}
+\`\`\`
+
+💰 Payment completed and tool accessed successfully!`
+
+          if (callback) {
+            callback({
+              text: apiResultText,
+              content: {
+                type: "api_success",
+                tool: selectedTool,
+                escrowId: result.escrowId,
+                apiResponse: responseData,
+                endpoint: result.tool.endpoint,
+              },
+            })
+          }
+
+          logger.info(`API test successful for tool ${selectedTool.toolId}`)
+
+        } catch (apiError) {
+          const apiErrorMsg = `⚠️ API Test Failed
+
+The escrow was created successfully, but the API test failed:
+🚫 Error: ${apiError instanceof Error ? apiError.message : String(apiError)}
+
+This might be because:
+• The tool's API endpoint is not responding
+• The tool hasn't implemented escrow validation yet
+• Network connectivity issues
+
+Your payment is secure - the escrow holds your funds until the tool is accessed successfully.`
+
+          if (callback) {
+            callback({
+              text: apiErrorMsg,
+              content: {
+                type: "api_error",
+                tool: selectedTool,
+                escrowId: result.escrowId,
+                error: apiError instanceof Error ? apiError.message : String(apiError),
+                endpoint: result.tool.endpoint,
+              },
+            })
+          }
+
+          logger.error(`API test failed for tool ${selectedTool.toolId}:`, apiError)
+        }
+
+        // Clear the selected tool from state after processing (successful or failed API test)
         httpayState.selectedTool = undefined
         state.httpay = httpayState
 
@@ -174,12 +270,42 @@ export const confirmPaymentAction: Action = {
         const httpayElizaService = runtime.getService("httpay") as any
         if (httpayElizaService?.clearSelectedTool) {
           httpayElizaService.clearSelectedTool()
-          logger.info("CONFIRM_HTTPAY_PAYMENT: Cleared tool from service after successful payment")
+          logger.info("CONFIRM_HTTPAY_PAYMENT: Cleared tool from service after processing")
         }
 
         logger.info(
           `Payment confirmed for tool ${selectedTool.toolId}, TX: ${result.txHash}`
         )
+      } else if (result.success) {
+        // Escrow successful but missing data for API test
+        const warningMsg = `✅ Escrow created successfully, but API test skipped.
+
+Some required information is missing:
+${!result.escrowId ? "• Escrow ID not found\n" : ""}${!result.authToken ? "• Auth token not generated\n" : ""}${!result.tool?.endpoint ? "• Tool endpoint not available\n" : ""}
+
+Your payment is secure and the escrow has been created.`
+
+        if (callback) {
+          callback({
+            text: warningMsg,
+            content: {
+              type: "escrow_success_no_api",
+              tool: selectedTool,
+              escrowId: result.escrowId,
+            },
+          })
+        }
+
+        // Clear the selected tool from state
+        httpayState.selectedTool = undefined
+        state.httpay = httpayState
+
+        const httpayElizaService = runtime.getService("httpay") as any
+        if (httpayElizaService?.clearSelectedTool) {
+          httpayElizaService.clearSelectedTool()
+        }
+
+        logger.info(`Escrow created for tool ${selectedTool.toolId}, but API test skipped`)
       } else {
         logger.error(
           `Payment failed for tool ${selectedTool.toolId}: ${result.error}`

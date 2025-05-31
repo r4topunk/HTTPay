@@ -142,6 +142,10 @@ export const httpayPlugin: Plugin = {
   description:
     "HTTPay integration plugin - enables AI agents to discover, select, and pay for blockchain tools using escrow payments",
 
+  // Register actions in priority order:
+  // 1. List tools first (most general)
+  // 2. Select tool (specific tool selection)
+  // 3. Confirm payment (final step, most restrictive)
   actions: [listToolsAction, selectToolAction, confirmPaymentAction],
 
   evaluators: [],

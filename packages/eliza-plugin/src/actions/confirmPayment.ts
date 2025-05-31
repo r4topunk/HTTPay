@@ -17,40 +17,60 @@ import { formatTransactionResult, formatPrice } from "../utils.js"
 export const confirmPaymentAction: Action = {
   name: "CONFIRM_HTTPAY_PAYMENT",
   description:
-    "Confirm payment, create an escrow transaction for the selected tool, and test the tool's API with the escrow credentials. Run only after the user writes 'confirm'.",
+    "Confirm payment, create an escrow transaction for the selected tool, and test the tool's API with the escrow credentials. This action is not supposed to run automatically, it should spend user money, so it should only be triggered by user confirmation.",
 
   validate: async (
     runtime: IAgentRuntime,
     message: Memory,
     state: State
-  ): Promise<boolean> => {
-    try {
-      // First check if there's a selected tool in state
-      const httpayState: HTTPayMVPState = state?.httpay || {}
-      if (!httpayState.selectedTool) {
-        return false
-      }
+  ): Promise<boolean> => false,
+  // {
+  //   try {
+  //     // First check if there's a selected tool in state
+  //     const httpayState: HTTPayMVPState = state?.httpay || {}
+  //     if (!httpayState.selectedTool) {
+  //       logger.info("CONFIRM_HTTPAY_PAYMENT: No tool selected, validation failed")
+  //       return false
+  //     }
 
-      // Then check if the message contains confirmation patterns
-      const text = message.content.text.toLowerCase()
-      const confirmPatterns = [
-        /^(?:yes|y)$/,
-        /^confirm(?:\s+payment)?$/,
-        /^(?:proceed|go\s+ahead)$/,
-        /^(?:pay|make\s+payment)$/,
-        /^(?:pay\s+for\s+it)$/,
-        /^(?:do\s+it)$/,
-        /confirm.*payment/,
-        /make.*payment/,
-        /pay.*(?:for|it)/
-      ]
+  //     const text = message.content.text.toLowerCase().trim()
+      
+  //     // Don't trigger if this looks like a list request
+  //     const listPattern = /^(?:list|show|display|get|see|view)\s+(?:available\s+)?tools?$/
+  //     if (listPattern.test(text)) {
+  //       logger.info("CONFIRM_HTTPAY_PAYMENT: Detected list request, skipping")
+  //       return false
+  //     }
 
-      return confirmPatterns.some(pattern => pattern.test(text))
-    } catch (error) {
-      logger.error("CONFIRM_HTTPAY_PAYMENT validation failed:", error)
-      return false
-    }
-  },
+  //     // Don't trigger if this looks like a tool selection
+  //     const selectPattern = /^(?:select|choose|pick|use)\s+(?:tool\s+)?[a-zA-Z0-9\-_]+$/
+  //     if (selectPattern.test(text)) {
+  //       logger.info("CONFIRM_HTTPAY_PAYMENT: Detected tool selection, skipping")
+  //       return false
+  //     }
+
+  //     // Then check if the message contains confirmation patterns
+  //     const confirmPatterns = [
+  //       /^(?:yes|y)$/,
+  //       /^confirm(?:\s+payment)?$/,
+  //       /^(?:proceed|go\s+ahead)$/,
+  //       /^(?:pay|make\s+payment)$/,
+  //       /^(?:pay\s+for\s+it)$/,
+  //       /^(?:do\s+it)$/,
+  //       /^confirm.*payment$/,
+  //       /^make.*payment$/,
+  //       /^pay.*(?:for|it)$/
+  //     ]
+
+  //     const isConfirmation = confirmPatterns.some(pattern => pattern.test(text))
+  //     logger.info(`CONFIRM_HTTPAY_PAYMENT: Confirmation check result: ${isConfirmation}`)
+      
+  //     return isConfirmation
+  //   } catch (error) {
+  //     logger.error("CONFIRM_HTTPAY_PAYMENT validation failed:", error)
+  //     return false
+  //   }
+  // },
 
   handler: async (
     runtime: IAgentRuntime,
@@ -59,8 +79,10 @@ export const confirmPaymentAction: Action = {
     options: any,
     callback?: HandlerCallback
   ): Promise<boolean> => {
+    // Add a 10 second delay before processing
+    await new Promise(resolve => setTimeout(resolve, 10000));
     try {
-      logger.info("Executing CONFIRM_HTTPAY_PAYMENT action")
+      logger.info("Executing CONFIRM_HTTPAY_PAYMENT action (supposed to not run LOL)")
       logger.info("CONFIRM_HTTPAY_PAYMENT: Current state:", JSON.stringify(state?.httpay || {}, null, 2))
 
       // Get the selected tool from state
@@ -331,7 +353,7 @@ Your payment is secure and the escrow has been created.`
     [
       {
         name: "{{user1}}",
-        content: { text: "Confirm payment" },
+        content: { text: "Confirm payment", thought: "I want to confirm the payment for the selected tool." },
       },
       {
         name: "{{agent}}",
@@ -343,7 +365,7 @@ Your payment is secure and the escrow has been created.`
     [
       {
         name: "{{user1}}",
-        content: { text: "Pay for it" },
+        content: { text: "Pay for it", thought: "I want to pay for the selected tool." },
       },
       {
         name: "{{agent}}",
@@ -355,7 +377,7 @@ Your payment is secure and the escrow has been created.`
     [
       {
         name: "{{user1}}",
-        content: { text: "Make payment" },
+        content: { text: "Make payment", thought: "I want to make the payment for the selected tool." },
       },
       {
         name: "{{agent}}",

@@ -15,27 +15,40 @@ import { formatToolsList } from "../utils.js"
  */
 export const listToolsAction: Action = {
   name: "LIST_HTTPAY_TOOLS",
-  similes: ["SHOW_TOOLS", "GET_TOOLS", "DISPLAY_TOOLS"],
   description:
     "List all available tools from the HTTPay registry with their prices and descriptions",
 
   validate: async (
     runtime: IAgentRuntime,
-    message: Memory
+    message: Memory,
+    state: State
   ): Promise<boolean> => {
     try {
-      const text = message.content.text.toLowerCase()
+      const text = message.content.text.toLowerCase().trim()
       
       // Only validate for messages that clearly ask for listing tools
+      // Make patterns more specific to avoid conflicts
       const listPatterns = [
-        /(?:list|show|display|get|see|view)\s+(?:available\s+)?tools?/,
-        /what\s+tools?\s+(?:are\s+)?(?:available|exist)/,
-        /show\s+me\s+(?:the\s+)?tools?/,
-        /(?:available|existing)\s+tools?/,
-        /tools?\s+(?:list|available)/
+        /^(?:list|show|display|get|see|view)\s+(?:available\s+)?tools?$/,
+        /^what\s+tools?\s+(?:are\s+)?(?:available|exist)\??$/,
+        /^show\s+me\s+(?:the\s+)?tools?$/,
+        /^(?:available|existing)\s+tools?\??$/,
+        /^tools?\s+(?:list|available)$/,
+        /^list$/,  // Just "list" in context
+        /^tools?$/  // Just "tools" in context
       ]
       
-      return listPatterns.some(pattern => pattern.test(text))
+      const matches = listPatterns.some(pattern => pattern.test(text))
+      
+      // Additional check: don't trigger if this looks like a tool selection
+      const selectPattern = /(?:select|choose|pick|use)\s+(?:tool\s+)?[a-zA-Z0-9\-_]+/
+      const isSelection = selectPattern.test(text)
+      
+      // Additional check: don't trigger if this looks like a confirmation
+      const confirmPattern = /(?:confirm|yes|pay|proceed)/
+      const isConfirmation = confirmPattern.test(text)
+      
+      return matches && !isSelection && !isConfirmation
     } catch (error) {
       logger.error("LIST_HTTPAY_TOOLS validation failed:", error)
       return false
@@ -128,7 +141,7 @@ export const listToolsAction: Action = {
     [
       {
         name: "{{user1}}",
-        content: { text: "List available tools" },
+        content: { text: "list available tools" },
       },
       {
         name: "{{agent}}",
@@ -140,7 +153,7 @@ export const listToolsAction: Action = {
     [
       {
         name: "{{user1}}",
-        content: { text: "What tools are available?" },
+        content: { text: "what tools are available?" },
       },
       {
         name: "{{agent}}",
@@ -152,7 +165,31 @@ export const listToolsAction: Action = {
     [
       {
         name: "{{user1}}",
-        content: { text: "Show me the tools" },
+        content: { text: "show me the tools" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          actions: ["LIST_HTTPAY_TOOLS"],
+        },
+      },
+    ],
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "tools" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          actions: ["LIST_HTTPAY_TOOLS"],
+        },
+      },
+    ],
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "list" },
       },
       {
         name: "{{agent}}",

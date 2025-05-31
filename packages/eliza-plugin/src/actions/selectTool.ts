@@ -26,12 +26,25 @@ export const selectToolAction: Action = {
   ): Promise<boolean> => {
     try {
       logger.info("Validating SELECT_HTTPAY_TOOL action")
-      // Extract tool ID from the message
-      const text = message.content.text.toLowerCase()
+      const text = message.content.text.toLowerCase().trim()
 
-      // Look for patterns like "select tool weather-api" or "choose weather-api"
+      // Don't trigger if this looks like a list request
+      const listPattern = /^(?:list|show|display|get|see|view)\s+(?:available\s+)?tools?$/
+      if (listPattern.test(text)) {
+        logger.info("SELECT_HTTPAY_TOOL: Detected list request, skipping")
+        return false
+      }
+
+      // Don't trigger if this looks like a confirmation without tool selection
+      const confirmPattern = /^(?:confirm|yes|y|proceed|pay|make\s+payment)$/
+      if (confirmPattern.test(text)) {
+        logger.info("SELECT_HTTPAY_TOOL: Detected confirmation request, skipping")
+        return false
+      }
+
+      // Look for specific tool selection patterns
       const toolIdMatch = text.match(
-        /(?:select|choose|pick|use)\s+(?:tool\s+)?([a-zA-Z0-9\-_]+)/
+        /^(?:select|choose|pick|use)\s+(?:tool\s+)?([a-zA-Z0-9\-_]+)$/
       )
 
       logger.info("SELECT_HTTPAY_TOOL: Tool ID match", toolIdMatch)
@@ -43,6 +56,14 @@ export const selectToolAction: Action = {
 
       const toolId = toolIdMatch[1]
       logger.info(`SELECT_HTTPAY_TOOL: Extracted tool ID: ${toolId}`)
+      
+      // Additional validation: ensure it's not a common word that might be misinterpreted
+      const commonWords = ['tools', 'list', 'confirm', 'payment', 'yes', 'no']
+      if (commonWords.includes(toolId)) {
+        logger.info(`SELECT_HTTPAY_TOOL: Rejected common word: ${toolId}`)
+        return false
+      }
+      
       const isValid = isValidToolId(toolId)
       logger.info(`SELECT_HTTPAY_TOOL: Tool ID validation result: ${isValid}`)
       return isValid
@@ -200,7 +221,7 @@ ${formatToolInfo(tool)}
     [
       {
         name: "{{user1}}",
-        content: { text: "Choose data-analyzer" },
+        content: { text: "choose data-analyzer" },
       },
       {
         name: "{{agent}}",
@@ -212,7 +233,19 @@ ${formatToolInfo(tool)}
     [
       {
         name: "{{user1}}",
-        content: { text: "Pick tool invalid-tool" },
+        content: { text: "pick tool weather-service" },
+      },
+      {
+        name: "{{agent}}",
+        content: {
+          actions: ["SELECT_HTTPAY_TOOL"],
+        },
+      },
+    ],
+    [
+      {
+        name: "{{user1}}",
+        content: { text: "use crypto-tracker" },
       },
       {
         name: "{{agent}}",

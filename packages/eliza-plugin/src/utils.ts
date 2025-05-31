@@ -154,7 +154,7 @@ ${escrowInfo}
   if (tool) {
     responseText += `
 
-📋 **Service Details:**
+📋 Service Details:
 🔧 Tool: ${tool.name} (${tool.toolId})
 💰 Locked Amount: ${formatPrice(tool.price)}
 👤 Provider: ${tool.provider}`
@@ -167,13 +167,13 @@ ${escrowInfo}
     if (result.authToken) {
       responseText += `
 
-🔑 **Authentication Token:** \`${result.authToken}\`
+🔑 Authentication Token: \`${result.authToken}\`
 💡 Use this token when calling the API endpoint to authorize your payment.`
     }
 
     responseText += `
 
-🚀 **Next Steps:**
+🚀 Next Steps:
 1. Call the API endpoint with your auth token
 2. The provider will verify your payment and provide the service
 3. Payment will be automatically released upon service completion`

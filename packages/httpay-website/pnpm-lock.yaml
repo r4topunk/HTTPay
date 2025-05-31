@@ -150,8 +150,8 @@ importers:
         specifier: 8.5.1
         version: 8.5.1(react@19.1.0)
       httpay:
-        specifier: ^0.2.2
-        version: 0.2.2(@cosmos-kit/react@2.22.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.33.1)(@interchain-ui/react@1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        specifier: ^0.2.3
+        version: 0.2.3(@cosmos-kit/react@2.22.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.33.1)(@interchain-ui/react@1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       input-otp:
         specifier: 1.4.1
         version: 1.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3462,8 +3462,8 @@ packages:
   hmac-drbg@1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
 
-  httpay@0.2.2:
-    resolution: {integrity: sha512-2D3nP+37JnK2Z7vHJtCgfO+L8PBDvdgp0lGeZOj7NpLZD2G/UOy0XhHIBrl1xHKYqSHvWpWMuv2tR3mYyDqr4w==}
+  httpay@0.2.3:
+    resolution: {integrity: sha512-xWk/IBfjtnJHTdF1VHiFLBZfyAf574XvM/zFmUEFhiR70VCKHdzvBp+Ao5mRRQ12Nbsfz5T8qYyUHXu0WVRjMg==}
     peerDependencies:
       '@cosmos-kit/react': ^2.22.0
       '@tanstack/react-query': ^4.0.0
@@ -9477,7 +9477,7 @@ snapshots:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
-  httpay@0.2.2(@cosmos-kit/react@2.22.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.33.1)(@interchain-ui/react@1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+  httpay@0.2.3(@cosmos-kit/react@2.22.0(@cosmjs/amino@0.33.1)(@cosmjs/proto-signing@0.33.1)(@interchain-ui/react@1.26.3(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
     dependencies:
       '@cosmjs/amino': 0.32.4
       '@cosmjs/cosmwasm-stargate': 0.32.4

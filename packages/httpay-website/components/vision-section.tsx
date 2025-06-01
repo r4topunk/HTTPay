@@ -10,8 +10,8 @@ export default function VisionSection() {
       <div className="container mx-auto">
         <div className="flex flex-col gap-12 max-w-4xl mx-auto">
           <div className="space-y-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">The Future of {APP_NAME}</h2>
-            <p className="text-xl text-muted-foreground">Our vision for autonomous AI payments is just beginning</p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Infrastructure for the Agentic Economy</h2>
+            <p className="text-xl text-muted-foreground">HTTPay is designed to become fundamental infrastructure for the autonomous agent economy</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -19,6 +19,18 @@ export default function VisionSection() {
               <CardContent className="p-6 space-y-4">
                 <h3 className="text-xl font-medium">Roadmap</h3>
                 <ul className="space-y-3">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>Reputation system for enhanced security and trust</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>ATOM staking requirements for API registration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>Eliza and LangChain framework integrations</span>
+                  </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>Multi-token support for cross-chain payments</span>
@@ -29,15 +41,7 @@ export default function VisionSection() {
                   </li>
                   <li className="flex items-start gap-2">
                     <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span>AI agent identity verification and reputation system</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>Subscription-based payment models</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span>Integration with major AI platforms and frameworks</span>
                   </li>
                 </ul>
               </CardContent>

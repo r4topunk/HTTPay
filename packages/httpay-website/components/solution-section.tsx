@@ -9,7 +9,7 @@ export default function SolutionSection() {
           <div className="space-y-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">The Solution</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              HTTPay enables trustless, autonomous payments between AI agents and service providers
+              A decentralized marketplace where developers monetize APIs and AI agents discover and pay autonomously
             </p>
           </div>
 
@@ -18,8 +18,7 @@ export default function SolutionSection() {
               <div className="space-y-4">
                 <h3 className="text-2xl font-medium">How It Works</h3>
                 <p className="text-lg text-muted-foreground">
-                  HTTPay uses smart contracts on the Cosmos blockchain to create a trustless payment protocol for AI
-                  agents and service providers.
+                  HTTPay creates a two-stage marketplace: developers register APIs with pricing in the Registry Contract, then agents discover these APIs and use the Escrow Contract for secure payments.
                 </p>
               </div>
 
@@ -33,8 +32,7 @@ export default function SolutionSection() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">
-                      Providers register their tools with metadata and pricing. Agents discover available tools through
-                      the on-chain registry.
+                      Developers register their APIs with metadata, pricing, and endpoints. Agents discover available APIs through the on-chain marketplace registry.
                     </p>
                   </CardContent>
                 </Card>
@@ -86,9 +84,9 @@ export default function SolutionSection() {
                             <div className="flex items-center gap-2">
                               <Database className="h-5 w-5 text-primary shrink-0" />
                               <div>
-                                <p className="text-sm font-medium">1. Tool Discovery</p>
+                                <p className="text-sm font-medium">1. API Discovery</p>
                                 <p className="text-xs text-muted-foreground">
-                                  Agent queries registry for available tools
+                                  Agent queries marketplace registry for available APIs
                                 </p>
                               </div>
                             </div>

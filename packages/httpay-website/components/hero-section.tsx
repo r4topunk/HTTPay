@@ -19,9 +19,9 @@ export default function HeroSection() {
             {APP_NAME}
           </span>
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">Autonomous Payments for AI Agents</p>
+        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">Decentralized API Marketplace for AI Agents</p>
         <p className="text-lg max-w-2xl">
-          Enabling AI agents to autonomously pay for services without human intervention
+          Where developers monetize APIs and AI agents discover and pay for services autonomously
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           {/* Use the ConnectButton component instead of the inline button */}

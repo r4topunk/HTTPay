@@ -573,11 +573,11 @@ We will implement HTTPay in 3 distinct phases:
 - [x] Deploy fresh Registry contract from scratch
   - [x] Build and optimize registry.wasm
   - [x] Store contract on Neutron testnet (Code ID: 11942)
-  - [x] Instantiate registry contract (Address: neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu)
+  - [x] Instantiate registry contract (Address: neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0)
 - [x] Deploy fresh Escrow contract with GetEscrows support
   - [x] Build and optimize escrow.wasm  
   - [x] Store contract on Neutron testnet (Code ID: 11943)
-  - [x] Instantiate escrow contract with registry address (Address: neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a)
+  - [x] Instantiate escrow contract with registry address (Address: neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn)
 - [x] Verify GetEscrows query functionality
 - [x] Update deployment.md with new contract addresses
 - [x] Document deployment transaction hashes for reference

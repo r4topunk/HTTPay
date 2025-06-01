@@ -190,8 +190,8 @@ The zero-config setup requires these environment variables:
 ```bash
 # Required
 NEXT_PUBLIC_RPC_ENDPOINT=https://rpc-falcron.pion-1.ntrn.tech
-NEXT_PUBLIC_REGISTRY_ADDRESS=neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu
-NEXT_PUBLIC_ESCROW_ADDRESS=neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a
+NEXT_PUBLIC_REGISTRY_ADDRESS=neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0
+NEXT_PUBLIC_ESCROW_ADDRESS=neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn
 CLIENT_PRIVATE_KEY=your-64-char-hex-private-key
 
 # Optional

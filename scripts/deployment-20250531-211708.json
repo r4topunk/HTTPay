@@ -1,0 +1,17 @@
+{
+    "timestamp": "2025-06-01T00:17:08Z",
+    "label_suffix": "1748736985",
+    "registry": {
+        "code_id": "12012",
+        "address": "neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0",
+        "store_txhash": "CE784C4216347B100258A3F84B68A5236DB5564A474D5E84055EEB6F43E82D87",
+        "instantiate_txhash": "CACCD4C38A6A0F849E2439A7F7332B0E9E4D4CF4F25F2FF81B1D63EACAE011D4"
+    },
+    "escrow": {
+        "code_id": "12013",
+        "address": "neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn",
+        "store_txhash": "D1E06D867D23BD6E082B87AFFBE0F0E451944291CE3117CA45B290DF2CE951C6",
+        "instantiate_txhash": "A11903DBEE2C35F8C6EB78A351773AE20E01B2DEA08D48615894EE825D6C310A",
+        "fee_percentage": 10
+    }
+}

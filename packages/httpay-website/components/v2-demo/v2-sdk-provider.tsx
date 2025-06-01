@@ -100,7 +100,7 @@ export const V2SDKProvider = ({ children }: V2SDKProviderProps) => {
   const [sdkConfig, setSdkConfig] = useState<V2SDKConfig>({
     rpcEndpoint: "https://rpc-falcron.pion-1.ntrn.tech",
     chainId: "pion-1",
-    registryAddress: "neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu",
+    registryAddress: "neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0",
     gasPrice: "0.0053untrn",
     gasAdjustment: 1.3,
   });

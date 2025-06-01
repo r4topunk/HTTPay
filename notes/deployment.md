@@ -116,8 +116,8 @@ neutrond query tx 4BCB1085014A070F30C341A37579EDCE773E7C06D41E067EFA368BC6EC6954
 
 # Instantiate escrow contract
 # Replace 11935 with the actual code ID of the escrow contract
-# Replace "neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu" with the actual registry contract address
-neutrond tx wasm instantiate 11935 '{"registry_addr": "neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu","fee_percentage":10}' \
+# Replace "neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0" with the actual registry contract address
+neutrond tx wasm instantiate 11935 '{"registry_addr": "neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0","fee_percentage":10}' \
   --from devwallet \
   --label "toolpay-escrow" \
   --no-admin \
@@ -133,16 +133,16 @@ t(.type == "instantiate") | .attributes[] | select(.key == "_contract_address") 
 
 #### Latest Deployment (Fresh contracts with GetEscrows query support)
 - Registry Code ID: 11942
-- Registry Address: neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu
+- Registry Address: neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0
 - Escrow Code ID: 11943  
-- Escrow Address: neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a
+- Escrow Address: neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn
 
 #### Previous Deployment (Deprecated - missing GetEscrows query)
-- Registry: neutron1rc9uvkt9df5df5rj89kw9mraa78glm60ruww8huj0dn2zdkuwjlslggcwu
-- Escrow: neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a
+- Registry: neutron1y3sukd6exjkmhu3sqdh7efl7gx3qthm4y9gadgaxuu5xckydnwesr6mev0
+- Escrow: neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn
 
 #### Verification
-- GetEscrows query tested and working: `neutrond query wasm contract-state smart neutron1fflqdqvpuka2y2afkqjc7fdznxdq3ft54fcexwdhvheyzfrvwl6qq5ju6a '{"get_escrows":{}}'`
+- GetEscrows query tested and working: `neutrond query wasm contract-state smart neutron1e9taftylxzdqvtcwscddznmy5ualhcx30xrrrttxznme0jsrm0msxkm6xn '{"get_escrows":{}}'`
 - Returns: `{"data":{"escrows":[]}}`
 
 #### Changes from Previous Deployment

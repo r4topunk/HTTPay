@@ -56,14 +56,9 @@ export default function VisionSection() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button className="gap-2" asChild>
-                    <Link href="https://github.com/httpay" target="_blank" rel="noopener noreferrer">
+                    <Link href="https://github.com/r4topunk/httpay" target="_blank" rel="noopener noreferrer">
                       <Github className="h-5 w-5" />
                       GitHub
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="https://discord.gg/httpay" target="_blank" rel="noopener noreferrer">
-                      Join Community
                     </Link>
                   </Button>
                 </div>
